@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // weddings - Only authenticated staff can read/write
+    match /weddings/{weddingId} {
+      allow read: if isAuthenticated() && isStaff();
+      allow write: if isAuthenticated() && isAdmin();
+      
+      match /events/{eventId} {
+        allow read: if isAuthenticated();
+        allow write: if isAuthenticated() && isAdmin();
+      }
+      
+      match /config/{configId} {
+        allow read: if isAuthenticated();
+        allow write: if isAuthenticated() && isAdmin();
+      }
+    }
+    
+    // invitations - Staff can manage, guests can read own invitation
+    match /invitations/{invitationId} {
+      // Guest access via inviteToken (for RSVP page)
+      allow read: if isAuthenticated() && (
+        isStaff() || 
+        request.auth.token.invitationId == invitationId
+      );
+      allow write: if isAuthenticated() && isStaff();
+      
+      // guests sub-collection
+      match /guests/{guestId} {
+        allow read: if isAuthenticated() && (
+          isStaff() || 
+          request.auth.token.invitationId == invitationId
+        );
+        allow write: if isAuthenticated() && isStaff();
+      }
+      
+      // conversation_history sub-collection
+      match /conversation_history/{historyId} {
+        allow read: if isAuthenticated() && isStaff();
+        allow create: if true; // System creates these
+        allow update, delete: if false;
+      }
+    }
+    
+    // messages_queue - System only
+    match /messages_queue/{messageId} {
+      allow read: if isAuthenticated() && isStaff();
+      allow create: if true; // Webhook creates these
+      allow update: if true; // Functions update these
+      allow delete: if false;
+    }
+    
+    // generated_invites - Staff can read, system manages
+    match /generated_invites/{inviteId} {
+      allow read: if isAuthenticated();
+      allow create: if true; // System creates
+      allow update: if true; // System updates
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+    
+    // check_in - Offline-first for reception staff
+    match /check_in/{checkInId} {
+      allow read: if isAuthenticated() && isStaff();
+      allow write: if isAuthenticated() && isStaff();
+    }
+    
+    // users - User profiles
+    match /users/{userId} {
+      allow read: if request.auth.uid == userId || isStaff();
+      allow write: if request.auth.uid == userId;
+    }
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isStaff() {
+      return request.auth.token.role in ['staff', 'admin'];
+    }
+    
+    function isAdmin() {
+      return request.auth.token.role == 'admin';
+    }
+  }
+}

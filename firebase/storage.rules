@@ -1,0 +1,36 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // templates - Admin only
+    match /templates/{allPaths=**} {
+      allow read: if isAuthenticated() && isStaff();
+      allow write: if isAuthenticated() && isAdmin();
+    }
+    
+    // generated-invites - Staff can read, system creates
+    match /generated-invites/{weddingId}/{invitationId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Only Cloud Functions can write
+    }
+    
+    // uploads - Staff can upload photos
+    match /uploads/{weddingId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isStaff();
+    }
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isStaff() {
+      return request.auth.token.role in ['staff', 'admin'];
+    }
+    
+    function isAdmin() {
+      return request.auth.token.role == 'admin';
+    }
+  }
+}
