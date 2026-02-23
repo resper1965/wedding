@@ -7,7 +7,9 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL!
+  // POSTGRES_URL uses Supabase pooler (port 6543) which is accessible from Vercel
+  // DATABASE_URL uses direct host (port 5432) which is blocked externally
+  const connectionString = process.env.POSTGRES_URL!
   const pool = new Pool({
     connectionString,
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
