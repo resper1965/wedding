@@ -104,7 +104,7 @@ export async function GET() {
     })
 
     // Fill in missing dates
-    const timelineData = []
+    const timelineData: Array<{ date: string; dateLabel: string; confirmed: number; declined: number; total: number; cumulative: number }> = []
     for (let i = 29; i >= 0; i--) {
       const date = new Date()
       date.setDate(date.getDate() - i)

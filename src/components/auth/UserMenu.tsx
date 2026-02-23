@@ -24,7 +24,7 @@ export function UserMenu() {
   if (!user) {
     return (
       <Button
-        onClick={signIn}
+        onClick={() => signIn('', '')}
         variant="outline"
         size="sm"
         className="border-stone-200"

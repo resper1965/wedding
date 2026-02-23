@@ -8,6 +8,8 @@
 
 import { invitationTemplate, rsvpConfirmationTemplate, reminderTemplate, thankYouTemplate, type TemplateData } from './templates'
 
+export type { TemplateData }
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -207,7 +209,7 @@ class EmailService {
    * Send bulk emails
    */
   async sendBulk(options: SendBulkOptions): Promise<Array<{ to: string; success: boolean; error?: string }>> {
-    const results = []
+    const results: Array<{ to: string; success: boolean; error?: string }> = []
     
     for (const email of options.emails) {
       let template

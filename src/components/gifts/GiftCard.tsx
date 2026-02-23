@@ -22,6 +22,7 @@ export interface GiftData {
   reservedMessage: string | null
   reservedAt: string | null
   category: string | null
+  priority: number | null
 }
 
 interface GiftCardProps {

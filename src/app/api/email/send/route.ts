@@ -59,22 +59,27 @@ async function handleSendInvitation(data: { guestId: string }) {
   const guest = await db.guest.findUnique({
     where: { id: data.guestId },
     include: {
-      wedding: {
-        include: { events: true }
-      },
-      group: true,
+      invitation: true,
       rsvps: { include: { event: true } }
     }
   })
 
-  if (!guest || !guest.email) {
+  // Fetch wedding separately
+  const wedding = guest ? await db.wedding.findUnique({
+    where: { id: guest.weddingId },
+    include: { events: true }
+  }) : null
+
+  // Fetch group if assigned
+  const group = guest?.groupId ? await db.guestGroup.findUnique({ where: { id: guest.groupId } }) : null
+
+  if (!guest || !guest.email || !wedding) {
     return NextResponse.json(
       { success: false, error: 'Guest not found or no email' },
       { status: 404 }
     )
   }
 
-  const wedding = guest.wedding
   const templateData = {
     partner1Name: wedding.partner1Name,
     partner2Name: wedding.partner2Name,
@@ -86,9 +91,9 @@ async function handleSendInvitation(data: { guestId: string }) {
     }),
     venue: wedding.venue,
     venueAddress: wedding.venueAddress,
-    replyByDate: wedding.replyByDate?.toLocaleDateString('pt-BR'),
+    replyByDate: wedding.replyByDate?.toLocaleDateString('pt-BR') ?? null,
     guestName: `${guest.firstName} ${guest.lastName}`,
-    familyName: guest.group?.name,
+    familyName: group?.name,
     rsvpLink: `${process.env.NEXT_PUBLIC_APP_URL || 'https://casamento.louise.com.br'}/convite/${guest.rsvpToken}`,
     events: wedding.events.map(e => ({
       name: e.name,
@@ -127,25 +132,26 @@ async function handleSendInvitation(data: { guestId: string }) {
 async function handleSendReminder(data: { guestIds?: string[]; daysLeft: number }) {
   const whereClause = data.guestIds
     ? { id: { in: data.guestIds } }
-    : { inviteStatus: 'pending' }
+    : { inviteStatus: 'pending' as const }
 
   const guests = await db.guest.findMany({
-    where: whereClause,
-    include: {
-      wedding: {
-        include: { events: true }
-      },
-      group: true
-    }
+    where: whereClause
   })
 
-  const results = []
+  const results: Array<{ guestId: string; email: string; success: boolean; error?: string }> = []
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://casamento.louise.com.br'
 
   for (const guest of guests) {
     if (!guest.email) continue
 
-    const wedding = guest.wedding
+    const wedding = await db.wedding.findUnique({
+      where: { id: guest.weddingId },
+      include: { events: true }
+    })
+    const group = guest.groupId ? await db.guestGroup.findUnique({ where: { id: guest.groupId } }) : null
+
+    if (!wedding) continue
+
     const templateData = {
       partner1Name: wedding.partner1Name,
       partner2Name: wedding.partner2Name,
@@ -157,9 +163,9 @@ async function handleSendReminder(data: { guestIds?: string[]; daysLeft: number 
       }),
       venue: wedding.venue,
       venueAddress: wedding.venueAddress,
-      replyByDate: wedding.replyByDate?.toLocaleDateString('pt-BR'),
+      replyByDate: wedding.replyByDate?.toLocaleDateString('pt-BR') ?? null,
       guestName: `${guest.firstName} ${guest.lastName}`,
-      familyName: guest.group?.name,
+      familyName: group?.name,
       rsvpLink: `${baseUrl}/convite/${guest.rsvpToken}`,
       events: wedding.events.map(e => ({
         name: e.name,
@@ -205,47 +211,49 @@ async function handleSendBulk(data: {
   daysLeft?: number 
 }) {
   const guests = await db.guest.findMany({
-    where: { id: { in: data.guestIds } },
-    include: {
-      wedding: {
-        include: { events: true }
-      },
-      group: true
-    }
+    where: { id: { in: data.guestIds } }
   })
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://casamento.louise.com.br'
 
-  const emails = guests
-    .filter(g => g.email)
-    .map(guest => {
-      const wedding = guest.wedding
-      return {
-        to: guest.email!,
-        templateData: {
-          partner1Name: wedding.partner1Name,
-          partner2Name: wedding.partner2Name,
-          weddingDate: wedding.weddingDate.toLocaleDateString('pt-BR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          }),
-          venue: wedding.venue,
-          venueAddress: wedding.venueAddress,
-          replyByDate: wedding.replyByDate?.toLocaleDateString('pt-BR'),
-          guestName: `${guest.firstName} ${guest.lastName}`,
-          familyName: guest.group?.name,
-          rsvpLink: `${baseUrl}/convite/${guest.rsvpToken}`,
-          events: wedding.events.map(e => ({
-            name: e.name,
-            date: e.startTime.toLocaleDateString('pt-BR'),
-            venue: e.venue
-          })),
-          messageFooter: wedding.messageFooter
-        }
+  // Fetch weddings for all guests
+  const weddingIds = [...new Set(guests.map(g => g.weddingId))]
+  const weddings = await Promise.all(weddingIds.map(id => db.wedding.findUnique({ where: { id }, include: { events: true } })))
+  const weddingMap = new Map(weddings.filter(Boolean).map(w => [w!.id, w!]))
+
+  const emails: Array<{ to: string; templateData: import('@/services/email/email-service').TemplateData }> = []
+
+  for (const guest of guests) {
+    if (!guest.email) continue
+    const wedding = weddingMap.get(guest.weddingId)
+    if (!wedding) continue
+    const group = guest.groupId ? await db.guestGroup.findUnique({ where: { id: guest.groupId } }) : null
+    emails.push({
+      to: guest.email,
+      templateData: {
+        partner1Name: wedding.partner1Name,
+        partner2Name: wedding.partner2Name,
+        weddingDate: wedding.weddingDate.toLocaleDateString('pt-BR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }),
+        venue: wedding.venue,
+        venueAddress: wedding.venueAddress,
+        replyByDate: wedding.replyByDate?.toLocaleDateString('pt-BR') ?? null,
+        guestName: `${guest.firstName} ${guest.lastName}`,
+        familyName: group?.name,
+        rsvpLink: `${baseUrl}/convite/${guest.rsvpToken}`,
+        events: wedding.events.map(e => ({
+          name: e.name,
+          date: e.startTime.toLocaleDateString('pt-BR'),
+          venue: e.venue
+        })),
+        messageFooter: wedding.messageFooter
       }
     })
+  }
 
   const results = await emailService.sendBulk({
     emails,
