@@ -25,15 +25,13 @@ export type User = {
 }
 
 /**
- * Sign in with Google OAuth via Supabase
+ * Sign in with email and password via Supabase
  */
-export async function signInWithGoogle(): Promise<void> {
+export async function signInWithEmail(email: string, password: string): Promise<void> {
   const supabase = getSupabase()
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${window.location.origin}/`,
-    },
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
   })
   if (error) throw error
 }
