@@ -7,12 +7,12 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  // POSTGRES_URL uses Supabase pooler (port 6543) which is accessible from Vercel
-  // DATABASE_URL uses direct host (port 5432) which is blocked externally
+  // POSTGRES_URL uses Supabase pooler (port 6543) — accessible from Vercel
+  // The pooler uses SSL with self-signed cert chain, so rejectUnauthorized must be false
   const connectionString = process.env.POSTGRES_URL!
   const pool = new Pool({
     connectionString,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    ssl: { rejectUnauthorized: false }, // Supabase pooler uses self-signed cert
     max: 1, // important for serverless
   })
   const adapter = new PrismaPg(pool)
