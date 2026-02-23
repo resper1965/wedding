@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, Heart, Info } from 'lucide-react'
 import { authFetch } from '@/lib/auth-fetch'
+import { useAuth } from '@/components/auth/SessionProvider'
 
 // Components
 import { Navigation, PageTransition } from '@/components/ui-custom/Navigation'
@@ -70,6 +72,8 @@ export default function WeddingGuestPlatform() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [guests, setGuests] = useState<Guest[]>([])
   const [groups, setGroups] = useState<Group[]>([])
+  const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
 
   // Fetch dashboard data
   const fetchDashboardData = useCallback(async () => {
@@ -113,12 +117,20 @@ export default function WeddingGuestPlatform() {
     }
   }, [])
 
-  // Initial seed and data fetch
+  // Redirect to login if not authenticated
   useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login')
+    }
+  }, [authLoading, user, router])
+
+  // Initial data fetch (only when authenticated)
+  useEffect(() => {
+    if (!user) return
+
     const initialize = async () => {
       setIsLoading(true)
       
-      // Fetch all data
       await Promise.all([
         fetchDashboardData(),
         fetchGuests(),
@@ -129,7 +141,7 @@ export default function WeddingGuestPlatform() {
     }
     
     initialize()
-  }, [fetchDashboardData, fetchGuests, fetchGroups])
+  }, [user, fetchDashboardData, fetchGuests, fetchGroups])
 
   // Refresh data
   const handleRefresh = useCallback(async () => {
@@ -139,8 +151,8 @@ export default function WeddingGuestPlatform() {
     ])
   }, [fetchDashboardData, fetchGuests])
 
-  // Loading state
-  if (isLoading) {
+  // Loading state (auth or data)
+  if (authLoading || isLoading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-stone-50">
         <motion.div
