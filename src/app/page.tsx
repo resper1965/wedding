@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, Heart, Info } from 'lucide-react'
+import { authFetch } from '@/lib/auth-fetch'
 
 // Components
 import { Navigation, PageTransition } from '@/components/ui-custom/Navigation'
@@ -73,7 +74,7 @@ export default function WeddingGuestPlatform() {
   // Fetch dashboard data
   const fetchDashboardData = useCallback(async () => {
     try {
-      const response = await fetch('/api/dashboard/stats')
+      const response = await authFetch('/api/dashboard/stats')
       const data = await response.json()
       
       if (data.success) {
@@ -87,7 +88,7 @@ export default function WeddingGuestPlatform() {
   // Fetch guests
   const fetchGuests = useCallback(async () => {
     try {
-      const response = await fetch('/api/guests')
+      const response = await authFetch('/api/guests')
       const data = await response.json()
       
       if (data.success) {
@@ -101,7 +102,7 @@ export default function WeddingGuestPlatform() {
   // Fetch groups
   const fetchGroups = useCallback(async () => {
     try {
-      const response = await fetch('/api/groups')
+      const response = await authFetch('/api/groups')
       const data = await response.json()
       
       if (data.success) {
@@ -116,9 +117,6 @@ export default function WeddingGuestPlatform() {
   useEffect(() => {
     const initialize = async () => {
       setIsLoading(true)
-      
-      // Seed initial data
-      await fetch('/api/seed', { method: 'POST' })
       
       // Fetch all data
       await Promise.all([

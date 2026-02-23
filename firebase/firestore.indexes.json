@@ -10,13 +10,6 @@
       ]
     },
     {
-      "collectionGroup": "invitations",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "primaryPhone", "order": "ASCENDING" }
-      ]
-    },
-    {
       "collectionGroup": "messages_queue",
       "queryScope": "COLLECTION",
       "fields": [

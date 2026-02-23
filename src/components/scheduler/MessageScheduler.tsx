@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Calendar,
@@ -225,7 +226,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
         }
       } else {
         // Create new message
-        const response = await fetch('/api/scheduler', {
+        const response = await authFetch('/api/scheduler', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

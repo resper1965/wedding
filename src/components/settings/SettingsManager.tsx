@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion } from 'framer-motion'
 import { Save, Heart, Calendar, MapPin, Clock, Plus, Trash2, Edit, Bell, CalendarClock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -86,8 +87,8 @@ export function SettingsManager() {
       try {
         const [weddingRes, eventsRes, groupsRes] = await Promise.all([
           fetch('/api/wedding'),
-          fetch('/api/events'),
-          fetch('/api/groups')
+          authFetch('/api/events'),
+          authFetch('/api/groups')
         ])
         
         const weddingData = await weddingRes.json()
@@ -206,7 +207,7 @@ export function SettingsManager() {
         toast.success(editingEvent ? 'Evento atualizado!' : 'Evento criado!')
         setIsEventDialogOpen(false)
         // Refresh events
-        const eventsRes = await fetch('/api/events')
+        const eventsRes = await authFetch('/api/events')
         const eventsData = await eventsRes.json()
         if (eventsData.success) {
           setEvents(eventsData.data)

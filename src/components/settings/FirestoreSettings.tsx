@@ -11,6 +11,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Cloud,
@@ -132,7 +133,7 @@ export function FirestoreSettings({ weddingId }: FirestoreSettingsProps) {
   const handleToggleSync = async (enabled: boolean) => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/sync', {
+      const response = await authFetch('/api/sync', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ weddingId, enabled })
@@ -156,7 +157,7 @@ export function FirestoreSettings({ weddingId }: FirestoreSettingsProps) {
   const handleManualSync = async () => {
     setIsSyncing(true)
     try {
-      const response = await fetch('/api/sync', {
+      const response = await authFetch('/api/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

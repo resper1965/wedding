@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion } from 'framer-motion'
 import { 
   Car, 
-  Taxi, 
+  CarTaxiFront, 
   Bus, 
   ParkingCircle, 
   Phone, 
@@ -48,7 +49,7 @@ interface Transport {
 
 const typeIcons: Record<string, React.ReactNode> = {
   uber: <Car className="w-6 h-6" />,
-  taxi: <Taxi className="w-6 h-6" />,
+  taxi: <CarTaxiFront className="w-6 h-6" />,
   shuttle: <Bus className="w-6 h-6" />,
   parking: <ParkingCircle className="w-6 h-6" />
 }
@@ -91,7 +92,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
   const fetchTransports = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/transport')
+      const response = await authFetch('/api/transport')
       const result = await response.json()
       if (result.success) {
         setTransports(result.data)

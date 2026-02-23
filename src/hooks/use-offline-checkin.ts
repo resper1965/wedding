@@ -1,35 +1,20 @@
 /**
  * ============================================================================
- * OFFLINE-FIRST RECEPTION APP
+ * OFFLINE-FIRST RECEPTION APP (Supabase)
  * ============================================================================
  * 
  * App de check-in para uso no dia do evento
  * Funciona 100% offline com sincronização automática
- * Integrado com Firestore e IndexedDB para persistência offline
+ * Usa Supabase Realtime + IndexedDB para persistência offline
  * ============================================================================
  */
 
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { 
-  collection, 
-  doc, 
-  query, 
-  where, 
-  orderBy, 
-  onSnapshot,
-  addDoc,
-  updateDoc,
-  serverTimestamp,
-  enableNetwork,
-  disableNetwork,
-  getDocs,
-  Firestore,
-  Unsubscribe
-} from 'firebase/firestore'
-import { getFirebaseFirestore } from '@/lib/firebase'
-import { getOfflineDb, OfflineDatabase, OfflineCheckIn, OfflineGuest, OfflineInvitation } from '@/services/firestore/offline-db'
+import { getSupabase } from '@/lib/supabase'
+import { authFetch } from '@/lib/auth-fetch'
+import { getOfflineDb, OfflineDatabase, OfflineCheckIn } from '@/services/firestore/offline-db'
 
 // ============================================================================
 // TYPES
@@ -113,10 +98,9 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
     ? localStorage.getItem('deviceId') || generateDeviceId()
     : ''
 
-  // Refs for Firestore and OfflineDB
-  const firestoreRef = useRef<Firestore | null>(null)
+  // Refs
   const offlineDbRef = useRef<OfflineDatabase | null>(null)
-  const subscriptionsRef = useRef<Unsubscribe[]>([])
+  const channelRef = useRef<ReturnType<ReturnType<typeof getSupabase>['channel']> | null>(null)
 
   // Generate unique device ID
   function generateDeviceId(): string {
@@ -138,13 +122,16 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
         offlineDbRef.current = getOfflineDb()
         await offlineDbRef.current.init()
 
-        // Initialize Firestore
-        firestoreRef.current = getFirebaseFirestore()
-
-        // Load initial data from offline storage
+        // Load from offline storage first
         await loadFromOfflineStorage()
 
-        // Setup Firestore subscriptions
+        // Load from API if online
+        if (isOnline) {
+          await loadGuestsFromAPI()
+          await loadCheckInsFromAPI()
+        }
+
+        // Setup Supabase Realtime for check-ins
         setupSubscriptions()
 
         console.log('[OfflineCheckIn] Initialized successfully')
@@ -157,9 +144,11 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
     init()
 
     return () => {
-      // Cleanup subscriptions
-      subscriptionsRef.current.forEach(unsub => unsub())
-      subscriptionsRef.current = []
+      if (channelRef.current) {
+        const supabase = getSupabase()
+        supabase.removeChannel(channelRef.current)
+        channelRef.current = null
+      }
     }
   }, [weddingId])
 
@@ -171,12 +160,9 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
     if (!offlineDbRef.current) return
 
     try {
-      // Load guests from offline storage
       const offlineGuests = await offlineDbRef.current.getGuests(weddingId)
-      const offlineInvitations = await offlineDbRef.current.getInvitations(weddingId)
       const offlineCheckIns = await offlineDbRef.current.getCheckIns(weddingId)
 
-      // Convert offline guests to display format
       const displayGuests: Guest[] = offlineGuests
         .filter(g => g.inviteStatus === 'confirmed' || g.inviteStatus === 'responded')
         .map(g => ({
@@ -189,7 +175,6 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
           rsvpStatus: {}
         }))
 
-      // Convert offline check-ins to Map
       const checkInMap = new Map<string, CheckInRecord>()
       let pending = 0
 
@@ -212,7 +197,7 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
         }
       })
 
-      setGuests(displayGuests)
+      if (displayGuests.length > 0) setGuests(displayGuests)
       setCheckIns(checkInMap)
       setPendingCount(pending)
       setSyncStatus(pending > 0 ? 'pending' : 'synced')
@@ -224,153 +209,78 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
   }
 
   // ============================================================================
-  // FIRESTORE SUBSCRIPTIONS
+  // LOAD FROM API
+  // ============================================================================
+
+  const loadGuestsFromAPI = async () => {
+    try {
+      const res = await authFetch(`/api/guests?weddingId=${weddingId}`)
+      if (res.ok) {
+        const data = await res.json()
+        const apiGuests: Guest[] = (data.guests || data || [])
+          .filter((g: Record<string, unknown>) => g.inviteStatus === 'confirmed' || g.inviteStatus === 'responded')
+          .map((g: Record<string, unknown>) => ({
+            id: g.id,
+            invitationId: g.invitationId || '',
+            firstName: g.firstName,
+            lastName: g.lastName,
+            fullName: `${g.firstName} ${g.lastName}`,
+            overallStatus: 'confirmed',
+            rsvpStatus: {}
+          }))
+        
+        if (apiGuests.length > 0) {
+          setGuests(apiGuests)
+          setIsLoading(false)
+        }
+      }
+    } catch (error) {
+      console.error('[OfflineCheckIn] Error loading guests from API:', error)
+    }
+  }
+
+  const loadCheckInsFromAPI = async () => {
+    try {
+      const res = await authFetch(`/api/checkin?weddingId=${weddingId}&eventId=${eventId}`)
+      if (res.ok) {
+        const data = await res.json()
+        const checkInMap = new Map<string, CheckInRecord>()
+        
+        for (const ci of (data.checkIns || [])) {
+          checkInMap.set(ci.guestId, {
+            ...ci,
+            checkedInAt: new Date(ci.checkedInAt),
+            syncedAt: ci.syncedAt ? new Date(ci.syncedAt) : undefined
+          })
+        }
+        
+        setCheckIns(checkInMap)
+      }
+    } catch (error) {
+      console.error('[OfflineCheckIn] Error loading check-ins from API:', error)
+    }
+  }
+
+  // ============================================================================
+  // SUPABASE REALTIME SUBSCRIPTIONS
   // ============================================================================
 
   const setupSubscriptions = () => {
-    if (!firestoreRef.current) return
+    const supabase = getSupabase()
 
-    const firestore = firestoreRef.current
-
-    // Subscribe to invitations with confirmed status
-    const invitationsQuery = query(
-      collection(firestore, 'invitations'),
-      where('weddingId', '==', weddingId),
-      where('flowStatus', '==', 'confirmed')
-    )
-
-    const unsubInvitations = onSnapshot(invitationsQuery, async (snapshot) => {
-      const allGuests: Guest[] = []
-      
-      for (const invitationDoc of snapshot.docs) {
-        const invitationId = invitationDoc.id
-        const invitationData = invitationDoc.data()
-        
-        // Save to offline storage
-        if (offlineDbRef.current) {
-          await offlineDbRef.current.saveInvitation({
-            id: invitationId,
-            weddingId: invitationData.weddingId,
-            primaryPhone: invitationData.primaryPhone,
-            primaryContactName: invitationData.primaryContactName,
-            familyName: invitationData.familyName,
-            flowStatus: invitationData.flowStatus,
-            flowData: invitationData.flowData,
-            conversationSummary: invitationData.conversationSummary,
-            lastMessageAt: invitationData.lastMessageAt?.toDate() || null,
-            qrToken: invitationData.qrToken,
-            qrTokenExpires: invitationData.qrTokenExpires?.toDate() || null,
-            checkedIn: invitationData.checkedIn,
-            checkedInAt: invitationData.checkedInAt?.toDate() || null,
-            createdAt: invitationData.createdAt?.toDate() || new Date(),
-            updatedAt: invitationData.updatedAt?.toDate() || new Date()
-          })
+    const channel = supabase
+      .channel(`checkin:${weddingId}:${eventId}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'Rsvp' },
+        () => {
+          // Reload check-ins on any RSVP change
+          loadCheckInsFromAPI()
         }
-        
-        // Get guests sub-collection
-        const guestsQuery = query(
-          collection(firestore, 'invitations', invitationId, 'guests'),
-          where('overallStatus', '==', 'confirmed')
-        )
-        
-        const guestsSnapshot = await getDocs(guestsQuery)
-        
-        guestsSnapshot.forEach(doc => {
-          const guestData = doc.data()
-          allGuests.push({ 
-            id: doc.id, 
-            invitationId, 
-            ...guestData,
-            fullName: `${guestData.firstName} ${guestData.lastName}`
-          } as Guest)
+      )
+      .subscribe()
 
-          // Save guest to offline storage
-          if (offlineDbRef.current) {
-            offlineDbRef.current.saveGuest({
-              id: doc.id,
-              weddingId: guestData.weddingId,
-              invitationId: invitationId,
-              firstName: guestData.firstName,
-              lastName: guestData.lastName,
-              email: guestData.email,
-              phone: guestData.phone,
-              category: guestData.category,
-              relationship: guestData.relationship,
-              inviteStatus: guestData.inviteStatus,
-              dietaryRestrictions: guestData.dietaryRestrictions,
-              specialNeeds: guestData.specialNeeds,
-              songs: guestData.songs,
-              notes: guestData.notes,
-              rsvpToken: guestData.rsvpToken,
-              createdAt: guestData.createdAt?.toDate() || new Date(),
-              updatedAt: guestData.updatedAt?.toDate() || new Date()
-            })
-          }
-        })
-      }
-      
-      setGuests(allGuests)
-      setIsLoading(false)
-    }, (error) => {
-      console.error('[OfflineCheckIn] Error loading guests:', error)
-      setIsLoading(false)
-      
-      // If offline, data will load from cache automatically
-      // Firestore handles this transparently
-    })
-
-    // Subscribe to check-ins
-    const checkInsQuery = query(
-      collection(firestore, 'check_in'),
-      where('weddingId', '==', weddingId),
-      where('eventId', '==', eventId),
-      orderBy('checkedInAt', 'desc')
-    )
-
-    const unsubCheckIns = onSnapshot(checkInsQuery, (snapshot) => {
-      const checkInMap = new Map<string, CheckInRecord>()
-      let pending = 0
-
-      snapshot.forEach(doc => {
-        const data = doc.data()
-        const checkIn: CheckInRecord = { 
-          id: doc.id, 
-          ...data,
-          checkedInAt: data.checkedInAt?.toDate() || new Date(),
-          syncedAt: data.syncedAt?.toDate()
-        } as CheckInRecord
-        
-        checkInMap.set(data.guestId, checkIn)
-        
-        // Count pending sync
-        if (!data.syncedAt) {
-          pending++
-        }
-
-        // Save to offline storage
-        if (offlineDbRef.current) {
-          offlineDbRef.current.saveCheckIn({
-            id: doc.id,
-            weddingId: data.weddingId,
-            guestId: data.guestId,
-            invitationId: data.invitationId,
-            eventId: data.eventId,
-            status: data.status,
-            checkedInAt: data.checkedInAt?.toDate() || new Date(),
-            checkedInBy: data.checkedInBy,
-            deviceId: data.deviceId,
-            syncedAt: data.syncedAt?.toDate() || null,
-            createdAt: data.createdAt?.toDate() || new Date()
-          })
-        }
-      })
-
-      setCheckIns(checkInMap)
-      setPendingCount(pending)
-      setSyncStatus(pending > 0 ? 'pending' : 'synced')
-    })
-
-    subscriptionsRef.current = [unsubInvitations, unsubCheckIns]
+    channelRef.current = channel
   }
 
   // ============================================================================
@@ -378,19 +288,12 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
   // ============================================================================
 
   useEffect(() => {
-    if (!firestoreRef.current) return
-    
     if (isOnline) {
-      enableNetwork(firestoreRef.current).then(() => {
-        console.log('[OfflineCheckIn] Network enabled')
-        // Sync pending check-ins
-        syncPendingCheckIns()
-      })
+      console.log('[OfflineCheckIn] Network enabled')
+      syncPendingCheckIns()
     } else {
-      disableNetwork(firestoreRef.current).then(() => {
-        console.log('[OfflineCheckIn] Network disabled - offline mode')
-        setSyncStatus('offline')
-      })
+      console.log('[OfflineCheckIn] Network disabled - offline mode')
+      setSyncStatus('offline')
     }
   }, [isOnline])
 
@@ -399,23 +302,26 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
   // ============================================================================
 
   const syncPendingCheckIns = useCallback(async () => {
-    if (!offlineDbRef.current || !firestoreRef.current) return
+    if (!offlineDbRef.current) return
 
-    const firestore = firestoreRef.current
-    
-    // Get all check-ins without syncedAt
     const pendingCheckIns = await offlineDbRef.current.getPendingCheckIns()
     
     for (const checkIn of pendingCheckIns) {
       try {
-        // Update in Firestore
-        const ref = doc(collection(firestore, 'check_in'), checkIn.id)
-        await updateDoc(ref, {
-          syncedAt: serverTimestamp()
+        const res = await authFetch('/api/checkin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            guestId: checkIn.guestId,
+            invitationId: checkIn.invitationId,
+            eventId: checkIn.eventId,
+            weddingId: checkIn.weddingId,
+          }),
         })
 
-        // Mark as synced in offline storage
-        await offlineDbRef.current.markCheckInSynced(checkIn.id)
+        if (res.ok) {
+          await offlineDbRef.current.markCheckInSynced(checkIn.id)
+        }
       } catch (error) {
         console.error('[OfflineCheckIn] Error syncing check-in:', error)
       }
@@ -430,63 +336,62 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
   // ============================================================================
 
   const checkInGuest = useCallback(async (guest: Guest) => {
-    if (!firestoreRef.current || !offlineDbRef.current) {
+    if (!offlineDbRef.current) {
       throw new Error('Not initialized')
     }
 
-    // Check if already checked in
     if (checkIns.has(guest.id)) {
       throw new Error('Convidado já fez check-in')
     }
 
-    const firestore = firestoreRef.current
-    const offlineDb = offlineDbRef.current
-
     const checkInId = `checkin_${guest.id}_${Date.now()}`
     const now = new Date()
 
-    // Create check-in record
-    const checkInData = {
+    const checkInData: CheckInRecord = {
+      id: checkInId,
       weddingId,
       guestId: guest.id,
       invitationId: guest.invitationId,
       eventId,
-      status: 'checked_in' as const,
+      status: 'checked_in',
       checkedInAt: now,
       checkedInBy: staffId,
       deviceId,
-      syncedAt: isOnline ? now : null,
-      createdAt: now
+      syncedAt: isOnline ? now : undefined
     }
 
-    // Save to Firestore (if online)
+    // Try to save via API if online
     if (isOnline) {
       try {
-        await addDoc(collection(firestore, 'check_in'), {
-          ...checkInData,
-          checkedInAt: serverTimestamp(),
-          syncedAt: serverTimestamp(),
-          createdAt: serverTimestamp()
+        await authFetch('/api/checkin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            guestId: guest.id,
+            invitationId: guest.invitationId,
+            eventId,
+            weddingId,
+            staffId,
+            deviceId,
+          }),
         })
       } catch (error) {
-        console.error('[OfflineCheckIn] Firestore write error:', error)
-        // Continue to save offline
+        console.error('[OfflineCheckIn] API write error:', error)
       }
     }
 
     // Save to offline storage
-    await offlineDb.saveCheckIn({
-      id: checkInId,
-      ...checkInData
+    await offlineDbRef.current.saveCheckIn({
+      ...checkInData,
+      syncedAt: isOnline ? now : null,
+      createdAt: now,
+      status: 'checked_in',
     })
 
     // Update local state
     setCheckIns(prev => {
       const updated = new Map(prev)
-      updated.set(guest.id, {
-        id: checkInId,
-        ...checkInData
-      })
+      updated.set(guest.id, checkInData)
       return updated
     })
 
@@ -499,36 +404,32 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
   }, [weddingId, eventId, staffId, deviceId, isOnline, checkIns])
 
   const undoCheckIn = useCallback(async (guestId: string) => {
-    if (!firestoreRef.current || !offlineDbRef.current) {
+    if (!offlineDbRef.current) {
       throw new Error('Not initialized')
     }
 
-    const firestore = firestoreRef.current
-    const offlineDb = offlineDbRef.current
     const checkIn = checkIns.get(guestId)
-    
     if (!checkIn) {
       throw new Error('Check-in não encontrado')
     }
 
-    // Update in Firestore
+    // Update via API if online
     if (isOnline) {
       try {
-        const ref = doc(firestore, 'check_in', checkIn.id)
-        await updateDoc(ref, {
-          status: 'no_show',
-          syncedAt: serverTimestamp()
+        await authFetch(`/api/checkin/${checkIn.id}`, {
+          method: 'DELETE',
         })
       } catch (error) {
-        console.error('[OfflineCheckIn] Firestore update error:', error)
+        console.error('[OfflineCheckIn] API delete error:', error)
       }
     }
 
     // Update in offline storage
-    await offlineDb.saveCheckIn({
+    await offlineDbRef.current.saveCheckIn({
       ...checkIn,
       status: 'no_show',
-      syncedAt: isOnline ? new Date() : null
+      syncedAt: isOnline ? new Date() : null,
+      createdAt: checkIn.checkedInAt,
     })
 
     // Update local state

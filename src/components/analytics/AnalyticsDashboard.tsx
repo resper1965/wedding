@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion } from 'framer-motion'
 import { RefreshCw, Utensils, Calendar, MessageSquare, CheckCircle } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -78,7 +79,7 @@ export function AnalyticsDashboard() {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('/api/analytics')
+      const response = await authFetch('/api/analytics')
       const result = await response.json()
       
       if (result.success) {

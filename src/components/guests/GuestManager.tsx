@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Plus, Search, Filter, MoreHorizontal, 
@@ -124,7 +125,7 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
     }
 
     try {
-      const response = await fetch('/api/guests', {
+      const response = await authFetch('/api/guests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

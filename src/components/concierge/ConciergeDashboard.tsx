@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   MessageSquare, 
@@ -85,14 +86,14 @@ export function ConciergeDashboard() {
     setIsLoading(true)
     try {
       // Fetch stats
-      const statsRes = await fetch('/api/concierge/stats')
+      const statsRes = await authFetch('/api/concierge/stats')
       if (statsRes.ok) {
         const data = await statsRes.json()
         setStats(data)
       }
       
       // Fetch conversations
-      const convRes = await fetch('/api/concierge/conversations')
+      const convRes = await authFetch('/api/concierge/conversations')
       if (convRes.ok) {
         const data = await convRes.json()
         setConversations(data.conversations || [])
@@ -111,7 +112,7 @@ export function ConciergeDashboard() {
     }
     
     try {
-      const res = await fetch('/api/concierge/qrcode', {
+      const res = await authFetch('/api/concierge/qrcode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ familyName: qrFamilyName })
@@ -137,7 +138,7 @@ export function ConciergeDashboard() {
     }
     
     try {
-      const res = await fetch('/api/concierge/media', {
+      const res = await authFetch('/api/concierge/media', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ familyName: mediaFamilyName })
@@ -163,7 +164,7 @@ export function ConciergeDashboard() {
     }
     
     try {
-      const res = await fetch('/api/concierge/send', {
+      const res = await authFetch('/api/concierge/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: testPhone, message: testMessage })

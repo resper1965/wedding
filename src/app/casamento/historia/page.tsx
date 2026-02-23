@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Heart, Sparkles, MapPin, Calendar, Ring } from 'lucide-react'
+import { Heart, Sparkles, MapPin, Calendar, Gem } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { PublicNav } from '@/components/public/PublicNav'
@@ -44,7 +44,7 @@ const storyTimeline = [
     year: '2023',
     title: 'O Pedido',
     description: 'Em um cenário perfeito, com o pôr do sol como testemunha, veio a pergunta que mudaria tudo: "Você quer se casar comigo?" E a resposta foi um sim apaixonado!',
-    icon: Ring,
+    icon: Gem,
     image: '/images/wedding/story-4.jpg'
   },
   {

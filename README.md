@@ -21,10 +21,13 @@ Uma plataforma elegante e minimalista para gestão de convidados de casamento, c
 
 - **Framework**: Next.js 16 (App Router)
 - **Linguagem**: TypeScript 5
-- **Banco de Dados**: SQLite com Prisma ORM
+- **Banco de Dados**: PostgreSQL (Neon) com Prisma ORM
 - **Estilização**: Tailwind CSS 4 + shadcn/ui
 - **Animações**: Framer Motion
-- **Autenticação**: NextAuth.js v4 com Google Provider
+- **Autenticação**: Firebase Auth (Google Provider)
+- **Real-time**: Firebase Firestore (check-in)
+- **Concierge**: Cloud Functions + WhatsApp Business API + OpenAI
+- **Deploy**: Vercel (free tier)
 
 ## 📦 Instalação
 
@@ -53,36 +56,34 @@ bun run dev
 Crie um arquivo `.env` na raiz do projeto:
 
 ```env
-# Banco de Dados
-DATABASE_URL=file:./db/wedding.db
+# Banco de Dados (Neon Postgres - free tier)
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
 
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=seu-secret-aleatorio-aqui
-
-# Google OAuth (obter em Google Cloud Console)
-GOOGLE_CLIENT_ID=seu-client-id
-GOOGLE_CLIENT_SECRET=seu-client-secret
+# Firebase (obter em Firebase Console > Project Settings)
+NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
 ```
 
-### Configurar Google OAuth
+### Deploy no Cloud Run (GCP)
 
-1. Acesse [Google Cloud Console](https://console.cloud.google.com/)
-2. Crie um novo projeto ou selecione um existente
-3. Vá em **APIs & Services** > **Credentials**
-4. Crie **OAuth 2.0 Client ID**
-5. Adicione as URLs autorizadas:
-   - Origem: `http://localhost:3000`
-   - Redirect: `http://localhost:3000/api/auth/callback/google`
-6. Copie Client ID e Client Secret para `.env`
-
-### Deploy no Firebase
-
-1. Instale Firebase CLI: `npm install -g firebase-tools`
-2. Login: `firebase login`
-3. Inicialize: `firebase init hosting`
-4. Build: `bun run build`
-5. Deploy: `firebase deploy`
+1. Build e push da imagem:
+   ```bash
+   gcloud builds submit --tag gcr.io/PROJECT_ID/wedding
+   ```
+2. Deploy com min-instances=0 (free tier):
+   ```bash
+   gcloud run deploy wedding \
+     --image gcr.io/PROJECT_ID/wedding \
+     --region southamerica-east1 \
+     --allow-unauthenticated \
+     --min-instances 0 \
+     --max-instances 1 \
+     --set-env-vars DATABASE_URL=your-neon-url
+   ```
 
 ## 📱 Funcionalidades
 

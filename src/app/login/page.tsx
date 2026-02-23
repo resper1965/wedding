@@ -1,17 +1,29 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { signIn } from 'next-auth/react'
+import { useAuth } from '@/components/auth/SessionProvider'
 import { Heart, Chrome } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  const { signIn } = useAuth()
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
-    await signIn('google', { callbackUrl: '/' })
+    setError(null)
+    try {
+      await signIn()
+      router.push('/')
+    } catch (err: unknown) {
+      console.error('Login error:', err)
+      setError('Erro ao fazer login. Tente novamente.')
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -56,6 +68,12 @@ export default function LoginPage() {
               Entre com sua conta Google para acessar o painel
             </p>
           </div>
+
+          {error && (
+            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+              {error}
+            </div>
+          )}
 
           <Button
             onClick={handleGoogleSignIn}

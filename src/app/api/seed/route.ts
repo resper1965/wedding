@@ -1,9 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { verifyFirebaseToken } from '@/lib/auth'
 import { db } from '@/lib/db'
 
-// Seed initial data for demonstration
-export async function POST() {
+// Seed initial data for demonstration (requires authentication)
+export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyFirebaseToken(request)
+    if (!auth.authorized) return auth.response
+
     // Check if already seeded
     const existingWedding = await db.wedding.findFirst()
     if (existingWedding) {

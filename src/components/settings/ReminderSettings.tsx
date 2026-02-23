@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Bell,
@@ -121,7 +122,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
     setIsSaving(true)
 
     try {
-      const response = await fetch('/api/reminders', {
+      const response = await authFetch('/api/reminders', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -153,7 +154,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
     setLastResult(null)
 
     try {
-      const response = await fetch('/api/reminders', {
+      const response = await authFetch('/api/reminders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

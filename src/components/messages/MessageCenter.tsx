@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { authFetch } from '@/lib/auth-fetch'
 import { motion } from 'framer-motion'
 import { Send, Mail, MessageCircle, Bell, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -63,7 +64,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
   // Fetch templates
   const fetchTemplates = useCallback(async () => {
     try {
-      const response = await fetch('/api/templates')
+      const response = await authFetch('/api/templates')
       const data = await response.json()
       
       if (data.success) {
@@ -119,7 +120,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
   // Duplicate template
   const handleDuplicate = async (template: Template) => {
     try {
-      const response = await fetch('/api/templates', {
+      const response = await authFetch('/api/templates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -183,7 +184,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
   // Save as new template
   const handleSaveAsNew = async (data: { name: string; type: string; subject: string; content: string; variables: string }) => {
     try {
-      const response = await fetch('/api/templates', {
+      const response = await authFetch('/api/templates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
