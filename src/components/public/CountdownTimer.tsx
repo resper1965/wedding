@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useSyncExternalStore } from 'react'
 import { motion } from 'framer-motion'
+import { Heart } from 'lucide-react'
 
 interface CountdownTimerProps {
   targetDate: Date
@@ -15,7 +16,6 @@ interface TimeLeft {
   seconds: number
 }
 
-// Custom hook for mounted state without setState in effect
 function useMounted() {
   return useSyncExternalStore(
     () => () => {},
@@ -24,19 +24,35 @@ function useMounted() {
   )
 }
 
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+      mq.addEventListener('change', cb)
+      return () => mq.removeEventListener('change', cb)
+    },
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    () => false
+  )
+}
+
 export function CountdownTimer({ targetDate, className = '' }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+  const [isPast, setIsPast] = useState(false)
   const mounted = useMounted()
+  const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
     const updateTimer = () => {
       const difference = targetDate.getTime() - new Date().getTime()
-      
+
       if (difference <= 0) {
+        setIsPast(true)
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
         return
       }
 
+      setIsPast(false)
       setTimeLeft({
         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
         hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
@@ -47,9 +63,19 @@ export function CountdownTimer({ targetDate, className = '' }: CountdownTimerPro
 
     updateTimer()
     const timer = setInterval(updateTimer, 1000)
-
     return () => clearInterval(timer)
   }, [targetDate])
+
+  // Celebratory state when date has passed
+  if (mounted && isPast) {
+    return (
+      <div className={`flex flex-col items-center gap-2 ${className}`}>
+        <Heart className="h-8 w-8 text-rose-400 animate-pulse" fill="currentColor" />
+        <p className="text-lg font-medium text-amber-800">O grande dia chegou!</p>
+        <p className="text-sm text-amber-600/80">Louise &amp; Nicolas 💕</p>
+      </div>
+    )
+  }
 
   const timeUnits = [
     { value: timeLeft.days, label: 'Dias' },
@@ -77,15 +103,13 @@ export function CountdownTimer({ targetDate, className = '' }: CountdownTimerPro
         <div key={unit.label} className="relative text-center">
           <motion.div
             key={`${unit.label}-${unit.value}`}
-            initial={{ scale: 1.05, opacity: 0.8 }}
+            initial={reducedMotion ? false : { scale: 1.05, opacity: 0.8 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="relative"
           >
             <div className="relative">
-              {/* Background glow */}
               <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-amber-200/30 to-orange-200/30 blur-sm" />
-              {/* Number */}
               <div className="relative text-3xl font-light tracking-tight text-amber-800 sm:text-4xl">
                 {String(unit.value).padStart(2, '0')}
               </div>
@@ -94,7 +118,6 @@ export function CountdownTimer({ targetDate, className = '' }: CountdownTimerPro
           <div className="mt-1 text-xs font-medium uppercase tracking-wider text-amber-600/80">
             {unit.label}
           </div>
-          {/* Separator */}
           {index < timeUnits.length - 1 && (
             <div className="absolute -right-2 top-1/2 hidden h-1 w-1 -translate-y-1/2 rounded-full bg-amber-300/50 sm:block" />
           )}

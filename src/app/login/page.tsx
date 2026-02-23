@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/components/auth/SessionProvider'
@@ -12,8 +12,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [partner1Name, setPartner1Name] = useState<string | null>(null)
+  const [partner2Name, setPartner2Name] = useState<string | null>(null)
   const router = useRouter()
   const { signIn } = useAuth()
+
+  useEffect(() => {
+    fetch('/api/wedding')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          setPartner1Name(data.data.partner1Name)
+          setPartner2Name(data.data.partner2Name)
+        }
+      })
+      .catch(() => {
+        // silently fail — fallback to no names
+      })
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,9 +67,19 @@ export default function LoginPage() {
             transition={{ duration: 0.5 }}
             className="mb-4 flex items-center justify-center gap-3"
           >
-            <span className="text-2xl font-light tracking-wide text-stone-700">Louise</span>
-            <Heart className="h-5 w-5 text-rose-400" fill="currentColor" />
-            <span className="text-2xl font-light tracking-wide text-stone-700">Nicolas</span>
+            {partner1Name ? (
+              <>
+                <span className="text-2xl font-light tracking-wide text-stone-700">{partner1Name}</span>
+                <Heart className="h-5 w-5 text-rose-400" fill="currentColor" />
+                <span className="text-2xl font-light tracking-wide text-stone-700">{partner2Name}</span>
+              </>
+            ) : (
+              <div className="flex items-center gap-3">
+                <div className="h-7 w-20 animate-pulse rounded-md bg-stone-100" />
+                <Heart className="h-5 w-5 text-rose-200" />
+                <div className="h-7 w-20 animate-pulse rounded-md bg-stone-100" />
+              </div>
+            )}
           </motion.div>
           <p className="text-sm text-stone-500">Gestão de Convidados</p>
         </div>
@@ -139,7 +165,7 @@ export default function LoginPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8 text-center text-xs text-stone-400"
         >
-          15 de Março de 2025 • São Paulo
+          11 de novembro de 2026 • São Paulo
         </motion.p>
       </motion.div>
     </div>

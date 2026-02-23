@@ -1,0 +1,1246 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-02-23T19:11:30.251Z",
+  "stack": {
+    "primaryLanguage": "typescript",
+    "languages": [
+      "javascript",
+      "typescript"
+    ],
+    "frameworks": [
+      "nextjs"
+    ],
+    "buildTools": [],
+    "testFrameworks": [],
+    "packageManager": "npm",
+    "isMonorepo": false,
+    "hasDocker": false,
+    "hasCI": false,
+    "runtimeEnvironment": "browser"
+  },
+  "structure": {
+    "totalFiles": 197,
+    "rootPath": ".",
+    "topDirectories": [
+      {
+        "name": "db",
+        "fileCount": 0,
+        "description": "Module directory"
+      },
+      {
+        "name": "download",
+        "fileCount": 1,
+        "description": "Module directory"
+      },
+      {
+        "name": "examples",
+        "fileCount": 2,
+        "description": "Example definitions"
+      },
+      {
+        "name": "firebase",
+        "fileCount": 10,
+        "description": "Module directory"
+      },
+      {
+        "name": "mini-services",
+        "fileCount": 0,
+        "description": "Business logic and orchestration services"
+      },
+      {
+        "name": "prisma",
+        "fileCount": 2,
+        "description": "Module directory"
+      },
+      {
+        "name": "public",
+        "fileCount": 5,
+        "description": "Public static assets"
+      },
+      {
+        "name": "src",
+        "fileCount": 162,
+        "description": "Source code root"
+      }
+    ],
+    "languageDistribution": [
+      {
+        "extension": ".tsx",
+        "count": 102
+      },
+      {
+        "extension": ".ts",
+        "count": 67
+      },
+      {
+        "extension": ".json",
+        "count": 11
+      },
+      {
+        "extension": ".md",
+        "count": 4
+      },
+      {
+        "extension": ".mjs",
+        "count": 2
+      },
+      {
+        "extension": ".png",
+        "count": 2
+      },
+      {
+        "extension": ".rules",
+        "count": 2
+      },
+      {
+        "extension": ".lock",
+        "count": 1
+      },
+      {
+        "extension": ".js",
+        "count": 1
+      },
+      {
+        "extension": ".txt",
+        "count": 1
+      }
+    ]
+  },
+  "architecture": {
+    "layers": [
+      {
+        "name": "Utils",
+        "description": "Shared utilities and helpers",
+        "directories": [
+          "src/lib"
+        ],
+        "symbolCount": 11,
+        "dependsOn": []
+      },
+      {
+        "name": "Services",
+        "description": "Business logic and orchestration",
+        "directories": [
+          "src/services/whatsapp",
+          "src/services/weather",
+          "src/services/reminder",
+          "src/services/firestore",
+          "src/services/email",
+          "src/services/concierge"
+        ],
+        "symbolCount": 93,
+        "dependsOn": []
+      },
+      {
+        "name": "Controllers",
+        "description": "Request handling and routing",
+        "directories": [
+          "src/app/api",
+          "src/app/api/wedding",
+          "src/app/api/weather",
+          "src/app/api/transport",
+          "src/app/api/templates",
+          "src/app/api/tables",
+          "src/app/api/sync",
+          "src/app/api/seed",
+          "src/app/api/scheduler",
+          "src/app/api/rsvp",
+          "src/app/api/reminders",
+          "src/app/api/guests",
+          "src/app/api/groups",
+          "src/app/api/gifts",
+          "src/app/api/events",
+          "src/app/api/checkin",
+          "src/app/api/analytics",
+          "src/app/api/accommodations",
+          "src/app/api/webhook/whatsapp",
+          "src/app/api/transport/[id]",
+          "src/app/api/templates/[id]",
+          "src/app/api/tables/[id]",
+          "src/app/api/scheduler/[id]",
+          "src/app/api/invite/[token]",
+          "src/app/api/guests/[id]",
+          "src/app/api/groups/assign",
+          "src/app/api/gifts/[id]",
+          "src/app/api/events/[id]",
+          "src/app/api/email/send",
+          "src/app/api/dashboard/stats",
+          "src/app/api/concierge/stats",
+          "src/app/api/concierge/send",
+          "src/app/api/concierge/qrcode",
+          "src/app/api/concierge/media",
+          "src/app/api/concierge/conversations",
+          "src/app/api/checkin/[token]",
+          "src/app/api/accommodations/[id]",
+          "src/app/api/gifts/[id]/reserve"
+        ],
+        "symbolCount": 88,
+        "dependsOn": []
+      },
+      {
+        "name": "Models",
+        "description": "Data structures and domain objects",
+        "directories": [
+          "firebase/functions/src"
+        ],
+        "symbolCount": 11,
+        "dependsOn": []
+      },
+      {
+        "name": "Generators",
+        "description": "Content and object generation",
+        "directories": [
+          "firebase/functions/src"
+        ],
+        "symbolCount": 7,
+        "dependsOn": []
+      },
+      {
+        "name": "Components",
+        "description": "UI components and views",
+        "directories": [
+          "src/app",
+          "src/components/weather",
+          "src/components/ui-custom",
+          "src/components/ui",
+          "src/components/templates",
+          "src/components/settings",
+          "src/components/seating",
+          "src/components/scheduler",
+          "src/components/public",
+          "src/components/messages",
+          "src/components/logistics",
+          "src/components/layout",
+          "src/components/guests",
+          "src/components/gifts",
+          "src/components/dashboard",
+          "src/components/concierge",
+          "src/components/checkin",
+          "src/components/auth",
+          "src/components/analytics",
+          "src/app/reception",
+          "src/app/presentes",
+          "src/app/login",
+          "src/app/info",
+          "src/app/checkin",
+          "src/app/casamento",
+          "src/app/ajuda",
+          "src/app/casamento/rsvp",
+          "src/app/casamento/padrinhos",
+          "src/app/casamento/info",
+          "src/app/casamento/hospedagem",
+          "src/app/casamento/historia",
+          "src/app/casamento/fotos",
+          "src/app/casamento/eventos"
+        ],
+        "symbolCount": 184,
+        "dependsOn": []
+      }
+    ],
+    "patterns": [
+      {
+        "name": "Service Layer",
+        "confidence": 0.85,
+        "description": "Encapsulates business logic in service classes",
+        "occurrences": 2
+      }
+    ],
+    "entryPoints": [
+      "src/types/index.ts",
+      "examples/websocket/server.ts",
+      "firebase/functions/src/index.ts"
+    ],
+    "mainEntryPoints": [],
+    "moduleExports": [
+      "src/types/index.ts",
+      "examples/websocket/server.ts",
+      "firebase/functions/src/index.ts"
+    ]
+  },
+  "symbols": {
+    "classes": [
+      {
+        "name": "AIConcierge",
+        "kind": "class",
+        "file": "src/services/concierge/ai-concierge.ts",
+        "line": 101,
+        "exported": true
+      },
+      {
+        "name": "OfflineDatabase",
+        "kind": "class",
+        "file": "src/services/firestore/offline-db.ts",
+        "line": 116,
+        "exported": true
+      },
+      {
+        "name": "WhatsAppClient",
+        "kind": "class",
+        "file": "src/services/whatsapp/client.ts",
+        "line": 82,
+        "exported": true
+      },
+      {
+        "name": "EmailService",
+        "kind": "class",
+        "file": "src/services/email/email-service.ts",
+        "line": 56,
+        "exported": false
+      },
+      {
+        "name": "ReminderService",
+        "kind": "class",
+        "file": "src/services/reminder/reminder-service.ts",
+        "line": 46,
+        "exported": false
+      }
+    ],
+    "interfaces": [
+      {
+        "name": "ApiResponse",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 19,
+        "exported": true
+      },
+      {
+        "name": "BatchInviteOptions",
+        "kind": "interface",
+        "file": "src/services/concierge/media-generator.ts",
+        "line": 267,
+        "exported": true
+      },
+      {
+        "name": "BatchInviteResult",
+        "kind": "interface",
+        "file": "src/services/concierge/media-generator.ts",
+        "line": 276,
+        "exported": true
+      },
+      {
+        "name": "CheckInCardProps",
+        "kind": "interface",
+        "file": "src/components/checkin/CheckInCard.tsx",
+        "line": 26,
+        "exported": true
+      },
+      {
+        "name": "CheckInDocument",
+        "kind": "interface",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 319,
+        "exported": true
+      },
+      {
+        "name": "CheckInResult",
+        "kind": "interface",
+        "file": "src/services/concierge/qr-service.ts",
+        "line": 335,
+        "exported": true
+      },
+      {
+        "name": "ConciergeContext",
+        "kind": "interface",
+        "file": "src/services/concierge/ai-concierge.ts",
+        "line": 24,
+        "exported": true
+      },
+      {
+        "name": "ConciergeStats",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 116,
+        "exported": true
+      },
+      {
+        "name": "ConversationDisplay",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 126,
+        "exported": true
+      },
+      {
+        "name": "ConversationHistoryDocument",
+        "kind": "interface",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 263,
+        "exported": true
+      },
+      {
+        "name": "DashboardStats",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 26,
+        "exported": true
+      },
+      {
+        "name": "EmailConfig",
+        "kind": "interface",
+        "file": "src/services/email/email-service.ts",
+        "line": 15,
+        "exported": true
+      },
+      {
+        "name": "EmailTemplate",
+        "kind": "interface",
+        "file": "src/services/email/templates.ts",
+        "line": 9,
+        "exported": true
+      },
+      {
+        "name": "EventDocument",
+        "kind": "interface",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 84,
+        "exported": true
+      },
+      {
+        "name": "FlowComponent",
+        "kind": "interface",
+        "file": "src/services/whatsapp/flows.ts",
+        "line": 30,
+        "exported": true
+      },
+      {
+        "name": "FlowResponse",
+        "kind": "interface",
+        "file": "src/services/whatsapp/flows.ts",
+        "line": 498,
+        "exported": true
+      },
+      {
+        "name": "FlowScreen",
+        "kind": "interface",
+        "file": "src/services/whatsapp/flows.ts",
+        "line": 20,
+        "exported": true
+      },
+      {
+        "name": "FunctionCallResult",
+        "kind": "interface",
+        "file": "src/services/concierge/ai-concierge.ts",
+        "line": 34,
+        "exported": true
+      },
+      {
+        "name": "GeneratedInvite",
+        "kind": "interface",
+        "file": "src/services/concierge/media-generator.ts",
+        "line": 55,
+        "exported": true
+      },
+      {
+        "name": "GeneratedInviteDocument",
+        "kind": "interface",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 289,
+        "exported": true
+      },
+      {
+        "name": "GiftData",
+        "kind": "interface",
+        "file": "src/components/gifts/GiftCard.tsx",
+        "line": 11,
+        "exported": true
+      },
+      {
+        "name": "GroupFormData",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 62,
+        "exported": true
+      },
+      {
+        "name": "GuestDocument",
+        "kind": "interface",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 159,
+        "exported": true
+      },
+      {
+        "name": "GuestFilters",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 79,
+        "exported": true
+      },
+      {
+        "name": "GuestFormData",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 48,
+        "exported": true
+      },
+      {
+        "name": "GuestSearchResult",
+        "kind": "interface",
+        "file": "src/components/checkin/GuestSearch.tsx",
+        "line": 23,
+        "exported": true
+      },
+      {
+        "name": "GuestWithDetails",
+        "kind": "interface",
+        "file": "src/types/index.ts",
+        "line": 87,
+        "exported": true
+      },
+      {
+        "name": "ImageMessage",
+        "kind": "interface",
+        "file": "src/services/whatsapp/client.ts",
+        "line": 31,
+        "exported": true
+      },
+      {
+        "name": "InteractiveButton",
+        "kind": "interface",
+        "file": "src/services/whatsapp/client.ts",
+        "line": 39,
+        "exported": true
+      },
+      {
+        "name": "InteractiveMessage",
+        "kind": "interface",
+        "file": "src/services/whatsapp/client.ts",
+        "line": 47,
+        "exported": true
+      }
+    ],
+    "functions": [
+      {
+        "name": "addQrCodeToInvite",
+        "kind": "function",
+        "file": "src/services/concierge/media-generator.ts",
+        "line": 330,
+        "exported": true
+      },
+      {
+        "name": "AppFooter",
+        "kind": "function",
+        "file": "src/components/layout/AppFooter.tsx",
+        "line": 6,
+        "exported": true
+      },
+      {
+        "name": "authFetch",
+        "kind": "function",
+        "file": "src/lib/auth-fetch.ts",
+        "line": 13,
+        "exported": true
+      },
+      {
+        "name": "cleanupOldInvites",
+        "kind": "function",
+        "file": "src/services/concierge/media-generator.ts",
+        "line": 366,
+        "exported": true
+      },
+      {
+        "name": "cn",
+        "kind": "function",
+        "file": "src/lib/utils.ts",
+        "line": 4,
+        "exported": true
+      },
+      {
+        "name": "confirmGuest",
+        "kind": "function",
+        "file": "src/services/concierge/ai-concierge.ts",
+        "line": 281,
+        "exported": true
+      },
+      {
+        "name": "CountdownTimer",
+        "kind": "function",
+        "file": "src/components/public/CountdownTimer.tsx",
+        "line": 27,
+        "exported": true
+      },
+      {
+        "name": "createCompleteFlow",
+        "kind": "function",
+        "file": "src/services/whatsapp/flows.ts",
+        "line": 298,
+        "exported": true
+      },
+      {
+        "name": "createRsvpFlow",
+        "kind": "function",
+        "file": "src/services/whatsapp/flows.ts",
+        "line": 189,
+        "exported": true
+      },
+      {
+        "name": "declineGuest",
+        "kind": "function",
+        "file": "src/services/concierge/ai-concierge.ts",
+        "line": 346,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/scheduler/route.ts",
+        "line": 174,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/transport/[id]/route.ts",
+        "line": 59,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/templates/[id]/route.ts",
+        "line": 66,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/tables/[id]/route.ts",
+        "line": 120,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/scheduler/[id]/route.ts",
+        "line": 199,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/guests/[id]/route.ts",
+        "line": 70,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/groups/assign/route.ts",
+        "line": 45,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/gifts/[id]/route.ts",
+        "line": 87,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/events/[id]/route.ts",
+        "line": 63,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/accommodations/[id]/route.ts",
+        "line": 78,
+        "exported": true
+      },
+      {
+        "name": "DELETE",
+        "kind": "function",
+        "file": "src/app/api/gifts/[id]/reserve/route.ts",
+        "line": 57,
+        "exported": true
+      },
+      {
+        "name": "flowToInteractiveMessage",
+        "kind": "function",
+        "file": "src/services/whatsapp/flows.ts",
+        "line": 571,
+        "exported": true
+      },
+      {
+        "name": "generateBatchInvites",
+        "kind": "function",
+        "file": "src/services/concierge/media-generator.ts",
+        "line": 292,
+        "exported": true
+      },
+      {
+        "name": "generateDeviceId",
+        "kind": "function",
+        "file": "src/hooks/use-offline-checkin.ts",
+        "line": 106,
+        "exported": true
+      },
+      {
+        "name": "generatePersonalizedInvite",
+        "kind": "function",
+        "file": "src/services/concierge/media-generator.ts",
+        "line": 136,
+        "exported": true
+      },
+      {
+        "name": "generateQRCode",
+        "kind": "function",
+        "file": "src/services/concierge/qr-service.ts",
+        "line": 213,
+        "exported": true
+      },
+      {
+        "name": "generateQrCodesForConfirmed",
+        "kind": "function",
+        "file": "src/services/concierge/qr-service.ts",
+        "line": 281,
+        "exported": true
+      },
+      {
+        "name": "GET",
+        "kind": "function",
+        "file": "src/app/api/route.ts",
+        "line": 3,
+        "exported": true
+      },
+      {
+        "name": "GET",
+        "kind": "function",
+        "file": "src/app/api/wedding/route.ts",
+        "line": 5,
+        "exported": true
+      },
+      {
+        "name": "GET",
+        "kind": "function",
+        "file": "src/app/api/weather/route.ts",
+        "line": 6,
+        "exported": true
+      }
+    ],
+    "types": [
+      {
+        "name": "ChartConfig",
+        "kind": "type",
+        "file": "src/components/ui/chart.tsx",
+        "line": 11,
+        "exported": true
+      },
+      {
+        "name": "FlowStatusType",
+        "kind": "type",
+        "file": "src/types/index.ts",
+        "line": 161,
+        "exported": true
+      },
+      {
+        "name": "InvitationStatus",
+        "kind": "type",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 146,
+        "exported": true
+      },
+      {
+        "name": "MessageDirectionType",
+        "kind": "type",
+        "file": "src/types/index.ts",
+        "line": 170,
+        "exported": true
+      },
+      {
+        "name": "ProcessingStatus",
+        "kind": "type",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 249,
+        "exported": true
+      },
+      {
+        "name": "RsvpStatus",
+        "kind": "type",
+        "file": "firebase/functions/src/schema.ts",
+        "line": 197,
+        "exported": true
+      },
+      {
+        "name": "User",
+        "kind": "type",
+        "file": "src/lib/supabase.ts",
+        "line": 20,
+        "exported": true
+      },
+      {
+        "name": "WhatsAppMessage",
+        "kind": "type",
+        "file": "src/services/whatsapp/client.ts",
+        "line": 70,
+        "exported": true
+      },
+      {
+        "name": "Action",
+        "kind": "type",
+        "file": "src/hooks/use-toast.ts",
+        "line": 37,
+        "exported": false
+      },
+      {
+        "name": "ActionType",
+        "kind": "type",
+        "file": "src/hooks/use-toast.ts",
+        "line": 35,
+        "exported": false
+      },
+      {
+        "name": "CarouselApi",
+        "kind": "type",
+        "file": "src/components/ui/carousel.tsx",
+        "line": 12,
+        "exported": false
+      },
+      {
+        "name": "CarouselContextProps",
+        "kind": "type",
+        "file": "src/components/ui/carousel.tsx",
+        "line": 24,
+        "exported": false
+      },
+      {
+        "name": "CarouselOptions",
+        "kind": "type",
+        "file": "src/components/ui/carousel.tsx",
+        "line": 14,
+        "exported": false
+      },
+      {
+        "name": "CarouselPlugin",
+        "kind": "type",
+        "file": "src/components/ui/carousel.tsx",
+        "line": 15,
+        "exported": false
+      },
+      {
+        "name": "CarouselProps",
+        "kind": "type",
+        "file": "src/components/ui/carousel.tsx",
+        "line": 17,
+        "exported": false
+      },
+      {
+        "name": "ChartContextProps",
+        "kind": "type",
+        "file": "src/components/ui/chart.tsx",
+        "line": 21,
+        "exported": false
+      },
+      {
+        "name": "FormFieldContextValue",
+        "kind": "type",
+        "file": "src/components/ui/form.tsx",
+        "line": 21,
+        "exported": false
+      },
+      {
+        "name": "FormItemContextValue",
+        "kind": "type",
+        "file": "src/components/ui/form.tsx",
+        "line": 68,
+        "exported": false
+      },
+      {
+        "name": "Message",
+        "kind": "type",
+        "file": "examples/websocket/frontend.tsx",
+        "line": 15,
+        "exported": false
+      },
+      {
+        "name": "SidebarContextProps",
+        "kind": "type",
+        "file": "src/components/ui/sidebar.tsx",
+        "line": 35,
+        "exported": false
+      },
+      {
+        "name": "Toast",
+        "kind": "type",
+        "file": "src/hooks/use-toast.ts",
+        "line": 143,
+        "exported": false
+      },
+      {
+        "name": "ToasterToast",
+        "kind": "type",
+        "file": "src/hooks/use-toast.ts",
+        "line": 14,
+        "exported": false
+      },
+      {
+        "name": "UseCarouselParameters",
+        "kind": "type",
+        "file": "src/components/ui/carousel.tsx",
+        "line": 13,
+        "exported": false
+      },
+      {
+        "name": "User",
+        "kind": "type",
+        "file": "examples/websocket/frontend.tsx",
+        "line": 10,
+        "exported": false
+      },
+      {
+        "name": "ViewMode",
+        "kind": "type",
+        "file": "src/components/messages/MessageCenter.tsx",
+        "line": 36,
+        "exported": false
+      }
+    ],
+    "enums": []
+  },
+  "publicAPI": [
+    {
+      "name": "addQrCodeToInvite",
+      "kind": "function",
+      "file": "src/services/concierge/media-generator.ts",
+      "line": 330,
+      "exported": true
+    },
+    {
+      "name": "AIConcierge",
+      "kind": "class",
+      "file": "src/services/concierge/ai-concierge.ts",
+      "line": 101,
+      "exported": true
+    },
+    {
+      "name": "ApiResponse",
+      "kind": "interface",
+      "file": "src/types/index.ts",
+      "line": 19,
+      "exported": true
+    },
+    {
+      "name": "AppFooter",
+      "kind": "function",
+      "file": "src/components/layout/AppFooter.tsx",
+      "line": 6,
+      "exported": true
+    },
+    {
+      "name": "authFetch",
+      "kind": "function",
+      "file": "src/lib/auth-fetch.ts",
+      "line": 13,
+      "exported": true
+    },
+    {
+      "name": "BatchInviteOptions",
+      "kind": "interface",
+      "file": "src/services/concierge/media-generator.ts",
+      "line": 267,
+      "exported": true
+    },
+    {
+      "name": "BatchInviteResult",
+      "kind": "interface",
+      "file": "src/services/concierge/media-generator.ts",
+      "line": 276,
+      "exported": true
+    },
+    {
+      "name": "ChartConfig",
+      "kind": "type",
+      "file": "src/components/ui/chart.tsx",
+      "line": 11,
+      "exported": true
+    },
+    {
+      "name": "CheckInCardProps",
+      "kind": "interface",
+      "file": "src/components/checkin/CheckInCard.tsx",
+      "line": 26,
+      "exported": true
+    },
+    {
+      "name": "CheckInDocument",
+      "kind": "interface",
+      "file": "firebase/functions/src/schema.ts",
+      "line": 319,
+      "exported": true
+    },
+    {
+      "name": "CheckInResult",
+      "kind": "interface",
+      "file": "src/services/concierge/qr-service.ts",
+      "line": 335,
+      "exported": true
+    },
+    {
+      "name": "cleanupOldInvites",
+      "kind": "function",
+      "file": "src/services/concierge/media-generator.ts",
+      "line": 366,
+      "exported": true
+    },
+    {
+      "name": "cn",
+      "kind": "function",
+      "file": "src/lib/utils.ts",
+      "line": 4,
+      "exported": true
+    },
+    {
+      "name": "ConciergeContext",
+      "kind": "interface",
+      "file": "src/services/concierge/ai-concierge.ts",
+      "line": 24,
+      "exported": true
+    },
+    {
+      "name": "ConciergeStats",
+      "kind": "interface",
+      "file": "src/types/index.ts",
+      "line": 116,
+      "exported": true
+    },
+    {
+      "name": "confirmGuest",
+      "kind": "function",
+      "file": "src/services/concierge/ai-concierge.ts",
+      "line": 281,
+      "exported": true
+    },
+    {
+      "name": "ConversationDisplay",
+      "kind": "interface",
+      "file": "src/types/index.ts",
+      "line": 126,
+      "exported": true
+    },
+    {
+      "name": "ConversationHistoryDocument",
+      "kind": "interface",
+      "file": "firebase/functions/src/schema.ts",
+      "line": 263,
+      "exported": true
+    },
+    {
+      "name": "CountdownTimer",
+      "kind": "function",
+      "file": "src/components/public/CountdownTimer.tsx",
+      "line": 27,
+      "exported": true
+    },
+    {
+      "name": "createCompleteFlow",
+      "kind": "function",
+      "file": "src/services/whatsapp/flows.ts",
+      "line": 298,
+      "exported": true
+    },
+    {
+      "name": "createRsvpFlow",
+      "kind": "function",
+      "file": "src/services/whatsapp/flows.ts",
+      "line": 189,
+      "exported": true
+    },
+    {
+      "name": "DashboardStats",
+      "kind": "interface",
+      "file": "src/types/index.ts",
+      "line": 26,
+      "exported": true
+    },
+    {
+      "name": "declineGuest",
+      "kind": "function",
+      "file": "src/services/concierge/ai-concierge.ts",
+      "line": 346,
+      "exported": true
+    },
+    {
+      "name": "DELETE",
+      "kind": "function",
+      "file": "src/app/api/scheduler/route.ts",
+      "line": 174,
+      "exported": true
+    },
+    {
+      "name": "DELETE",
+      "kind": "function",
+      "file": "src/app/api/transport/[id]/route.ts",
+      "line": 59,
+      "exported": true
+    },
+    {
+      "name": "DELETE",
+      "kind": "function",
+      "file": "src/app/api/templates/[id]/route.ts",
+      "line": 66,
+      "exported": true
+    },
+    {
+      "name": "DELETE",
+      "kind": "function",
+      "file": "src/app/api/tables/[id]/route.ts",
+      "line": 120,
+      "exported": true
+    },
+    {
+      "name": "DELETE",
+      "kind": "function",
+      "file": "src/app/api/scheduler/[id]/route.ts",
+      "line": 199,
+      "exported": true
+    },
+    {
+      "name": "DELETE",
+      "kind": "function",
+      "file": "src/app/api/guests/[id]/route.ts",
+      "line": 70,
+      "exported": true
+    },
+    {
+      "name": "DELETE",
+      "kind": "function",
+      "file": "src/app/api/groups/assign/route.ts",
+      "line": 45,
+      "exported": true
+    }
+  ],
+  "dependencies": {
+    "mostImported": [
+      {
+        "file": "src/components/gifts/GiftCard.tsx",
+        "importedBy": 3
+      },
+      {
+        "file": ".next/types/routes.d.ts",
+        "importedBy": 1,
+        "description": "TypeScript type definitions"
+      },
+      {
+        "file": "src/services/email/templates.ts",
+        "importedBy": 1
+      },
+      {
+        "file": "src/app/globals.css",
+        "importedBy": 1,
+        "description": "Application entry (Next.js app router)"
+      },
+      {
+        "file": "src/components/templates/TemplatePreview.tsx",
+        "importedBy": 1,
+        "description": "Template files"
+      },
+      {
+        "file": "src/components/logistics/AccommodationCard.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/components/gifts/GiftList.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/components/gifts/GiftReserveDialog.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/components/dashboard/StatCard.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/components/analytics/RSVPChart.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/components/analytics/TimelineChart.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/components/analytics/CategoryChart.tsx",
+        "importedBy": 1
+      }
+    ]
+  },
+  "stats": {
+    "totalSymbols": 453,
+    "exportedSymbols": 208,
+    "analysisTimeMs": 932
+  },
+  "keyFiles": [
+    {
+      "path": "examples/websocket/server.ts",
+      "description": "Entry point",
+      "category": "entrypoint"
+    },
+    {
+      "path": "firebase/functions/src/index.ts",
+      "description": "src module exports",
+      "category": "entrypoint"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "description": "Tool configuration",
+      "category": "config"
+    },
+    {
+      "path": "firebase/functions/tsconfig.json",
+      "description": "TypeScript configuration",
+      "category": "config"
+    },
+    {
+      "path": "next.config.ts",
+      "description": "Tool configuration",
+      "category": "config"
+    },
+    {
+      "path": "package.json",
+      "description": "Package manifest",
+      "category": "config"
+    },
+    {
+      "path": "postcss.config.mjs",
+      "description": "Tool configuration",
+      "category": "config"
+    },
+    {
+      "path": "tailwind.config.ts",
+      "description": "Tool configuration",
+      "category": "config"
+    },
+    {
+      "path": "tsconfig.json",
+      "description": "TypeScript configuration",
+      "category": "config"
+    },
+    {
+      "path": "src/types/index.ts",
+      "description": "types module exports",
+      "category": "types"
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "description": "Utility functions",
+      "category": "util"
+    }
+  ],
+  "navigation": {
+    "tests": "src/**/*.test.ts",
+    "config": [
+      "package.json",
+      "tsconfig.json",
+      "next.config.ts"
+    ],
+    "types": [
+      "next-env.d.ts",
+      "src/types/index.ts"
+    ],
+    "mainLogic": [
+      "src/services",
+      "src/lib"
+    ]
+  }
+}

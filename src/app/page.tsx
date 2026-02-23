@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useCallback, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, Heart, Info } from 'lucide-react'
 import { authFetch } from '@/lib/auth-fetch'
 import { useAuth } from '@/components/auth/SessionProvider'
 
 // Components
-import { Navigation, PageTransition } from '@/components/ui-custom/Navigation'
+import { Navigation, PageTransition, SidebarNav, BottomNav } from '@/components/ui-custom/Navigation'
 import { WeddingHero } from '@/components/dashboard/WeddingHero'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
 import { RecentActivity } from '@/components/dashboard/RecentActivity'
@@ -19,6 +19,9 @@ import { UserMenu } from '@/components/auth/UserMenu'
 import { SettingsManager } from '@/components/settings/SettingsManager'
 import { AnalyticsDashboard } from '@/components/analytics/AnalyticsDashboard'
 import { SeatingPlanner } from '@/components/seating/SeatingPlanner'
+import { BudgetManager } from '@/components/budget/BudgetManager'
+import { VendorManager } from '@/components/vendors/VendorManager'
+import { ChecklistManager } from '@/components/checklist/ChecklistManager'
 import Link from 'next/link'
 
 // Types
@@ -66,14 +69,23 @@ interface Group {
   _count?: { guests: number }
 }
 
-export default function WeddingGuestPlatform() {
-  const [activeTab, setActiveTab] = useState('dashboard')
+export function WeddingGuestPlatform() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const activeTab = searchParams.get('tab') || 'dashboard'
+
+  const setActiveTab = (tab: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', tab)
+    router.push(`?${params.toString()}`, { scroll: false })
+  }
+
   const [isLoading, setIsLoading] = useState(true)
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [guests, setGuests] = useState<Guest[]>([])
   const [groups, setGroups] = useState<Group[]>([])
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const { user, loading: authLoading } = useAuth()
-  const router = useRouter()
 
   // Fetch dashboard data
   const fetchDashboardData = useCallback(async () => {
@@ -183,104 +195,147 @@ export default function WeddingGuestPlatform() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
-      {/* Header */}
-      <header className="border-b border-amber-100/50 bg-white/80 backdrop-blur-sm">
-        <div className="mx-auto max-w-6xl px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex items-center gap-2.5 text-lg font-medium">
-                <span className="bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-transparent">{dashboardData.partner1Name}</span>
-                <Heart className="h-4 w-5 text-rose-400" fill="currentColor" />
-                <span className="bg-gradient-to-r from-orange-600 to-amber-700 bg-clip-text text-transparent">{dashboardData.partner2Name}</span>
-              </div>
-            </Link>
-            <div className="flex items-center gap-3">
-              <Link 
-                href="/info"
-                className="flex items-center gap-1.5 rounded-full border border-amber-200/50 px-4 py-2 text-sm text-amber-700 transition-colors hover:bg-amber-50 hover:border-amber-300"
-              >
-                <Info className="h-4 w-4" />
-                <span className="hidden sm:inline">Informações</span>
+    <div className="flex min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+      {/* Sidebar — desktop */}
+      <SidebarNav
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        partner1Name={dashboardData.partner1Name}
+        partner2Name={dashboardData.partner2Name}
+        collapsed={sidebarCollapsed}
+        onCollapsedChange={setSidebarCollapsed}
+      />
+
+      {/* Right column */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Header */}
+        <header className="border-b border-amber-100/50 bg-white/80 backdrop-blur-sm">
+          <div className="px-4 py-4">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5 text-lg font-medium">
+                  <span className="bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-transparent">{dashboardData.partner1Name}</span>
+                  <Heart className="h-4 w-5 text-rose-400" fill="currentColor" />
+                  <span className="bg-gradient-to-r from-orange-600 to-amber-700 bg-clip-text text-transparent">{dashboardData.partner2Name}</span>
+                </div>
               </Link>
-              <UserMenu />
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/info"
+                  className="flex items-center gap-1.5 rounded-full border border-amber-200/50 px-4 py-2 text-sm text-amber-700 transition-colors hover:bg-amber-50 hover:border-amber-300"
+                >
+                  <Info className="h-4 w-4" />
+                  <span className="hidden sm:inline">Informações</span>
+                </Link>
+                <UserMenu />
+              </div>
             </div>
           </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto px-4 py-6 pb-24 md:pb-6">
+          <div className="mx-auto max-w-5xl">
+            <AnimatePresence mode="wait">
+              {activeTab === 'dashboard' && (
+                <PageTransition key="dashboard">
+                  <div className="space-y-6">
+                    <WeddingHero
+                      partner1Name={dashboardData.partner1Name}
+                      partner2Name={dashboardData.partner2Name}
+                      weddingDate={dashboardData.weddingDate}
+                      daysUntilWedding={dashboardData.daysUntilWedding}
+                      venue={dashboardData.venue}
+                    />
+                    <StatsOverview
+                      stats={{
+                        totalInvited: dashboardData.totalInvited,
+                        totalConfirmed: dashboardData.totalConfirmed,
+                        totalDeclined: dashboardData.totalDeclined,
+                        totalPending: dashboardData.totalPending
+                      }}
+                    />
+                    <RecentActivity activities={dashboardData.recentActivity} />
+                  </div>
+                </PageTransition>
+              )}
+
+              {activeTab === 'guests' && (
+                <PageTransition key="guests">
+                  <GuestManager
+                    guests={guests}
+                    groups={groups}
+                    onRefresh={handleRefresh}
+                  />
+                </PageTransition>
+              )}
+
+              {activeTab === 'analytics' && (
+                <PageTransition key="analytics">
+                  <AnalyticsDashboard />
+                </PageTransition>
+              )}
+
+              {activeTab === 'seating' && (
+                <PageTransition key="seating">
+                  <SeatingPlanner />
+                </PageTransition>
+              )}
+
+              {activeTab === 'messages' && (
+                <PageTransition key="messages">
+                  <MessageCenter
+                    stats={{
+                      totalPending: dashboardData.totalPending,
+                      totalSent: dashboardData.totalInvited - dashboardData.totalPending
+                    }}
+                  />
+                </PageTransition>
+              )}
+
+              {activeTab === 'settings' && (
+                <PageTransition key="settings">
+                  <SettingsManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'budget' && (
+                <PageTransition key="budget">
+                  <BudgetManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'vendors' && (
+                <PageTransition key="vendors">
+                  <VendorManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'checklist' && (
+                <PageTransition key="checklist">
+                  <ChecklistManager />
+                </PageTransition>
+              )}
+            </AnimatePresence>
+          </div>
+        </main>
+
+        {/* Footer — desktop only */}
+        <div className="hidden md:block">
+          <AppFooter />
         </div>
-        <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
-        <AnimatePresence mode="wait">
-          {activeTab === 'dashboard' && (
-            <PageTransition key="dashboard">
-              <div className="space-y-6">
-                <WeddingHero
-                  partner1Name={dashboardData.partner1Name}
-                  partner2Name={dashboardData.partner2Name}
-                  weddingDate={dashboardData.weddingDate}
-                  daysUntilWedding={dashboardData.daysUntilWedding}
-                  venue={dashboardData.venue}
-                />
-                
-                <StatsOverview 
-                  stats={{
-                    totalInvited: dashboardData.totalInvited,
-                    totalConfirmed: dashboardData.totalConfirmed,
-                    totalDeclined: dashboardData.totalDeclined,
-                    totalPending: dashboardData.totalPending
-                  }} 
-                />
-
-                <RecentActivity activities={dashboardData.recentActivity} />
-              </div>
-            </PageTransition>
-          )}
-
-          {activeTab === 'guests' && (
-            <PageTransition key="guests">
-              <GuestManager 
-                guests={guests}
-                groups={groups}
-                onRefresh={handleRefresh}
-              />
-            </PageTransition>
-          )}
-
-          {activeTab === 'analytics' && (
-            <PageTransition key="analytics">
-              <AnalyticsDashboard />
-            </PageTransition>
-          )}
-
-          {activeTab === 'seating' && (
-            <PageTransition key="seating">
-              <SeatingPlanner />
-            </PageTransition>
-          )}
-
-          {activeTab === 'messages' && (
-            <PageTransition key="messages">
-              <MessageCenter 
-                stats={{
-                  totalPending: dashboardData.totalPending,
-                  totalSent: dashboardData.totalInvited - dashboardData.totalPending
-                }}
-              />
-            </PageTransition>
-          )}
-
-          {activeTab === 'settings' && (
-            <PageTransition key="settings">
-              <SettingsManager />
-            </PageTransition>
-          )}
-        </AnimatePresence>
-      </main>
-
-      {/* Footer */}
-      <AppFooter />
+      {/* Bottom Nav — mobile only */}
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <WeddingGuestPlatform />
+    </Suspense>
   )
 }

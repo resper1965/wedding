@@ -51,8 +51,8 @@ export default function PublicWeddingPage() {
     )
   }
 
-  const weddingDate = wedding ? new Date(wedding.weddingDate) : new Date('2025-03-15')
-  const formattedDate = format(weddingDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
+  const weddingDate = wedding ? new Date(wedding.weddingDate) : null
+  const formattedDate = weddingDate ? format(weddingDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : null
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
@@ -110,19 +110,21 @@ export default function PublicWeddingPage() {
             </motion.p>
 
             {/* Date */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="mb-8"
-            >
-              <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/50 bg-white/60 px-6 py-3 shadow-sm backdrop-blur-sm">
-                <Calendar className="h-5 w-5 text-amber-500" />
-                <span className="text-lg font-medium text-amber-800">
-                  {formattedDate}
-                </span>
-              </div>
-            </motion.div>
+            {formattedDate && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="mb-8"
+              >
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/50 bg-white/60 px-6 py-3 shadow-sm backdrop-blur-sm">
+                  <Calendar className="h-5 w-5 text-amber-500" />
+                  <span className="text-lg font-medium text-amber-800">
+                    {formattedDate}
+                  </span>
+                </div>
+              </motion.div>
+            )}
 
             {/* Venue */}
             {wedding?.venue && (
@@ -143,19 +145,21 @@ export default function PublicWeddingPage() {
             )}
 
             {/* Countdown */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="mb-12"
-            >
-              <div className="inline-flex flex-col items-center rounded-2xl border border-amber-200/50 bg-white/70 px-8 py-6 shadow-lg backdrop-blur-sm">
-                <p className="mb-3 text-xs uppercase tracking-[0.2em] text-amber-600">
-                  Contagem Regressiva
-                </p>
-                <CountdownTimer targetDate={weddingDate} />
-              </div>
-            </motion.div>
+            {weddingDate && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="mb-12"
+              >
+                <div className="inline-flex flex-col items-center rounded-2xl border border-amber-200/50 bg-white/70 px-8 py-6 shadow-lg backdrop-blur-sm">
+                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-amber-600">
+                    Contagem Regressiva
+                  </p>
+                  <CountdownTimer targetDate={weddingDate} />
+                </div>
+              </motion.div>
+            )}
 
             {/* CTA Button */}
             <motion.div

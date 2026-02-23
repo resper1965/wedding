@@ -17,14 +17,12 @@ const geistMono = Geist_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: "#d97706",
 };
 
 export const metadata: Metadata = {
   title: "Louise & Nicolas | Casamento",
-  description: "Plataforma para gestão de convidados do casamento de Louise e Nicolas. 15 de Março de 2025, São Paulo.",
+  description: "Plataforma para gestão de convidados do casamento de Louise e Nicolas. São Paulo.",
   keywords: ["casamento", "wedding", "Louise", "Nicolas", "convidados", "RSVP"],
   authors: [{ name: "Louise & Nicolas" }],
   icons: {

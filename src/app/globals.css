@@ -45,53 +45,53 @@
 
 :root {
   --radius: 0.75rem;
-  
+
   /* Indie Theme - Warm, Earthy, Artisanal */
-  --background: oklch(0.98 0.005 80);            /* Warm cream */
-  --foreground: oklch(0.25 0.02 50);             /* Warm brown */
-  
-  --card: oklch(1 0 0);                          /* Pure white */
-  --card-foreground: oklch(0.25 0.02 50);        /* Warm brown */
-  
+  --background: oklch(0.98 0.005 80); /* Warm cream */
+  --foreground: oklch(0.25 0.02 50); /* Warm brown */
+
+  --card: oklch(1 0 0); /* Pure white */
+  --card-foreground: oklch(0.25 0.02 50); /* Warm brown */
+
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.25 0.02 50);
-  
-  --primary: oklch(0.55 0.12 60);                /* Terracotta/Amber */
-  --primary-foreground: oklch(0.98 0.005 80);    /* Cream */
-  
-  --secondary: oklch(0.94 0.02 80);              /* Light warm */
-  --secondary-foreground: oklch(0.3 0.02 50);    /* Dark brown */
-  
-  --muted: oklch(0.95 0.01 80);                  /* Light warm gray */
-  --muted-foreground: oklch(0.5 0.02 60);        /* Medium warm */
-  
-  --accent: oklch(0.75 0.12 50);                 /* Golden amber */
-  --accent-foreground: oklch(0.25 0.02 50);      /* Dark brown */
-  
-  --destructive: oklch(0.55 0.18 25);            /* Muted red */
-  
-  --border: oklch(0.88 0.02 80);                 /* Warm border */
-  --input: oklch(0.95 0.01 80);                  /* Light input */
-  --ring: oklch(0.55 0.12 60);                   /* Amber ring */
-  
+
+  --primary: oklch(0.55 0.12 60); /* Terracotta/Amber */
+  --primary-foreground: oklch(0.98 0.005 80); /* Cream */
+
+  --secondary: oklch(0.94 0.02 80); /* Light warm */
+  --secondary-foreground: oklch(0.3 0.02 50); /* Dark brown */
+
+  --muted: oklch(0.95 0.01 80); /* Light warm gray */
+  --muted-foreground: oklch(0.5 0.02 60); /* Medium warm */
+
+  --accent: oklch(0.75 0.12 50); /* Golden amber */
+  --accent-foreground: oklch(0.25 0.02 50); /* Dark brown */
+
+  --destructive: oklch(0.55 0.18 25); /* Muted red */
+
+  --border: oklch(0.88 0.02 80); /* Warm border */
+  --input: oklch(0.95 0.01 80); /* Light input */
+  --ring: oklch(0.55 0.12 60); /* Amber ring */
+
   /* Indie Color Palette */
-  --amber: oklch(0.7 0.15 70);                   /* Warm amber */
-  --amber-light: oklch(0.9 0.06 80);             /* Light amber */
-  --terracotta: oklch(0.6 0.12 35);              /* Terracotta */
-  --sage: oklch(0.6 0.06 150);                   /* Sage green */
-  --sage-light: oklch(0.88 0.03 150);            /* Light sage */
-  --rose: oklch(0.65 0.1 15);                    /* Dusty rose */
-  --rose-light: oklch(0.9 0.05 15);              /* Light rose */
-  --cream: oklch(0.97 0.01 85);                  /* Cream */
-  --olive: oklch(0.5 0.05 120);                  /* Olive */
-  
+  --amber: oklch(0.7 0.15 70); /* Warm amber */
+  --amber-light: oklch(0.9 0.06 80); /* Light amber */
+  --terracotta: oklch(0.6 0.12 35); /* Terracotta */
+  --sage: oklch(0.6 0.06 150); /* Sage green */
+  --sage-light: oklch(0.88 0.03 150); /* Light sage */
+  --rose: oklch(0.65 0.1 15); /* Dusty rose */
+  --rose-light: oklch(0.9 0.05 15); /* Light rose */
+  --cream: oklch(0.97 0.01 85); /* Cream */
+  --olive: oklch(0.5 0.05 120); /* Olive */
+
   /* Chart colors - Indie palette */
-  --chart-1: oklch(0.6 0.12 60);                 /* Amber */
-  --chart-2: oklch(0.55 0.08 150);               /* Sage */
-  --chart-3: oklch(0.6 0.1 35);                  /* Terracotta */
-  --chart-4: oklch(0.5 0.05 50);                 /* Brown */
-  --chart-5: oklch(0.65 0.1 15);                 /* Rose */
-  
+  --chart-1: oklch(0.6 0.12 60); /* Amber */
+  --chart-2: oklch(0.55 0.08 150); /* Sage */
+  --chart-3: oklch(0.6 0.1 35); /* Terracotta */
+  --chart-4: oklch(0.5 0.05 50); /* Brown */
+  --chart-5: oklch(0.65 0.1 15); /* Rose */
+
   --sidebar: oklch(0.98 0.005 80);
   --sidebar-foreground: oklch(0.25 0.02 50);
   --sidebar-primary: oklch(0.55 0.12 60);
@@ -103,33 +103,33 @@
 }
 
 .dark {
-  --background: oklch(0.18 0.01 60);             /* Warm dark */
-  --foreground: oklch(0.95 0.005 80);            /* Light warm */
-  
-  --card: oklch(0.22 0.01 60);                   /* Slightly lighter dark */
+  --background: oklch(0.18 0.01 60); /* Warm dark */
+  --foreground: oklch(0.95 0.005 80); /* Light warm */
+
+  --card: oklch(0.22 0.01 60); /* Slightly lighter dark */
   --card-foreground: oklch(0.95 0.005 80);
-  
+
   --popover: oklch(0.22 0.01 60);
   --popover-foreground: oklch(0.95 0.005 80);
-  
-  --primary: oklch(0.65 0.08 150);               /* Lighter sage */
+
+  --primary: oklch(0.65 0.08 150); /* Lighter sage */
   --primary-foreground: oklch(0.18 0.01 60);
-  
+
   --secondary: oklch(0.28 0.01 60);
   --secondary-foreground: oklch(0.95 0.005 80);
-  
+
   --muted: oklch(0.28 0.01 60);
   --muted-foreground: oklch(0.65 0.02 70);
-  
-  --accent: oklch(0.35 0.04 15);                 /* Darker rose */
+
+  --accent: oklch(0.35 0.04 15); /* Darker rose */
   --accent-foreground: oklch(0.95 0.005 80);
-  
+
   --destructive: oklch(0.55 0.18 25);
-  
+
   --border: oklch(0.35 0.01 60);
   --input: oklch(0.28 0.01 60);
   --ring: oklch(0.65 0.08 150);
-  
+
   /* Custom Wedding Colors - Dark Mode */
   --sage: oklch(0.55 0.06 150);
   --sage-light: oklch(0.35 0.03 150);
@@ -139,13 +139,13 @@
   --gold-light: oklch(0.4 0.03 85);
   --cream: oklch(0.25 0.01 90);
   --taupe: oklch(0.6 0.02 60);
-  
+
   --chart-1: oklch(0.55 0.08 150);
   --chart-2: oklch(0.55 0.1 15);
   --chart-3: oklch(0.65 0.08 85);
   --chart-4: oklch(0.5 0.04 60);
   --chart-5: oklch(0.55 0.05 150);
-  
+
   --sidebar: oklch(0.2 0.01 60);
   --sidebar-foreground: oklch(0.95 0.005 80);
   --sidebar-primary: oklch(0.65 0.08 150);
@@ -186,8 +186,14 @@
 
 /* Smooth animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -200,4 +206,16 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

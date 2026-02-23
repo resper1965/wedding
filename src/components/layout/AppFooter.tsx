@@ -12,7 +12,7 @@ export function AppFooter() {
           <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
           <span>para Louise & Nicolas</span>
         </div>
-        <p className="text-xs text-stone-400">15 de Março de 2025</p>
+        <p className="text-xs text-stone-400">11 de novembro de 2026</p>
       </div>
     </footer>
   )

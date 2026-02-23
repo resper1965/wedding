@@ -55,6 +55,9 @@ model Wedding {
   scheduledMessages ScheduledMessage[]
   reminderConfigs  ReminderConfig[]
   gifts         Gift[]
+  budgetItems   BudgetItem[]
+  vendors       Vendor[]
+  checklistItems ChecklistItem[]
 }
 
 // Sub-eventos (Cerimônia, Recepção, etc.)
@@ -180,6 +183,10 @@ model Guest {
   
   // Notas internas
   notes       String?
+  
+  // Rastreamento de agradecimento (pós-evento)
+  thankYouSent   Boolean  @default(false)
+  thankYouSentAt DateTime?
   
   // Token único para RSVP (link do convite)
   rsvpToken   String   @unique @default(cuid())
@@ -624,6 +631,80 @@ model Settings {
   // Configurações gerais
   defaultReplyDays   Int      @default(30)
   
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ============================================================================
+// ORÇAMENTO
+// ============================================================================
+
+model BudgetItem {
+  id          String   @id @default(cuid())
+  weddingId   String
+  wedding     Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  category    String   // "Buffet", "Flores", "Foto", "Música", "Vestido", etc.
+  description String
+  estimated   Float    @default(0)
+  actual      Float    @default(0)
+  paid        Float    @default(0)
+  isPaid      Boolean  @default(false)
+  notes       String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ============================================================================
+// FORNECEDORES
+// ============================================================================
+
+model Vendor {
+  id          String   @id @default(cuid())
+  weddingId   String
+  wedding     Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  name        String
+  category    String   // "Fotógrafo", "Buffet", "DJ", "Florista", "Cerimonial", "Bolo", "Outro"
+  contact     String?
+  phone       String?
+  email       String?
+  website     String?
+  value       Float    @default(0)
+  status      VendorStatus @default(pesquisando)
+  notes       String?
+  contractUrl String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum VendorStatus {
+  pesquisando
+  orcado
+  contratado
+  pago
+  cancelado
+}
+
+// ============================================================================
+// CHECKLIST DE PLANEJAMENTO
+// ============================================================================
+
+model ChecklistItem {
+  id          String   @id @default(cuid())
+  weddingId   String
+  wedding     Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  title       String
+  category    String   // "Venue", "Fornecedores", "Vestuário", "Convites", "Lua de Mel", "Geral"
+  dueDate     DateTime?
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  notes       String?
+  priority    String   @default("normal") // "low", "normal", "high"
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

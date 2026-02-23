@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react'
 import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Plus, Search, Filter, MoreHorizontal, 
+  Plus, Search, MoreHorizontal, 
   Edit, Trash2, Mail, Phone, Users,
-  Check, X, Clock, Send, Link, Copy
+  Check, X, Clock, Send, Link, Copy, UserPlus, Download, QrCode, Heart
 } from 'lucide-react'
+import QRCode from 'qrcode'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -48,8 +49,6 @@ interface Guest {
   groupId: string | null
   group?: { id: string; name: string } | null
   rsvps: { id: string; status: string; event: { id: string; name: string } }[]
-  dietaryRestrictions?: string | null
-  specialNeeds?: string | null
   notes?: string | null
 }
 
@@ -64,6 +63,9 @@ interface GuestManagerProps {
   groups: Group[]
   onRefresh: () => void
 }
+
+const CATEGORIES = ['Família', 'Amigos']
+const WHO_INVITES = ['Noivo', 'Noiva', 'Casal']
 
 const statusConfig = {
   pending: { label: 'Pendente', color: 'bg-stone-100 text-stone-600', icon: Clock },
@@ -80,6 +82,16 @@ const rsvpStatusConfig = {
   maybe: { label: 'Talvez', color: 'bg-violet-100 text-violet-700' }
 }
 
+const emptyForm = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  category: '',
+  relationship: '',
+  notes: ''
+}
+
 export function GuestManager({ guests: initialGuests, groups, onRefresh }: GuestManagerProps) {
   const [guests, setGuests] = useState(initialGuests)
   const [search, setSearch] = useState('')
@@ -87,22 +99,9 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null)
-  const [inviteLinkGuest, setInviteLinkGuest] = useState<Guest | null>(null)
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    category: '',
-    relationship: '',
-    groupId: '',
-    dietaryRestrictions: '',
-    specialNeeds: '',
-    notes: ''
-  })
-
-  // Get unique categories
-  const categories = [...new Set(guests.map(g => g.category).filter(Boolean))]
+  const [formData, setFormData] = useState(emptyForm)
+  const [qrDialogGuest, setQrDialogGuest] = useState<Guest | null>(null)
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null)
 
   // Filter guests
   const filteredGuests = guests.filter(guest => {
@@ -130,13 +129,12 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-      
       const data = await response.json()
       
       if (data.success) {
         toast.success('Convidado adicionado com sucesso')
         setIsAddDialogOpen(false)
-        resetForm()
+        setFormData(emptyForm)
         onRefresh()
       } else {
         toast.error(data.error || 'Erro ao adicionar convidado')
@@ -144,6 +142,39 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
     } catch {
       toast.error('Erro ao adicionar convidado')
     }
+  }
+
+  const exportCSV = () => {
+    window.open('/api/guests/export', '_blank')
+  }
+
+  const openQRCode = async (guest: Guest) => {
+    setQrDialogGuest(guest)
+    setQrCodeUrl(null)
+    const link = `${window.location.origin}/convite/${guest.id}`
+    try {
+      const url = await QRCode.toDataURL(link, { width: 280, margin: 2, color: { dark: '#292524', light: '#ffffff' } })
+      setQrCodeUrl(url)
+    } catch { toast.error('Erro ao gerar QR Code') }
+  }
+
+  const downloadQR = () => {
+    if (!qrCodeUrl || !qrDialogGuest) return
+    const a = document.createElement('a')
+    a.href = qrCodeUrl
+    a.download = `qr-${qrDialogGuest.firstName}-${qrDialogGuest.lastName}.png`
+    a.click()
+  }
+
+  const toggleThankYou = async (guestId: string) => {
+    try {
+      const r = await fetch(`/api/guests/${guestId}/thank-you`, { method: 'PATCH' })
+      const data = await r.json()
+      if (data.success) {
+        setGuests(prev => prev.map(g => g.id === guestId ? { ...g, thankYouSent: data.data.thankYouSent } : g))
+        toast.success(data.data.thankYouSent ? 'Obrigado enviado ✓' : 'Marcado como não enviado')
+      }
+    } catch { toast.error('Erro ao atualizar') }
   }
 
   const handleUpdateGuest = async () => {
@@ -158,13 +189,12 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-      
       const data = await response.json()
       
       if (data.success) {
         toast.success('Convidado atualizado com sucesso')
         setEditingGuest(null)
-        resetForm()
+        setFormData(emptyForm)
         onRefresh()
       } else {
         toast.error(data.error || 'Erro ao atualizar convidado')
@@ -192,21 +222,6 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
     }
   }
 
-  const resetForm = () => {
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      category: '',
-      relationship: '',
-      groupId: '',
-      dietaryRestrictions: '',
-      specialNeeds: '',
-      notes: ''
-    })
-  }
-
   const copyInviteLink = (guestId: string) => {
     const link = `${window.location.origin}/convite/${guestId}`
     navigator.clipboard.writeText(link)
@@ -222,17 +237,113 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
       phone: guest.phone || '',
       category: guest.category || '',
       relationship: guest.relationship || '',
-      groupId: guest.groupId || '',
-      dietaryRestrictions: guest.dietaryRestrictions || '',
-      specialNeeds: guest.specialNeeds || '',
       notes: guest.notes || ''
     })
   }
 
-  // Update local guests when props change
+  const openAddCompanion = (guest: Guest) => {
+    setFormData({
+      ...emptyForm,
+      category: guest.category || '',
+      relationship: guest.relationship || '',
+      notes: `Acompanhante de ${guest.firstName} ${guest.lastName}`
+    })
+    setIsAddDialogOpen(true)
+  }
+
   useEffect(() => {
     setGuests(initialGuests)
   }, [initialGuests])
+
+  const GuestForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="firstName">Nome *</Label>
+          <Input
+            id="firstName"
+            value={formData.firstName}
+            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            className="mt-1"
+          />
+        </div>
+        <div>
+          <Label htmlFor="lastName">Sobrenome *</Label>
+          <Input
+            id="lastName"
+            value={formData.lastName}
+            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            className="mt-1"
+          />
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className="mt-1"
+        />
+      </div>
+      <div>
+        <Label htmlFor="phone">WhatsApp</Label>
+        <Input
+          id="phone"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          className="mt-1"
+          placeholder="(11) 99999-9999"
+          inputMode="tel"
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Categoria</Label>
+          <Select
+            value={formData.category}
+            onValueChange={(v) => setFormData({ ...formData, category: v })}
+          >
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Selecionar" />
+            </SelectTrigger>
+            <SelectContent>
+              {CATEGORIES.map(cat => (
+                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Quem Convida</Label>
+          <Select
+            value={formData.relationship}
+            onValueChange={(v) => setFormData({ ...formData, relationship: v })}
+          >
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Selecionar" />
+            </SelectTrigger>
+            <SelectContent>
+              {WHO_INVITES.map(who => (
+                <SelectItem key={who} value={who}>{who}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="notes">Observações</Label>
+        <Textarea
+          id="notes"
+          value={formData.notes}
+          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+          className="mt-1"
+          rows={2}
+        />
+      </div>
+    </div>
+  )
 
   return (
     <div className="space-y-4">
@@ -242,13 +353,18 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
           <h2 className="text-xl font-semibold text-stone-800">Convidados</h2>
           <p className="text-sm text-stone-500">{filteredGuests.length} convidados</p>
         </div>
-        <Button 
-          onClick={() => setIsAddDialogOpen(true)}
-          className="bg-stone-800 hover:bg-stone-700"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Adicionar
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={exportCSV} className="border-stone-200">
+            <Download className="mr-2 h-4 w-4" /> Exportar CSV
+          </Button>
+          <Button 
+            onClick={() => { setFormData(emptyForm); setIsAddDialogOpen(true) }}
+            className="bg-stone-800 hover:bg-stone-700"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Adicionar
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -279,8 +395,8 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas</SelectItem>
-            {categories.map(cat => (
-              <SelectItem key={cat} value={cat as string}>{cat}</SelectItem>
+            {CATEGORIES.map(cat => (
+              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -298,6 +414,15 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
               >
                 <Users className="mx-auto h-10 w-10 text-stone-300" />
                 <p className="mt-2 text-sm text-stone-500">Nenhum convidado encontrado</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-4"
+                  onClick={() => { setFormData(emptyForm); setIsAddDialogOpen(true) }}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Adicionar primeiro convidado
+                </Button>
               </motion.div>
             ) : (
               filteredGuests.map((guest, index) => {
@@ -320,7 +445,7 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
 
                     {/* Info */}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium text-stone-800">
                           {guest.firstName} {guest.lastName}
                         </span>
@@ -328,6 +453,16 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
                           <StatusIcon className="mr-1 h-3 w-3" />
                           {status.label}
                         </Badge>
+                        {guest.category && (
+                          <Badge variant="outline" className="text-xs text-stone-500">
+                            {guest.category}
+                          </Badge>
+                        )}
+                        {guest.relationship && (
+                          <Badge variant="outline" className="text-xs text-amber-600 border-amber-200">
+                            {guest.relationship}
+                          </Badge>
+                        )}
                       </div>
                       <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-stone-500">
                         {guest.email && (
@@ -340,12 +475,6 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
                           <span className="flex items-center gap-1">
                             <Phone className="h-3 w-3" />
                             {guest.phone}
-                          </span>
-                        )}
-                        {guest.group && (
-                          <span className="flex items-center gap-1">
-                            <Users className="h-3 w-3" />
-                            {guest.group.name}
                           </span>
                         )}
                       </div>
@@ -365,7 +494,7 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
                     {/* Actions */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -373,6 +502,18 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
                         <DropdownMenuItem onClick={() => copyInviteLink(guest.id)}>
                           <Link className="mr-2 h-4 w-4" />
                           Copiar Link do Convite
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => openQRCode(guest)}>
+                          <QrCode className="mr-2 h-4 w-4" />
+                          Ver QR Code
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => openAddCompanion(guest)}>
+                          <UserPlus className="mr-2 h-4 w-4" />
+                          Adicionar Acompanhante
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => toggleThankYou(guest.id)}>
+                          <Heart className="mr-2 h-4 w-4" />
+                          {(guest as Guest & { thankYouSent?: boolean }).thankYouSent ? 'Desmarcar Obrigado' : 'Marcar Obrigado Enviado'}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => openEditDialog(guest)}>
                           <Edit className="mr-2 h-4 w-4" />
@@ -398,100 +539,11 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
 
       {/* Add Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-h-[90dvh] overflow-y-auto max-w-md">
           <DialogHeader>
             <DialogTitle>Adicionar Convidado</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="firstName">Nome *</Label>
-                <Input
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="lastName">Sobrenome *</Label>
-                <Input
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">WhatsApp</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="mt-1"
-                placeholder="(11) 99999-9999"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="category">Categoria</Label>
-                <Input
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="mt-1"
-                  placeholder="Família, Amigos..."
-                />
-              </div>
-              <div>
-                <Label htmlFor="group">Grupo</Label>
-                <Select 
-                  value={formData.groupId} 
-                  onValueChange={(v) => setFormData({ ...formData, groupId: v })}
-                >
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Selecionar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groups.map(g => (
-                      <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="dietary">Restrições Alimentares</Label>
-              <Input
-                id="dietary"
-                value={formData.dietaryRestrictions}
-                onChange={(e) => setFormData({ ...formData, dietaryRestrictions: e.target.value })}
-                className="mt-1"
-                placeholder="Vegetariano, sem glúten..."
-              />
-            </div>
-            <div>
-              <Label htmlFor="notes">Observações</Label>
-              <Textarea
-                id="notes"
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                className="mt-1"
-                rows={2}
-              />
-            </div>
-          </div>
+          <GuestForm onSubmit={handleAddGuest} submitLabel="Adicionar" />
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
               Cancelar
@@ -505,105 +557,42 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
 
       {/* Edit Dialog */}
       <Dialog open={!!editingGuest} onOpenChange={() => setEditingGuest(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-h-[90dvh] overflow-y-auto max-w-md">
           <DialogHeader>
             <DialogTitle>Editar Convidado</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="edit-firstName">Nome *</Label>
-                <Input
-                  id="edit-firstName"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-lastName">Sobrenome *</Label>
-                <Input
-                  id="edit-lastName"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="edit-email">Email</Label>
-              <Input
-                id="edit-email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="edit-phone">WhatsApp</Label>
-              <Input
-                id="edit-phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="mt-1"
-                placeholder="(11) 99999-9999"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="edit-category">Categoria</Label>
-                <Input
-                  id="edit-category"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="mt-1"
-                  placeholder="Família, Amigos..."
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-group">Grupo</Label>
-                <Select 
-                  value={formData.groupId} 
-                  onValueChange={(v) => setFormData({ ...formData, groupId: v })}
-                >
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Selecionar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groups.map(g => (
-                      <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="edit-dietary">Restrições Alimentares</Label>
-              <Input
-                id="edit-dietary"
-                value={formData.dietaryRestrictions}
-                onChange={(e) => setFormData({ ...formData, dietaryRestrictions: e.target.value })}
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="edit-notes">Observações</Label>
-              <Textarea
-                id="edit-notes"
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                className="mt-1"
-                rows={2}
-              />
-            </div>
-          </div>
+          <GuestForm onSubmit={handleUpdateGuest} submitLabel="Salvar" />
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingGuest(null)}>
               Cancelar
             </Button>
             <Button onClick={handleUpdateGuest} className="bg-stone-800 hover:bg-stone-700">
               Salvar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* QR Code Dialog */}
+      <Dialog open={!!qrDialogGuest} onOpenChange={() => setQrDialogGuest(null)}>
+        <DialogContent className="max-w-xs text-center">
+          <DialogHeader>
+            <DialogTitle>QR Code do Convite</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-stone-500">
+            {qrDialogGuest?.firstName} {qrDialogGuest?.lastName}
+          </p>
+          <div className="flex justify-center py-4">
+            {qrCodeUrl ? (
+              <img src={qrCodeUrl} alt="QR Code" className="rounded-lg shadow-sm" width={200} height={200} />
+            ) : (
+              <div className="h-[200px] w-[200px] animate-pulse rounded-lg bg-stone-100" />
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setQrDialogGuest(null)}>Fechar</Button>
+            <Button onClick={downloadQR} className="bg-stone-800 hover:bg-stone-700" disabled={!qrCodeUrl}>
+              <Download className="mr-2 h-4 w-4" /> Baixar PNG
             </Button>
           </DialogFooter>
         </DialogContent>
