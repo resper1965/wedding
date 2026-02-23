@@ -1,13 +1,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { LayoutDashboard, Users, MessageSquare, Settings, BarChart3, Grid3X3 } from 'lucide-react'
+import { LayoutDashboard, Users, MessageSquare, Settings, BarChart3, Grid3X3, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 interface Tab {
   id: string
   label: string
   icon: React.ElementType
+  href?: string
 }
 
 const tabs: Tab[] = [
@@ -17,6 +19,7 @@ const tabs: Tab[] = [
   { id: 'seating', label: 'Mesas', icon: Grid3X3 },
   { id: 'messages', label: 'Mensagens', icon: MessageSquare },
   { id: 'settings', label: 'Configurações', icon: Settings },
+  { id: 'help', label: 'Ajuda', icon: HelpCircle, href: '/ajuda' },
 ]
 
 interface NavigationProps {
@@ -31,18 +34,16 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
-          
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={cn(
-                'relative flex items-center gap-2 whitespace-nowrap px-5 py-3.5 text-sm font-medium transition-colors',
-                isActive 
-                  ? 'text-amber-800' 
-                  : 'text-stone-400 hover:text-stone-600'
-              )}
-            >
+
+          const className = cn(
+            'relative flex items-center gap-2 whitespace-nowrap px-5 py-3.5 text-sm font-medium transition-colors',
+            isActive 
+              ? 'text-amber-800' 
+              : 'text-stone-400 hover:text-stone-600'
+          )
+
+          const content = (
+            <>
               <Icon className="h-4 w-4" />
               <span>{tab.label}</span>
               {isActive && (
@@ -52,6 +53,24 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
                   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               )}
+            </>
+          )
+
+          if (tab.href) {
+            return (
+              <Link key={tab.id} href={tab.href} className={className}>
+                {content}
+              </Link>
+            )
+          }
+          
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              className={className}
+            >
+              {content}
             </button>
           )
         })}
