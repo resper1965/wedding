@@ -1,49 +1,26 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { getWeatherForecast, isForecastAvailable } from '@/services/weather/weather-service'
+import { WeatherService } from '@/services/weather/weather-service'
 
-// GET - Get weather forecast for wedding date
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const wedding = await db.wedding.findFirst()
+    const { searchParams } = new URL(request.url)
+    const lat = searchParams.get('lat')
+    const lon = searchParams.get('lon')
 
-    if (!wedding) {
-      return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
-    }
+    const { data: wedding } = await db.from('Wedding').select('venue, venueAddress, weddingDate').limit(1).maybeSingle()
 
-    // Get weather for wedding date
-    // Using São Paulo coordinates as default for Espaço Jardim Secreto
-    const weather = await getWeatherForecast(wedding.weddingDate)
-
-    if (!weather) {
-      return NextResponse.json({
-        success: true,
-        data: {
-          available: false,
-          weddingDate: wedding.weddingDate,
-          venue: wedding.venue,
-          message: 'Previsão não disponível para esta data'
-        }
-      })
-    }
-
-    const isForecast = isForecastAvailable(wedding.weddingDate)
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        available: true,
-        isForecast,
-        weddingDate: wedding.weddingDate,
-        venue: wedding.venue,
-        ...weather,
-        message: isForecast
-          ? 'Previsão para o dia do casamento'
-          : 'Média histórica para esta época do ano'
-      }
+    const weatherService = new WeatherService()
+    const weather = await weatherService.getWeather({
+      lat: lat ? parseFloat(lat) : undefined,
+      lon: lon ? parseFloat(lon) : undefined,
+      venue: wedding?.venue || undefined,
+      date: wedding?.weddingDate || undefined,
     })
+
+    return NextResponse.json({ success: true, data: weather })
   } catch (error) {
-    console.error('Error fetching weather:', error)
-    return NextResponse.json({ success: false, error: 'Erro ao carregar previsão do tempo' }, { status: 500 })
+    console.error('Weather error:', error)
+    return NextResponse.json({ success: false, error: 'Erro ao buscar clima' }, { status: 500 })
   }
 }

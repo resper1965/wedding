@@ -14,7 +14,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getSupabase } from '@/lib/supabase'
 import { authFetch } from '@/lib/auth-fetch'
-import { getOfflineDb, OfflineDatabase, OfflineCheckIn } from '@/services/firestore/offline-db'
+import { getOfflineDb, OfflineDatabase, OfflineCheckIn } from '@/services/offline/offline-db'
 
 // ============================================================================
 // TYPES

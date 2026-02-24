@@ -1,95 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { GiftStatus } from '@prisma/client'
 
-// GET - List all gifts (public)
 export async function GET(request: NextRequest) {
   try {
-    const wedding = await db.wedding.findFirst()
-    if (!wedding) {
-      return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
-    }
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
 
     const searchParams = request.nextUrl.searchParams
     const status = searchParams.get('status')
     const category = searchParams.get('category')
     const search = searchParams.get('search')
 
-    const gifts = await db.gift.findMany({
-      where: {
-        weddingId: wedding.id,
-        ...(status && { status: status as GiftStatus }),
-        ...(category && { category }),
-        ...(search && {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { description: { contains: search, mode: 'insensitive' } }
-          ]
-        })
-      },
-      orderBy: [
-        { priority: 'desc' },
-        { createdAt: 'asc' }
-      ]
-    })
+    let query = db.from('Gift').select('*').eq('weddingId', wedding.id)
+    if (status) query = query.eq('status', status)
+    if (category) query = query.eq('category', category)
+    if (search) query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`)
 
-    // Get unique categories
-    const categories = await db.gift.groupBy({
-      by: ['category'],
-      where: {
-        weddingId: wedding.id,
-        category: { not: null }
-      },
-      _count: true
-    })
+    const { data: gifts, error } = await query.order('priority', { ascending: false }).order('createdAt')
+    if (error) throw error
 
-    return NextResponse.json({ 
-      success: true, 
-      data: gifts,
-      categories: categories.map(c => c.category).filter(Boolean)
-    })
+    const categories = [...new Set((gifts || []).map((g: any) => g.category).filter(Boolean))]
+
+    return NextResponse.json({ success: true, data: gifts, categories })
   } catch (error) {
     console.error('Error fetching gifts:', error)
     return NextResponse.json({ success: false, error: 'Erro ao carregar presentes' }, { status: 500 })
   }
 }
 
-// POST - Create gift (admin)
 export async function POST(request: NextRequest) {
   try {
-    const wedding = await db.wedding.findFirst()
-    if (!wedding) {
-      return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
-    }
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
 
     const body = await request.json()
-    const { 
-      name, 
-      description, 
-      imageUrl, 
-      price, 
-      currency, 
-      externalUrl, 
-      store, 
-      priority, 
-      category 
-    } = body
+    const { name, description, imageUrl, price, currency, externalUrl, store, priority, category } = body
 
-    const gift = await db.gift.create({
-      data: {
-        weddingId: wedding.id,
-        name,
-        description: description || null,
-        imageUrl: imageUrl || null,
-        price: price ? parseFloat(price) : null,
-        currency: currency || 'BRL',
-        externalUrl: externalUrl || null,
-        store: store || null,
-        priority: priority || 0,
-        category: category || null
-      }
-    })
+    const { data: gift, error } = await db.from('Gift').insert({
+      id: crypto.randomUUID(),
+      weddingId: wedding.id,
+      name,
+      description: description || null,
+      imageUrl: imageUrl || null,
+      price: price || null,
+      currency: currency || 'BRL',
+      externalUrl: externalUrl || null,
+      store: store || null,
+      status: 'available',
+      priority: priority || 0,
+      category: category || null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).select().single()
 
+    if (error) throw error
     return NextResponse.json({ success: true, data: gift })
   } catch (error) {
     console.error('Error creating gift:', error)

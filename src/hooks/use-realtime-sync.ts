@@ -21,7 +21,7 @@ import {
   OfflineInvitation,
   OfflineRsvp,
   OfflineCheckIn
-} from '@/services/firestore/offline-db'
+} from '@/services/offline/offline-db'
 
 // ============================================================================
 // TYPES

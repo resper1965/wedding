@@ -1,34 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-// GET - List all accommodations
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type')
     const sortBy = searchParams.get('sortBy') || 'order'
 
-    const wedding = await db.wedding.findFirst()
-    if (!wedding) {
-      return NextResponse.json({ success: true, data: [] })
-    }
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: true, data: [] })
 
-    const where: { weddingId: string; type?: string } = { weddingId: wedding.id }
-    if (type && type !== 'all') {
-      where.type = type
-    }
+    let query = db.from('Accommodation').select('*').eq('weddingId', wedding.id)
+    if (type && type !== 'all') query = query.eq('type', type)
 
-    let orderBy: { order: 'asc' } | { priceRange: 'asc' } | { distance: 'asc' } = { order: 'asc' }
-    if (sortBy === 'price') {
-      orderBy = { priceRange: 'asc' }
-    } else if (sortBy === 'distance') {
-      orderBy = { distance: 'asc' }
-    }
-
-    const accommodations = await db.accommodation.findMany({
-      where,
-      orderBy
-    })
+    const sortField = sortBy === 'price' ? 'priceRange' : sortBy === 'distance' ? 'distance' : 'order'
+    const { data: accommodations, error } = await query.order(sortField)
+    if (error) throw error
 
     return NextResponse.json({ success: true, data: accommodations })
   } catch (error) {
@@ -37,50 +24,33 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create accommodation
 export async function POST(request: NextRequest) {
   try {
-    const wedding = await db.wedding.findFirst()
-    if (!wedding) {
-      return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
-    }
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
 
     const body = await request.json()
-    const {
-      name,
-      type,
-      description,
-      imageUrl,
-      address,
-      phone,
-      website,
-      priceRange,
-      distance,
-      specialRate,
-      discountCode,
-      recommended,
-      order
-    } = body
+    const { data: accommodation, error } = await db.from('Accommodation').insert({
+      id: crypto.randomUUID(),
+      weddingId: wedding.id,
+      name: body.name,
+      type: body.type,
+      description: body.description || null,
+      imageUrl: body.imageUrl || null,
+      address: body.address,
+      phone: body.phone || null,
+      website: body.website || null,
+      priceRange: body.priceRange || null,
+      distance: body.distance || null,
+      specialRate: body.specialRate || null,
+      discountCode: body.discountCode || null,
+      recommended: body.recommended || false,
+      order: body.order || 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).select().single()
 
-    const accommodation = await db.accommodation.create({
-      data: {
-        weddingId: wedding.id,
-        name,
-        type,
-        description: description || null,
-        imageUrl: imageUrl || null,
-        address,
-        phone: phone || null,
-        website: website || null,
-        priceRange: priceRange || null,
-        distance: distance || null,
-        specialRate: specialRate || null,
-        discountCode: discountCode || null,
-        recommended: recommended || false,
-        order: order || 0
-      }
-    })
-
+    if (error) throw error
     return NextResponse.json({ success: true, data: accommodation })
   } catch (error) {
     console.error('Error creating accommodation:', error)

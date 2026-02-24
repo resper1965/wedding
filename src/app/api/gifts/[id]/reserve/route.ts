@@ -1,97 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { GiftStatus } from '@prisma/client'
 
-// POST - Reserve a gift
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
     const body = await request.json()
-    const { name, message } = body
+    const { guestName, guestMessage, action } = body
 
-    if (!name || name.trim().length < 2) {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Por favor, informe seu nome' 
-      }, { status: 400 })
-    }
+    const { data: gift } = await db.from('Gift').select('*').eq('id', id).maybeSingle()
+    if (!gift) return NextResponse.json({ success: false, error: 'Presente não encontrado' }, { status: 404 })
 
-    const gift = await db.gift.findUnique({ where: { id } })
-    
-    if (!gift) {
-      return NextResponse.json({ success: false, error: 'Presente não encontrado' }, { status: 404 })
+    if (action === 'unreserve') {
+      const { data: updated, error } = await db.from('Gift').update({
+        status: 'available',
+        reservedBy: null,
+        reservedAt: null,
+        reservedByName: null,
+        reservedMessage: null,
+        updatedAt: new Date().toISOString(),
+      }).eq('id', id).select().single()
+      if (error) throw error
+      return NextResponse.json({ success: true, data: updated })
     }
 
     if (gift.status !== 'available') {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Este presente já foi reservado' 
-      }, { status: 400 })
+      return NextResponse.json({ success: false, error: 'Presente já reservado' }, { status: 409 })
     }
 
-    const updatedGift = await db.gift.update({
-      where: { id },
-      data: {
-        status: GiftStatus.reserved,
-        reservedByName: name.trim(),
-        reservedMessage: message?.trim() || null,
-        reservedAt: new Date()
-      }
-    })
+    const { data: updated, error } = await db.from('Gift').update({
+      status: 'reserved',
+      reservedByName: guestName || null,
+      reservedMessage: guestMessage || null,
+      reservedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).eq('id', id).select().single()
 
-    return NextResponse.json({ 
-      success: true, 
-      data: updatedGift,
-      message: 'Presente reservado com sucesso!'
-    })
+    if (error) throw error
+    return NextResponse.json({ success: true, data: updated })
   } catch (error) {
     console.error('Error reserving gift:', error)
     return NextResponse.json({ success: false, error: 'Erro ao reservar presente' }, { status: 500 })
-  }
-}
-
-// DELETE - Cancel reservation
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params
-    
-    const gift = await db.gift.findUnique({ where: { id } })
-    
-    if (!gift) {
-      return NextResponse.json({ success: false, error: 'Presente não encontrado' }, { status: 404 })
-    }
-
-    if (gift.status !== 'reserved') {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Este presente não está reservado' 
-      }, { status: 400 })
-    }
-
-    const updatedGift = await db.gift.update({
-      where: { id },
-      data: {
-        status: GiftStatus.available,
-        reservedByName: null,
-        reservedMessage: null,
-        reservedAt: null,
-        reservedBy: null
-      }
-    })
-
-    return NextResponse.json({ 
-      success: true, 
-      data: updatedGift,
-      message: 'Reserva cancelada com sucesso'
-    })
-  } catch (error) {
-    console.error('Error canceling reservation:', error)
-    return NextResponse.json({ success: false, error: 'Erro ao cancelar reserva' }, { status: 500 })
   }
 }

@@ -60,7 +60,7 @@ interface OfflineStats {
   pendingSync: number
 }
 
-interface FirestoreSettingsProps {
+interface RealtimeSyncSettingsProps {
   weddingId: string
 }
 
@@ -68,7 +68,7 @@ interface FirestoreSettingsProps {
 // COMPONENT
 // ============================================================================
 
-export function FirestoreSettings({ weddingId }: FirestoreSettingsProps) {
+export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
   // State
   const [isEnabled, setIsEnabled] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
@@ -464,4 +464,4 @@ export function FirestoreSettings({ weddingId }: FirestoreSettingsProps) {
   )
 }
 
-export default FirestoreSettings
+export default RealtimeSyncSettings

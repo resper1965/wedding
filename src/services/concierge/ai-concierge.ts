@@ -15,7 +15,12 @@
 
 import ZAI from 'z-ai-web-dev-sdk'
 import { db } from '@/lib/db'
-import type { Wedding, Invitation, Guest, Event } from '@prisma/client'
+
+// Types from database schema
+type Wedding = Record<string, any>
+type Invitation = Record<string, any>
+type Guest = Record<string, any>
+type Event = Record<string, any>
 
 // ============================================================================
 // TYPES
@@ -114,9 +119,9 @@ export class AIConcierge {
    * Build the wedding context for RAG injection
    */
   private buildWeddingContext(wedding: Wedding & { events: Event[] }): string {
-    const eventDetails = wedding.events
-      .sort((a, b) => a.order - b.order)
-      .map(e => {
+    const eventDetails = (wedding.events || [])
+      .sort((a: any, b: any) => a.order - b.order)
+      .map((e: any) => {
         const date = new Date(e.startTime)
         const formattedDate = date.toLocaleDateString('pt-BR', {
           weekday: 'long',
@@ -165,7 +170,7 @@ ${wedding.conciergeContext ? `\n**Informações Adicionais:**\n${wedding.concier
       return 'Convidado não identificado - aguardando identificação pelo número de WhatsApp.'
     }
     
-    const guestList = guests.map(g => {
+    const guestList = guests.map((g: any) => {
       const status = g.inviteStatus === 'responded' ? '✅' : '⏳'
       return `${status} ${g.firstName} ${g.lastName}${g.dietaryRestrictions ? ` (Restrições: ${g.dietaryRestrictions})` : ''}`
     }).join('\n')
@@ -197,20 +202,45 @@ ${invitation.conversationSummary ? `\n**Resumo da Conversa:** ${invitation.conve
   
   /**
    * Process an incoming message and generate AI response
+   * Accepts either (content, context) or (wedding, invitation, guests, history, content)
    */
   async processMessage(
-    wedding: Wedding & { events: Event[] },
-    invitation: Invitation | null,
-    guests: Guest[],
-    conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }>,
-    userMessage: string
+    contentOrWedding: string | (Wedding & { events: Event[] }),
+    contextOrInvitation?: ConciergeContext | Invitation | null,
+    guests?: Guest[],
+    conversationHistory?: Array<{ role: 'user' | 'assistant'; content: string }>,
+    userMessageArg?: string
   ): Promise<ProcessedMessage> {
     await this.initialize()
+
+    let wedding: Wedding & { events: Event[] }
+    let invitation: Invitation | null
+    let guestList: Guest[]
+    let history: Array<{ role: 'user' | 'assistant'; content: string }>
+    let userMessage: string
+
+    // Support both call signatures
+    if (typeof contentOrWedding === 'string') {
+      // processMessage(content, context)
+      const context = contextOrInvitation as ConciergeContext
+      userMessage = contentOrWedding
+      wedding = context.wedding
+      invitation = context.invitation
+      guestList = context.guests
+      history = context.conversationHistory
+    } else {
+      // processMessage(wedding, invitation, guests, history, content)
+      wedding = contentOrWedding
+      invitation = contextOrInvitation as Invitation | null
+      guestList = guests || []
+      history = conversationHistory || []
+      userMessage = userMessageArg || ''
+    }
     
     // Build context
     const weddingContext = this.buildWeddingContext(wedding)
-    const guestContext = this.buildGuestContext(invitation, guests)
-    const historyContext = this.formatConversationHistory(conversationHistory)
+    const guestContext = this.buildGuestContext(invitation, guestList)
+    const historyContext = this.formatConversationHistory(history)
     
     // Build system prompt with injected context
     const systemPrompt = LUXURY_CONCIERGE_SYSTEM_PROMPT
@@ -283,48 +313,40 @@ export async function confirmGuest(
   guestIds: string[]
 ): Promise<FunctionCallResult> {
   try {
-    // Update RSVPs for all guests
-    const events = await db.event.findMany({
-      where: { wedding: { invitations: { some: { id: invitationId } } } }
-    })
-    
+    const { data: events } = await db.from('Event')
+      .select('id')
+      .eq('weddingId', db.from('Invitation').select('weddingId').eq('id', invitationId).limit(1))
+
+    // Fetch the weddingId from the invitation first
+    const { data: invitationData } = await db.from('Invitation').select('weddingId').eq('id', invitationId).maybeSingle()
+    const { data: eventList } = await db.from('Event').select('id').eq('weddingId', invitationData?.weddingId || '')
+
     for (const guestId of guestIds) {
-      for (const event of events) {
-        await db.rsvp.upsert({
-          where: {
-            guestId_eventId: { guestId, eventId: event.id }
-          },
-          create: {
-            guestId,
-            eventId: event.id,
-            status: 'confirmed',
-            respondedAt: new Date(),
-            responseSource: 'whatsapp'
-          },
-          update: {
-            status: 'confirmed',
-            respondedAt: new Date(),
-            responseSource: 'whatsapp'
-          }
-        })
+      for (const event of (eventList || [])) {
+        await db.from('Rsvp').upsert({
+          id: crypto.randomUUID(),
+          guestId,
+          eventId: event.id,
+          status: 'confirmed',
+          respondedAt: new Date().toISOString(),
+          responseSource: 'whatsapp',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }, { onConflict: 'guestId,eventId', ignoreDuplicates: false })
       }
-      
-      // Update guest status
-      await db.guest.update({
-        where: { id: guestId },
-        data: { inviteStatus: 'responded' }
-      })
+
+      await db.from('Guest').update({
+        inviteStatus: 'responded',
+        updatedAt: new Date().toISOString(),
+      }).eq('id', guestId)
     }
-    
-    // Update invitation flow status
-    await db.invitation.update({
-      where: { id: invitationId },
-      data: {
-        flowStatus: 'confirmed',
-        lastMessageAt: new Date()
-      }
-    })
-    
+
+    await db.from('Invitation').update({
+      flowStatus: 'confirmed',
+      lastMessageAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).eq('id', invitationId)
+
     return {
       success: true,
       action: 'confirm_guest',
@@ -348,45 +370,35 @@ export async function declineGuest(
   guestIds: string[]
 ): Promise<FunctionCallResult> {
   try {
-    const events = await db.event.findMany({
-      where: { wedding: { invitations: { some: { id: invitationId } } } }
-    })
-    
+    const { data: invitationData } = await db.from('Invitation').select('weddingId').eq('id', invitationId).maybeSingle()
+    const { data: eventList } = await db.from('Event').select('id').eq('weddingId', invitationData?.weddingId || '')
+
     for (const guestId of guestIds) {
-      for (const event of events) {
-        await db.rsvp.upsert({
-          where: {
-            guestId_eventId: { guestId, eventId: event.id }
-          },
-          create: {
-            guestId,
-            eventId: event.id,
-            status: 'declined',
-            respondedAt: new Date(),
-            responseSource: 'whatsapp'
-          },
-          update: {
-            status: 'declined',
-            respondedAt: new Date(),
-            responseSource: 'whatsapp'
-          }
-        })
+      for (const event of (eventList || [])) {
+        await db.from('Rsvp').upsert({
+          id: crypto.randomUUID(),
+          guestId,
+          eventId: event.id,
+          status: 'declined',
+          respondedAt: new Date().toISOString(),
+          responseSource: 'whatsapp',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }, { onConflict: 'guestId,eventId', ignoreDuplicates: false })
       }
-      
-      await db.guest.update({
-        where: { id: guestId },
-        data: { inviteStatus: 'responded' }
-      })
+
+      await db.from('Guest').update({
+        inviteStatus: 'responded',
+        updatedAt: new Date().toISOString(),
+      }).eq('id', guestId)
     }
-    
-    await db.invitation.update({
-      where: { id: invitationId },
-      data: {
-        flowStatus: 'declined',
-        lastMessageAt: new Date()
-      }
-    })
-    
+
+    await db.from('Invitation').update({
+      flowStatus: 'declined',
+      lastMessageAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).eq('id', invitationId)
+
     return {
       success: true,
       action: 'decline_guest',
@@ -410,11 +422,11 @@ export async function updateDietary(
   restrictions: string
 ): Promise<FunctionCallResult> {
   try {
-    await db.guest.update({
-      where: { id: guestId },
-      data: { dietaryRestrictions: restrictions }
-    })
-    
+    await db.from('Guest').update({
+      dietaryRestrictions: restrictions,
+      updatedAt: new Date().toISOString(),
+    }).eq('id', guestId)
+
     return {
       success: true,
       action: 'update_dietary',
@@ -437,20 +449,18 @@ export async function requestSongs(
   songs: string
 ): Promise<FunctionCallResult> {
   try {
-    const guest = await db.guest.findUnique({
-      where: { id: guestId }
-    })
-    
+    const { data: guest } = await db.from('Guest').select('songs').eq('id', guestId).maybeSingle()
+
     const existingSongs = guest?.songs || ''
-    const updatedSongs = existingSongs 
+    const updatedSongs = existingSongs
       ? `${existingSongs}, ${songs}`
       : songs
-    
-    await db.guest.update({
-      where: { id: guestId },
-      data: { songs: updatedSongs }
-    })
-    
+
+    await db.from('Guest').update({
+      songs: updatedSongs,
+      updatedAt: new Date().toISOString(),
+    }).eq('id', guestId)
+
     return {
       success: true,
       action: 'request_songs',

@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-// GET - List all events
 export async function GET() {
   try {
-    const wedding = await db.wedding.findFirst()
-    if (!wedding) {
-      return NextResponse.json({ success: true, data: [] })
-    }
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: true, data: [] })
 
-    const events = await db.event.findMany({
-      where: { weddingId: wedding.id },
-      orderBy: { order: 'asc' }
-    })
+    const { data: events, error } = await db.from('Event').select('*').eq('weddingId', wedding.id).order('order', { ascending: true })
+    if (error) throw error
 
     return NextResponse.json({ success: true, data: events })
   } catch (error) {
@@ -21,32 +16,31 @@ export async function GET() {
   }
 }
 
-// POST - Create event
 export async function POST(request: NextRequest) {
   try {
-    const wedding = await db.wedding.findFirst()
-    if (!wedding) {
-      return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
-    }
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
 
     const body = await request.json()
     const { name, description, startTime, endTime, venue, address, dressCode, maxCapacity, order } = body
 
-    const event = await db.event.create({
-      data: {
-        weddingId: wedding.id,
-        name,
-        description: description || null,
-        startTime: new Date(startTime),
-        endTime: endTime ? new Date(endTime) : null,
-        venue: venue || null,
-        address: address || null,
-        dressCode: dressCode || null,
-        maxCapacity: maxCapacity || null,
-        order: order || 0
-      }
-    })
+    const { data: event, error } = await db.from('Event').insert({
+      id: crypto.randomUUID(),
+      weddingId: wedding.id,
+      name,
+      description: description || null,
+      startTime: new Date(startTime).toISOString(),
+      endTime: endTime ? new Date(endTime).toISOString() : null,
+      venue: venue || null,
+      address: address || null,
+      dressCode: dressCode || null,
+      maxCapacity: maxCapacity || null,
+      order: order || 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).select().single()
 
+    if (error) throw error
     return NextResponse.json({ success: true, data: event })
   } catch (error) {
     console.error('Error creating event:', error)
