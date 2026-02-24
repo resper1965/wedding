@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { WeatherService } from '@/services/weather/weather-service'
+import { getWeatherForecast } from '@/services/weather/weather-service'
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,13 +10,16 @@ export async function GET(request: NextRequest) {
 
     const { data: wedding } = await db.from('Wedding').select('venue, venueAddress, weddingDate').limit(1).maybeSingle()
 
-    const weatherService = new WeatherService()
-    const weather = await weatherService.getWeather({
-      lat: lat ? parseFloat(lat) : undefined,
-      lon: lon ? parseFloat(lon) : undefined,
-      venue: wedding?.venue || undefined,
-      date: wedding?.weddingDate || undefined,
-    })
+    let targetDate = new Date()
+    if (wedding?.weddingDate) {
+      targetDate = new Date(wedding.weddingDate)
+    }
+
+    const weather = await getWeatherForecast(
+      targetDate,
+      lat ? parseFloat(lat) : undefined,
+      lon ? parseFloat(lon) : undefined
+    )
 
     return NextResponse.json({ success: true, data: weather })
   } catch (error) {

@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const result = await reminderService.sendReminders(weddingId, reminderType as 'first' | 'second' | 'final')
+    const result = await reminderService.sendReminder(weddingId, reminderType as 'first' | 'second' | 'final')
 
     return NextResponse.json({
       success: result.success,

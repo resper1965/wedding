@@ -159,7 +159,7 @@ class ReminderService {
       try {
         if (!guest.email) continue
 
-        const templateData: TemplateData = {
+        const templateData: any = {
           guestName: `${guest.firstName} ${guest.lastName}`,
           partner1Name: wedding.partner1Name,
           partner2Name: wedding.partner2Name,
@@ -169,7 +169,19 @@ class ReminderService {
           customMessage: customMessage || '',
         }
 
-        await emailService.sendReminderEmail(guest.email, subjectMap[type], templateData)
+        const htmlContent = `
+          <p>Olá ${templateData.guestName},</p>
+          <p>${subjectMap[type]}</p>
+          <p>${customMessage || ''}</p>
+          <p><a href="${templateData.rsvpLink}">Clique aqui para acessar seu convite</a></p>
+        `
+
+        await emailService.send({
+          to: guest.email,
+          subject: subjectMap[type],
+          html: htmlContent,
+          text: htmlContent
+        })
 
         await db.from('MessageLog').insert({
           id: crypto.randomUUID(),

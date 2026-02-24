@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { verifySupabaseToken } from '@/lib/auth'
-import { EmailService } from '@/services/email/email-service'
+import { emailService } from '@/services/email/email-service'
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Nenhum convidado encontrado' }, { status: 404 })
     }
 
-    let template = null
+    let template: any = null
     if (templateId) {
       const { data } = await db.from('MessageTemplate').select('*').eq('id', templateId).maybeSingle()
       template = data
@@ -34,11 +34,10 @@ export async function POST(request: NextRequest) {
 
     for (const guest of guests) {
       try {
-        const emailService = new EmailService()
         const personalizedContent = (content || template?.content || '').replace(/\{\{nome\}\}/g, guest.firstName).replace(/\{\{sobrenome\}\}/g, guest.lastName).replace(/\{\{email\}\}/g, guest.email || '')
 
         if (guest.email) {
-          await emailService.send({ to: guest.email, subject: subject || template?.subject || 'Convite de Casamento', html: personalizedContent })
+          await emailService.send({ to: guest.email, subject: subject || template?.subject || 'Convite de Casamento', html: personalizedContent, text: personalizedContent })
           results.sent++
 
           await db.from('MessageLog').insert({

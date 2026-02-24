@@ -22,20 +22,23 @@ export async function POST(request: NextRequest) {
 
     const tableName = (groupWithTable as any)?.group?.table?.name
 
-    const qrData = await generateQRCode({
+    const guestIds = (guests || []).map((g: any) => g.id)
+    const qrData = await generateQRCode(
       invitationId,
-      familyName: invitation.familyName || '',
-      guestCount: (guests || []).length,
-      tableNumber: tableName,
-    })
+      guestIds,
+      invitation.familyName || '',
+      tableName
+    )
+
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
     await db.from('Invitation').update({
       qrToken: qrData.token,
-      qrTokenExpires: qrData.expiresAt,
+      qrTokenExpires: expiresAt,
       updatedAt: new Date().toISOString(),
     }).eq('id', invitationId)
 
-    return NextResponse.json({ success: true, data: { qrCode: qrData.qrCode, token: qrData.token, expiresAt: qrData.expiresAt } })
+    return NextResponse.json({ success: true, data: { qrCode: qrData.qrDataUrl, token: qrData.token, expiresAt } })
   } catch (error) {
     console.error('QR code generation error:', error)
     return NextResponse.json({ error: 'Erro ao gerar QR Code' }, { status: 500 })

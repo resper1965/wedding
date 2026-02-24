@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
@@ -27,9 +28,9 @@ export async function GET() {
 
     const csv = [headers, ...rows]
       .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-      .join('\n')
+      .join('\\n')
 
-    return new Response('\uFEFF' + csv, {
+    return new Response('﻿' + csv, {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
         'Content-Disposition': 'attachment; filename="convidados.csv"'

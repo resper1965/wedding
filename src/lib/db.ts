@@ -19,4 +19,4 @@ function createDbClient() {
 
 export const db = globalForDb.db ?? createDbClient()
 
-if (process.env.NODE_ENV !== 'production') globalForDb.db = db
+if (process.env.NODE_ENV !== 'production') globalForDb.db = db as any

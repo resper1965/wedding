@@ -287,6 +287,8 @@ export async function generateQrCodesForConfirmed(): Promise<Array<{ invitationI
   
   const results: Array<{ invitationId: string; familyName: string; qrDataUrl: string }> = []
   
+  if (!invitations) return results
+
   for (const invitation of invitations) {
     const guestIds = invitation.guests.map(g => g.id)
     const familyName = invitation.familyName || 'Convidado'
