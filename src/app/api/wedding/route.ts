@@ -1,23 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-// GET - Get wedding settings
 export async function GET() {
   try {
-    let wedding = await db.wedding.findFirst()
-    
+    const { data: wedding } = await db.from('Wedding').select('*').limit(1).maybeSingle()
+
     if (!wedding) {
-      // Create default wedding if none exists
-      wedding = await db.wedding.create({
-        data: {
-          partner1Name: 'Louise',
-          partner2Name: 'Nicolas',
-          weddingDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-          venue: '',
-          venueAddress: '',
-          messageFooter: ''
-        }
-      })
+      const { data: created, error } = await db.from('Wedding').insert({
+        id: crypto.randomUUID(),
+        partner1Name: 'Louise',
+        partner2Name: 'Nicolas',
+        weddingDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+        venue: '',
+        venueAddress: '',
+        messageFooter: '',
+        totalInvited: 0,
+        totalConfirmed: 0,
+        totalDeclined: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }).select().single()
+      if (error) throw error
+      return NextResponse.json({ success: true, data: created })
     }
 
     return NextResponse.json({ success: true, data: wedding })
@@ -27,39 +31,28 @@ export async function GET() {
   }
 }
 
-// PUT - Update wedding settings
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const { 
-      partner1Name, 
-      partner2Name, 
-      weddingDate, 
-      venue, 
-      venueAddress,
-      replyByDate,
-      messageFooter 
-    } = body
+    const { partner1Name, partner2Name, weddingDate, venue, venueAddress, replyByDate, messageFooter } = body
 
-    const wedding = await db.wedding.findFirst()
-    
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
     if (!wedding) {
       return NextResponse.json({ success: false, error: 'Casamento não encontrado' }, { status: 404 })
     }
 
-    const updated = await db.wedding.update({
-      where: { id: wedding.id },
-      data: {
-        partner1Name,
-        partner2Name,
-        weddingDate: new Date(weddingDate),
-        venue: venue || null,
-        venueAddress: venueAddress || null,
-        replyByDate: replyByDate ? new Date(replyByDate) : null,
-        messageFooter: messageFooter || null
-      }
-    })
+    const { data: updated, error } = await db.from('Wedding').update({
+      partner1Name,
+      partner2Name,
+      weddingDate: new Date(weddingDate).toISOString(),
+      venue: venue || null,
+      venueAddress: venueAddress || null,
+      replyByDate: replyByDate ? new Date(replyByDate).toISOString() : null,
+      messageFooter: messageFooter || null,
+      updatedAt: new Date().toISOString(),
+    }).eq('id', wedding.id).select().single()
 
+    if (error) throw error
     return NextResponse.json({ success: true, data: updated })
   } catch (error) {
     console.error('Error updating wedding:', error)

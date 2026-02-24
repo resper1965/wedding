@@ -3,104 +3,73 @@ import { db } from '@/lib/db'
 
 export async function GET() {
   try {
-    // Get or create wedding
-    let wedding = await db.wedding.findFirst()
-    
+    let { data: wedding } = await db.from('Wedding').select('*').limit(1).maybeSingle()
+
     if (!wedding) {
-      // Create default wedding
-      wedding = await db.wedding.create({
-        data: {
-          partner1Name: 'Ana',
-          partner2Name: 'Carlos',
-          weddingDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
-          venue: 'Espaço Villa Bella',
-          venueAddress: 'Rua das Flores, 123',
-        }
-      })
+      const { data: created, error } = await db.from('Wedding').insert({
+        id: crypto.randomUUID(),
+        partner1Name: 'Ana',
+        partner2Name: 'Carlos',
+        weddingDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+        venue: 'Espaço Villa Bella',
+        venueAddress: 'Rua das Flores, 123',
+        totalInvited: 0, totalConfirmed: 0, totalDeclined: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }).select().single()
+      if (error) throw error
+      wedding = created
     }
 
-    // Get all events
-    const events = await db.event.findMany({
-      where: { weddingId: wedding.id },
-      orderBy: { order: 'asc' },
-      include: {
-        _count: { select: { rsvps: true } },
-        rsvps: { where: { status: 'confirmed' } }
-      }
-    })
+    const [{ data: events }, { data: guests }] = await Promise.all([
+      db.from('Event').select('*, rsvps:Rsvp(*)').eq('weddingId', wedding.id).order('order'),
+      db.from('Guest').select('*, rsvps:Rsvp(*)').eq('weddingId', wedding.id),
+    ])
 
-    // Get all guests with their RSVPs
-    const guests = await db.guest.findMany({
-      where: { weddingId: wedding.id },
-      include: {
-        rsvps: true,
-        group: true
-      }
-    })
-
-    // Calculate stats
-    const totalInvited = guests.length
-    const totalConfirmed = guests.filter(g => 
-      g.rsvps.some(r => r.status === 'confirmed')
-    ).length
-    const totalDeclined = guests.filter(g => 
-      g.rsvps.some(r => r.status === 'declined')
-    ).length
+    const totalInvited = (guests || []).length
+    const totalConfirmed = (guests || []).filter((g: any) => (g.rsvps || []).some((r: any) => r.status === 'confirmed')).length
+    const totalDeclined = (guests || []).filter((g: any) => (g.rsvps || []).some((r: any) => r.status === 'declined')).length
     const totalPending = totalInvited - totalConfirmed - totalDeclined
 
-    // Confirmed by event
-    const confirmedByEvent = events.map(event => ({
-      eventName: event.name,
-      confirmed: event.rsvps.length,
-      total: event._count.rsvps
+    const confirmedByEvent = (events || []).map((ev: any) => ({
+      eventName: ev.name,
+      confirmed: (ev.rsvps || []).filter((r: any) => r.status === 'confirmed').length,
+      total: (ev.rsvps || []).length,
     }))
 
-    // Calculate days until wedding
     const weddingDate = new Date(wedding.weddingDate)
-    const today = new Date()
-    const daysUntilWedding = Math.ceil((weddingDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+    const daysUntilWedding = Math.max(0, Math.ceil((weddingDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
 
-    // Get recent activity (last 10 RSVP responses)
-    const recentRsvps = await db.rsvp.findMany({
-      where: { 
-        respondedAt: { not: null },
-        guest: { weddingId: wedding.id }
-      },
-      orderBy: { respondedAt: 'desc' },
-      take: 10,
-      include: { guest: true }
-    })
+    const { data: recentRsvps } = await db.from('Rsvp')
+      .select('*, guest:Guest(firstName, lastName, weddingId)')
+      .not('respondedAt', 'is', null)
+      .order('respondedAt', { ascending: false })
+      .limit(10)
 
-    const recentActivity = recentRsvps.map(rsvp => ({
+    const weddingGuests = (recentRsvps || []).filter((r: any) => r.guest?.weddingId === wedding.id)
+    const recentActivity = weddingGuests.map((rsvp: any) => ({
       id: rsvp.id,
       type: 'rsvp' as const,
       message: `${rsvp.guest.firstName} ${rsvp.guest.lastName} ${rsvp.status === 'confirmed' ? 'confirmou' : rsvp.status === 'declined' ? 'recusou' : 'respondeu talvez'}`,
-      timestamp: rsvp.respondedAt?.toISOString() || rsvp.createdAt.toISOString(),
-      guestName: `${rsvp.guest.firstName} ${rsvp.guest.lastName}`
+      timestamp: rsvp.respondedAt || rsvp.createdAt,
+      guestName: `${rsvp.guest.firstName} ${rsvp.guest.lastName}`,
     }))
 
     return NextResponse.json({
       success: true,
       data: {
-        totalInvited,
-        totalConfirmed,
-        totalDeclined,
-        totalPending,
-        confirmedByEvent,
-        recentActivity,
-        weddingDate: wedding.weddingDate.toISOString(),
-        daysUntilWedding: daysUntilWedding > 0 ? daysUntilWedding : 0,
+        totalInvited, totalConfirmed, totalDeclined, totalPending,
+        confirmedByEvent, recentActivity,
+        weddingDate: wedding.weddingDate,
+        daysUntilWedding,
         partner1Name: wedding.partner1Name,
         partner2Name: wedding.partner2Name,
         venue: wedding.venue,
-        events: events.map(e => ({ id: e.id, name: e.name }))
+        events: (events || []).map((e: any) => ({ id: e.id, name: e.name })),
       }
     })
   } catch (error) {
     console.error('Error fetching dashboard stats:', error)
-    return NextResponse.json(
-      { success: false, error: 'Erro ao carregar estatísticas' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Erro ao carregar estatísticas' }, { status: 500 })
   }
 }

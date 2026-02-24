@@ -1,179 +1,94 @@
-/**
- * ============================================================================
- * TABLES API - Wedding Guest Platform
- * ============================================================================
- * API endpoint for table management
- * ============================================================================
- */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-/**
- * GET /api/tables - List all tables
- */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const wedding = await db.wedding.findFirst()
-    
-    if (!wedding) {
-      return NextResponse.json(
-        { success: false, error: 'Wedding not found' },
-        { status: 404 }
-      )
-    }
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: false, error: 'Wedding not found' }, { status: 404 })
 
-    const tables = await db.table.findMany({
-      where: { weddingId: wedding.id },
-      include: {
-        groups: {
-          include: {
-            guests: {
-              include: {
-                rsvps: {
-                  where: { status: 'confirmed' },
-                  select: { id: true, status: true }
-                }
-              }
-            }
-          }
-        }
-      },
-      orderBy: { name: 'asc' }
-    })
+    const [{ data: tables }, { data: unassignedGroups }] = await Promise.all([
+      db.from('Table').select('*, groups:GuestGroup(*, guests:Guest(*, rsvps:Rsvp(id, status)))').eq('weddingId', wedding.id).order('name'),
+      db.from('GuestGroup').select('*, guests:Guest(*, rsvps:Rsvp(id, status))').eq('weddingId', wedding.id).is('tableId', null).order('name'),
+    ])
 
-    // Get unassigned groups
-    const unassignedGroups = await db.guestGroup.findMany({
-      where: {
-        weddingId: wedding.id,
-        tableId: null
-      },
-      include: {
-        guests: {
-          include: {
-            rsvps: {
-              where: { status: 'confirmed' },
-              select: { id: true, status: true }
-            }
-          }
-        }
-      },
-      orderBy: { name: 'asc' }
-    })
+    const formatGuests = (guests: any[]) => (guests || []).map((g: any) => ({
+      id: g.id,
+      firstName: g.firstName,
+      lastName: g.lastName,
+      confirmed: (g.rsvps || []).some((r: any) => r.status === 'confirmed'),
+    }))
 
     return NextResponse.json({
       success: true,
       data: {
-        tables: tables.map(table => ({
-          id: table.id,
-          name: table.name,
-          capacity: table.capacity,
-          shape: table.shape,
-          positionX: table.positionX,
-          positionY: table.positionY,
-          notes: table.notes,
-          groups: table.groups.map(group => ({
-            id: group.id,
-            name: group.name,
-            guests: group.guests.map(g => ({
-              id: g.id,
-              firstName: g.firstName,
-              lastName: g.lastName,
-              confirmed: g.rsvps.length > 0
-            }))
-          })),
-          occupiedSeats: table.groups.reduce(
-            (acc, g) => acc + g.guests.filter(guest => guest.rsvps.length > 0).length,
-            0
-          )
+        tables: (tables || []).map((t: any) => ({
+          id: t.id,
+          name: t.name,
+          capacity: t.capacity,
+          shape: t.shape,
+          positionX: t.positionX,
+          positionY: t.positionY,
+          notes: t.notes,
+          groups: (t.groups || []).map((g: any) => ({ id: g.id, name: g.name, guests: formatGuests(g.guests) })),
+          occupiedSeats: (t.groups || []).reduce((acc: number, g: any) => acc + formatGuests(g.guests).filter((gg: any) => gg.confirmed).length, 0),
         })),
-        unassignedGroups: unassignedGroups.map(group => ({
-          id: group.id,
-          name: group.name,
-          guests: group.guests.map(g => ({
-            id: g.id,
-            firstName: g.firstName,
-            lastName: g.lastName,
-            confirmed: g.rsvps.length > 0
-          }))
-        }))
-      }
+        unassignedGroups: (unassignedGroups || []).map((g: any) => ({
+          id: g.id,
+          name: g.name,
+          guests: formatGuests(g.guests),
+        })),
+      },
     })
   } catch (error) {
     console.error('Error fetching tables:', error)
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }
 
-/**
- * POST /api/tables - Create new table
- */
 export async function POST(request: NextRequest) {
   try {
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    if (!wedding) return NextResponse.json({ success: false, error: 'Wedding not found' }, { status: 404 })
+
     const body = await request.json()
     const { name, capacity, shape } = body
 
-    const wedding = await db.wedding.findFirst()
-    
-    if (!wedding) {
-      return NextResponse.json(
-        { success: false, error: 'Wedding not found' },
-        { status: 404 }
-      )
+    let tableName = name
+    if (!tableName) {
+      const { count } = await db.from('Table').select('*', { count: 'exact', head: true }).eq('weddingId', wedding.id)
+      tableName = `Mesa ${(count ?? 0) + 1}`
     }
 
-    const table = await db.table.create({
-      data: {
-        weddingId: wedding.id,
-        name: name || `Mesa ${await db.table.count({ where: { weddingId: wedding.id } }) + 1}`,
-        capacity: capacity || 8,
-        shape: shape || 'round'
-      }
-    })
+    const { data: table, error } = await db.from('Table').insert({
+      id: crypto.randomUUID(),
+      weddingId: wedding.id,
+      name: tableName,
+      capacity: capacity || 8,
+      shape: shape || 'round',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).select().single()
 
-    return NextResponse.json({
-      success: true,
-      data: table
-    })
+    if (error) throw error
+    return NextResponse.json({ success: true, data: table })
   } catch (error) {
     console.error('Error creating table:', error)
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }
 
-/**
- * PUT /api/tables - Update table positions (bulk)
- */
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
     const { tables } = body as { tables: Array<{ id: string; positionX: number; positionY: number }> }
 
-    // Update positions in parallel
     await Promise.all(
-      tables.map(table =>
-        db.table.update({
-          where: { id: table.id },
-          data: {
-            positionX: table.positionX,
-            positionY: table.positionY
-          }
-        })
-      )
+      tables.map(t => db.from('Table').update({ positionX: t.positionX, positionY: t.positionY, updatedAt: new Date().toISOString() }).eq('id', t.id))
     )
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error updating table positions:', error)
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

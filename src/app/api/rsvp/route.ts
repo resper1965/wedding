@@ -1,35 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { RsvpStatus } from '@prisma/client'
 
-// POST - Update RSVP status
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { guestId, eventId, status, plusOne, plusOneName, guestMessage } = body
 
-    const rsvp = await db.rsvp.update({
-      where: {
-        guestId_eventId: { guestId, eventId }
-      },
-      data: {
-        status: status as RsvpStatus,
-        plusOne: plusOne || false,
-        plusOneName: plusOneName || null,
-        guestMessage: guestMessage || null,
-        respondedAt: new Date()
-      },
-      include: {
-        guest: true,
-        event: true
-      }
-    })
+    const { data: rsvp, error } = await db.from('Rsvp').update({
+      status,
+      plusOne: plusOne || false,
+      plusOneName: plusOneName || null,
+      guestMessage: guestMessage || null,
+      respondedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).eq('guestId', guestId).eq('eventId', eventId)
+      .select('*, guest:Guest(*), event:Event(*)').single()
 
-    // Update guest status
-    await db.guest.update({
-      where: { id: guestId },
-      data: { inviteStatus: 'responded' }
-    })
+    if (error) throw error
+
+    await db.from('Guest').update({ inviteStatus: 'responded', updatedAt: new Date().toISOString() }).eq('id', guestId)
 
     return NextResponse.json({ success: true, data: rsvp })
   } catch (error) {
@@ -38,26 +27,19 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET - List RSVPs
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const eventId = searchParams.get('eventId')
     const status = searchParams.get('status')
 
-    const rsvps = await db.rsvp.findMany({
-      where: {
-        ...(eventId && { eventId }),
-        ...(status && { status: status as RsvpStatus })
-      },
-      include: {
-        guest: {
-          include: { group: true }
-        },
-        event: true
-      },
-      orderBy: { respondedAt: 'desc' }
-    })
+    let query = db.from('Rsvp').select('*, guest:Guest(*, group:GuestGroup(*)), event:Event(*)')
+
+    if (eventId) query = query.eq('eventId', eventId)
+    if (status) query = query.eq('status', status)
+
+    const { data: rsvps, error } = await query.order('respondedAt', { ascending: false, nullsFirst: false })
+    if (error) throw error
 
     return NextResponse.json({ success: true, data: rsvps })
   } catch (error) {

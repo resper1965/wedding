@@ -3,34 +3,17 @@ import { db } from '@/lib/db'
 
 export async function GET() {
   try {
-    const wedding = await db.wedding.findFirst()
+    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
     if (!wedding) return NextResponse.json({ success: false, error: 'No wedding' }, { status: 404 })
 
-    const guests = await db.guest.findMany({
-      where: { weddingId: wedding.id },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        category: true,
-        relationship: true,
-        inviteStatus: true,
-        thankYouSent: true,
-        rsvps: {
-          select: {
-            status: true,
-            event: { select: { name: true } }
-          }
-        }
-      },
-      orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }]
-    })
+    const { data: guests, error } = await db.from('Guest')
+      .select('id, firstName, lastName, email, phone, category, relationship, inviteStatus, thankYouSent, rsvps:Rsvp(status, event:Event(name))')
+      .eq('weddingId', wedding.id)
+      .order('lastName').order('firstName')
+    if (error) throw error
 
-    // Build CSV
     const headers = ['Nome', 'Sobrenome', 'Email', 'Telefone', 'Categoria', 'Quem Convida', 'Status Convite', 'RSVP', 'Obrigado Enviado']
-    const rows = guests.map(g => [
+    const rows = (guests || []).map((g: any) => [
       g.firstName,
       g.lastName,
       g.email || '',
@@ -38,7 +21,7 @@ export async function GET() {
       g.category || '',
       g.relationship || '',
       g.inviteStatus,
-      g.rsvps.map(r => `${r.event.name}: ${r.status}`).join(' | '),
+      (g.rsvps || []).map((r: any) => `${r.event?.name}: ${r.status}`).join(' | '),
       g.thankYouSent ? 'Sim' : 'Não'
     ])
 

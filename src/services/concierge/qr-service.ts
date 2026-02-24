@@ -15,6 +15,7 @@
  */
 
 import crypto from 'crypto'
+import { db } from '@/lib/db'
 
 // JWT Configuration
 const JWT_SECRET = process.env.JWT_SECRET || 'wedding_concierge_secret_key_2025'
@@ -278,22 +279,11 @@ export function validateQRCode(token: string): QRValidationResult {
 /**
  * Generate QR codes for all confirmed invitations
  */
-export async function generateQrCodesForConfirmed(db: {
-  invitation: {
-    findMany: (args: { where: { flowStatus: string; qrToken: null }, include: { guests: boolean } }) => Promise<Array<{ id: string; familyName: string | null; guests: Array<{ id: string }> }>>
-    update: (args: { where: { id: string }, data: { qrToken: string; qrTokenExpires: Date } }) => Promise<unknown>
-  }
-}): Promise<Array<{ invitationId: string; familyName: string; qrDataUrl: string }>> {
-  // Find all confirmed invitations without QR codes
-  const invitations = await db.invitation.findMany({
-    where: {
-      flowStatus: 'confirmed',
-      qrToken: null
-    },
-    include: {
-      guests: true
-    }
-  })
+export async function generateQrCodesForConfirmed(): Promise<Array<{ invitationId: string; familyName: string; qrDataUrl: string }>> {
+  const { data: invitations } = await db.from('Invitation')
+    .select('*, guests:Guest(id)')
+    .eq('flowStatus', 'confirmed')
+    .is('qrToken', null)
   
   const results: Array<{ invitationId: string; familyName: string; qrDataUrl: string }> = []
   
@@ -308,14 +298,11 @@ export async function generateQrCodesForConfirmed(db: {
     )
     
     if (result.success && result.token) {
-      // Save token to database
-      await db.invitation.update({
-        where: { id: invitation.id },
-        data: {
-          qrToken: result.token,
-          qrTokenExpires: new Date(Date.now() + JWT_EXPIRY_DAYS * 24 * 60 * 60 * 1000)
-        }
-      })
+      await db.from('Invitation').update({
+        qrToken: result.token,
+        qrTokenExpires: new Date(Date.now() + JWT_EXPIRY_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date().toISOString(),
+      }).eq('id', invitation.id)
       
       results.push({
         invitationId: invitation.id,
@@ -344,16 +331,7 @@ export interface CheckInResult {
  * Process a check-in from scanned QR code
  */
 export async function processCheckIn(
-  token: string,
-  db: {
-    invitation: {
-      findUnique: (args: { where: { id: string } }) => Promise<{ id: string; familyName: string | null; checkedIn: boolean; checkedInAt: Date | null } | null>
-      update: (args: { where: { id: string }, data: { checkedIn: boolean; checkedInAt: Date } }) => Promise<unknown>
-    }
-    guest: {
-      updateMany: (args: { where: { invitationId: string }, data: object }) => Promise<unknown>
-    }
-  }
+  token: string
 ): Promise<CheckInResult> {
   // Validate token
   const validation = validateQRCode(token)
@@ -368,9 +346,7 @@ export async function processCheckIn(
   const payload = validation.payload!
   
   // Check if already checked in
-  const invitation = await db.invitation.findUnique({
-    where: { id: payload.invitationId }
-  })
+  const { data: invitation } = await db.from('Invitation').select('*').eq('id', payload.invitationId).maybeSingle()
   
   if (!invitation) {
     return {
@@ -389,13 +365,7 @@ export async function processCheckIn(
   }
   
   // Mark as checked in
-  await db.invitation.update({
-    where: { id: payload.invitationId },
-    data: {
-      checkedIn: true,
-      checkedInAt: new Date()
-    }
-  })
+  await db.from('Invitation').update({ checkedIn: true, checkedInAt: new Date().toISOString(), updatedAt: new Date().toISOString() }).eq('id', payload.invitationId)
   
   // Update guest records (if needed)
   // Additional logic for per-guest check-in can be added here
