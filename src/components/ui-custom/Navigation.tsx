@@ -5,17 +5,19 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Users, MessageSquare, Settings,
   BarChart3, Grid3X3, HelpCircle, ChevronLeft, ChevronRight,
-  Heart, DollarSign, Briefcase, ClipboardList
+  Heart, DollarSign, Briefcase, ClipboardList, Shield
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/components/auth/SessionProvider'
 
 interface Tab {
   id: string
   label: string
   icon: React.ElementType
   href?: string
+  adminOnly?: boolean
 }
 
 export const tabs: Tab[] = [
@@ -28,6 +30,7 @@ export const tabs: Tab[] = [
   { id: 'vendors', label: 'Fornecedores', icon: Briefcase },
   { id: 'checklist', label: 'Checklist', icon: ClipboardList },
   { id: 'settings', label: 'Configurações', icon: Settings },
+  { id: 'users', label: 'Usuários', icon: Shield, adminOnly: true },
   { id: 'help', label: 'Ajuda', icon: HelpCircle, href: '/ajuda' },
 ]
 
@@ -54,6 +57,9 @@ export function SidebarNav({
   collapsed,
   onCollapsedChange,
 }: NavigationProps) {
+  const { user } = useAuth()
+  const displayTabs = tabs.filter(t => !t.adminOnly || user?.role === 'admin')
+
   return (
     <aside
       className={cn(
@@ -76,7 +82,7 @@ export function SidebarNav({
 
       {/* Nav items */}
       <nav className="flex flex-1 flex-col gap-1 p-2 pt-3">
-        {tabs.map((tab) => {
+        {displayTabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
 
@@ -132,11 +138,12 @@ export function SidebarNav({
  * Bottom navigation bar — mobile only (< md)
  */
 export function BottomNav({ activeTab, onTabChange }: Pick<NavigationProps, 'activeTab' | 'onTabChange'>) {
-  // Show all tabs except help in a scrollable strip
-  const navTabs = tabs.filter(t => t.id !== 'help')
+  const { user } = useAuth()
+  // Show all tabs except help in a scrollable strip, filtering admin-only
+  const navTabs = tabs.filter(t => t.id !== 'help' && (!t.adminOnly || user?.role === 'admin'))
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex border-t border-amber-100/50 bg-white/95 backdrop-blur-md">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex border-t border-amber-100/50 bg-white/95 backdrop-blur-md overflow-x-auto scrollbar-hide">
       {navTabs.map((tab) => {
         const Icon = tab.icon
         const isActive = activeTab === tab.id

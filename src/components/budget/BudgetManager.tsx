@@ -35,6 +35,50 @@ const emptyForm: Omit<BudgetItem, 'id'> = {
   notes: null
 }
 
+function ItemForm({ 
+  form, 
+  setForm 
+}: { 
+  form: typeof emptyForm; 
+  setForm: (data: typeof emptyForm) => void 
+}) {
+  return (
+    <div className="grid gap-4 py-2">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>Categoria</Label>
+          <Select value={form.category} onValueChange={v => setForm({ ...form, category: v })}>
+            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
+            <SelectContent>{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Descrição</Label>
+          <Input className="mt-1" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-3">
+        <div>
+          <Label>Orçado (R$)</Label>
+          <Input className="mt-1" type="number" value={form.estimated} onChange={e => setForm({ ...form, estimated: parseFloat(e.target.value) || 0 })} />
+        </div>
+        <div>
+          <Label>Real (R$)</Label>
+          <Input className="mt-1" type="number" value={form.actual} onChange={e => setForm({ ...form, actual: parseFloat(e.target.value) || 0 })} />
+        </div>
+        <div>
+          <Label>Pago (R$)</Label>
+          <Input className="mt-1" type="number" value={form.paid} onChange={e => setForm({ ...form, paid: parseFloat(e.target.value) || 0 })} />
+        </div>
+      </div>
+      <div>
+        <Label>Observações</Label>
+        <Textarea className="mt-1" rows={2} value={form.notes || ''} onChange={e => setForm({ ...form, notes: e.target.value || null })} />
+      </div>
+    </div>
+  )
+}
+
 function fmt(v: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
 }
@@ -109,41 +153,6 @@ export function BudgetManager() {
     setForm({ category: item.category, description: item.description, estimated: item.estimated, actual: item.actual, paid: item.paid, isPaid: item.isPaid, notes: item.notes })
   }
 
-  const ItemForm = () => (
-    <div className="grid gap-4 py-2">
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label>Categoria</Label>
-          <Select value={form.category} onValueChange={v => setForm({ ...form, category: v })}>
-            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
-            <SelectContent>{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label>Descrição</Label>
-          <Input className="mt-1" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
-        </div>
-      </div>
-      <div className="grid grid-cols-3 gap-3">
-        <div>
-          <Label>Orçado (R$)</Label>
-          <Input className="mt-1" type="number" value={form.estimated} onChange={e => setForm({ ...form, estimated: parseFloat(e.target.value) || 0 })} />
-        </div>
-        <div>
-          <Label>Real (R$)</Label>
-          <Input className="mt-1" type="number" value={form.actual} onChange={e => setForm({ ...form, actual: parseFloat(e.target.value) || 0 })} />
-        </div>
-        <div>
-          <Label>Pago (R$)</Label>
-          <Input className="mt-1" type="number" value={form.paid} onChange={e => setForm({ ...form, paid: parseFloat(e.target.value) || 0 })} />
-        </div>
-      </div>
-      <div>
-        <Label>Observações</Label>
-        <Textarea className="mt-1" rows={2} value={form.notes || ''} onChange={e => setForm({ ...form, notes: e.target.value || null })} />
-      </div>
-    </div>
-  )
 
   return (
     <div className="space-y-6">
@@ -238,7 +247,7 @@ export function BudgetManager() {
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto max-w-md">
           <DialogHeader><DialogTitle>Adicionar Item</DialogTitle></DialogHeader>
-          <ItemForm />
+          <ItemForm form={form} setForm={setForm} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddOpen(false)}>Cancelar</Button>
             <Button onClick={handleSave} className="bg-stone-800 hover:bg-stone-700">Adicionar</Button>
@@ -250,7 +259,7 @@ export function BudgetManager() {
       <Dialog open={!!editingItem} onOpenChange={() => setEditingItem(null)}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto max-w-md">
           <DialogHeader><DialogTitle>Editar Item</DialogTitle></DialogHeader>
-          <ItemForm />
+          <ItemForm form={form} setForm={setForm} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingItem(null)}>Cancelar</Button>
             <Button onClick={handleSave} className="bg-stone-800 hover:bg-stone-700">Salvar</Button>

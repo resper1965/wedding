@@ -38,6 +38,49 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 
 const emptyForm = { name: '', category: '', contact: '', phone: '', email: '', website: '', value: 0, status: 'pesquisando', notes: '', contractUrl: '' }
 
+function VendorForm({ 
+  form, 
+  setForm 
+}: { 
+  form: typeof emptyForm; 
+  setForm: (data: typeof emptyForm) => void 
+}) {
+  return (
+    <div className="grid gap-4 py-2">
+      <div className="grid grid-cols-2 gap-3">
+        <div><Label>Nome *</Label><Input className="mt-1" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></div>
+        <div>
+          <Label>Categoria *</Label>
+          <Select value={form.category} onValueChange={v => setForm({ ...form, category: v })}>
+            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
+            <SelectContent>{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><Label>Contato</Label><Input className="mt-1" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} /></div>
+        <div><Label>WhatsApp</Label><Input className="mt-1" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><Label>Email</Label><Input className="mt-1" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
+        <div><Label>Site</Label><Input className="mt-1" value={form.website} onChange={e => setForm({ ...form, website: e.target.value })} /></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><Label>Valor (R$)</Label><Input className="mt-1" type="number" value={form.value} onChange={e => setForm({ ...form, value: parseFloat(e.target.value) || 0 })} /></div>
+        <div>
+          <Label>Status</Label>
+          <Select value={form.status} onValueChange={v => setForm({ ...form, status: v })}>
+            <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+            <SelectContent>{Object.entries(STATUS_CONFIG).map(([k, v]) => <SelectItem key={k} value={k}>{v.label}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div><Label>Link do Contrato</Label><Input className="mt-1" placeholder="https://" value={form.contractUrl} onChange={e => setForm({ ...form, contractUrl: e.target.value })} /></div>
+      <div><Label>Observações</Label><Textarea className="mt-1" rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} /></div>
+    </div>
+  )
+}
+
 function fmt(v: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
 }
@@ -92,40 +135,6 @@ export function VendorManager() {
     setForm({ name: v.name, category: v.category, contact: v.contact || '', phone: v.phone || '', email: v.email || '', website: v.website || '', value: v.value, status: v.status, notes: v.notes || '', contractUrl: v.contractUrl || '' })
   }
 
-  const VendorForm = () => (
-    <div className="grid gap-4 py-2">
-      <div className="grid grid-cols-2 gap-3">
-        <div><Label>Nome *</Label><Input className="mt-1" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></div>
-        <div>
-          <Label>Categoria *</Label>
-          <Select value={form.category} onValueChange={v => setForm({ ...form, category: v })}>
-            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
-            <SelectContent>{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div><Label>Contato</Label><Input className="mt-1" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} /></div>
-        <div><Label>WhatsApp</Label><Input className="mt-1" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div><Label>Email</Label><Input className="mt-1" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
-        <div><Label>Site</Label><Input className="mt-1" value={form.website} onChange={e => setForm({ ...form, website: e.target.value })} /></div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div><Label>Valor (R$)</Label><Input className="mt-1" type="number" value={form.value} onChange={e => setForm({ ...form, value: parseFloat(e.target.value) || 0 })} /></div>
-        <div>
-          <Label>Status</Label>
-          <Select value={form.status} onValueChange={v => setForm({ ...form, status: v })}>
-            <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-            <SelectContent>{Object.entries(STATUS_CONFIG).map(([k, v]) => <SelectItem key={k} value={k}>{v.label}</SelectItem>)}</SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div><Label>Link do Contrato</Label><Input className="mt-1" placeholder="https://" value={form.contractUrl} onChange={e => setForm({ ...form, contractUrl: e.target.value })} /></div>
-      <div><Label>Observações</Label><Textarea className="mt-1" rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} /></div>
-    </div>
-  )
 
   return (
     <div className="space-y-6">
@@ -196,7 +205,7 @@ export function VendorManager() {
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto max-w-md">
           <DialogHeader><DialogTitle>Adicionar Fornecedor</DialogTitle></DialogHeader>
-          <VendorForm />
+          <VendorForm form={form} setForm={setForm} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddOpen(false)}>Cancelar</Button>
             <Button onClick={handleSave} className="bg-stone-800 hover:bg-stone-700">Adicionar</Button>
@@ -207,7 +216,7 @@ export function VendorManager() {
       <Dialog open={!!editingVendor} onOpenChange={() => setEditingVendor(null)}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto max-w-md">
           <DialogHeader><DialogTitle>Editar Fornecedor</DialogTitle></DialogHeader>
-          <VendorForm />
+          <VendorForm form={form} setForm={setForm} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingVendor(null)}>Cancelar</Button>
             <Button onClick={handleSave} className="bg-stone-800 hover:bg-stone-700">Salvar</Button>

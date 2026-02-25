@@ -22,6 +22,7 @@ import { SeatingPlanner } from '@/components/seating/SeatingPlanner'
 import { BudgetManager } from '@/components/budget/BudgetManager'
 import { VendorManager } from '@/components/vendors/VendorManager'
 import { ChecklistManager } from '@/components/checklist/ChecklistManager'
+import { UserManager } from '@/components/users/UserManager'
 import Link from 'next/link'
 
 // Types
@@ -314,6 +315,12 @@ export function WeddingGuestPlatform() {
               {activeTab === 'checklist' && (
                 <PageTransition key="checklist">
                   <ChecklistManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'users' && user?.role === 'admin' && (
+                <PageTransition key="users">
+                  <UserManager />
                 </PageTransition>
               )}
             </AnimatePresence>

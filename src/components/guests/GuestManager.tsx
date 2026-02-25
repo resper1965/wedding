@@ -92,6 +92,104 @@ const emptyForm = {
   notes: ''
 }
 
+function GuestForm({ 
+  formData, 
+  setFormData 
+}: { 
+  formData: typeof emptyForm; 
+  setFormData: (data: typeof emptyForm) => void 
+}) {
+  return (
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="firstName">Nome *</Label>
+          <Input
+            id="firstName"
+            value={formData.firstName}
+            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            className="mt-1"
+          />
+        </div>
+        <div>
+          <Label htmlFor="lastName">Sobrenome *</Label>
+          <Input
+            id="lastName"
+            value={formData.lastName}
+            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            className="mt-1"
+          />
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className="mt-1"
+        />
+      </div>
+      <div>
+        <Label htmlFor="phone">WhatsApp</Label>
+        <Input
+          id="phone"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          className="mt-1"
+          placeholder="(11) 99999-9999"
+          inputMode="tel"
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Categoria</Label>
+          <Select
+            value={formData.category}
+            onValueChange={(v) => setFormData({ ...formData, category: v })}
+          >
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Selecionar" />
+            </SelectTrigger>
+            <SelectContent>
+              {CATEGORIES.map(cat => (
+                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Quem Convida</Label>
+          <Select
+            value={formData.relationship}
+            onValueChange={(v) => setFormData({ ...formData, relationship: v })}
+          >
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Selecionar" />
+            </SelectTrigger>
+            <SelectContent>
+              {WHO_INVITES.map(who => (
+                <SelectItem key={who} value={who}>{who}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="notes">Observações</Label>
+        <Textarea
+          id="notes"
+          value={formData.notes}
+          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+          className="mt-1"
+          rows={2}
+        />
+      </div>
+    </div>
+  )
+}
+
 export function GuestManager({ guests: initialGuests, groups, onRefresh }: GuestManagerProps) {
   const [guests, setGuests] = useState(initialGuests)
   const [search, setSearch] = useState('')
@@ -254,96 +352,6 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
   useEffect(() => {
     setGuests(initialGuests)
   }, [initialGuests])
-
-  const GuestForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="grid gap-4 py-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="firstName">Nome *</Label>
-          <Input
-            id="firstName"
-            value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <Label htmlFor="lastName">Sobrenome *</Label>
-          <Input
-            id="lastName"
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            className="mt-1"
-          />
-        </div>
-      </div>
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="mt-1"
-        />
-      </div>
-      <div>
-        <Label htmlFor="phone">WhatsApp</Label>
-        <Input
-          id="phone"
-          value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className="mt-1"
-          placeholder="(11) 99999-9999"
-          inputMode="tel"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>Categoria</Label>
-          <Select
-            value={formData.category}
-            onValueChange={(v) => setFormData({ ...formData, category: v })}
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Selecionar" />
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORIES.map(cat => (
-                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label>Quem Convida</Label>
-          <Select
-            value={formData.relationship}
-            onValueChange={(v) => setFormData({ ...formData, relationship: v })}
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Selecionar" />
-            </SelectTrigger>
-            <SelectContent>
-              {WHO_INVITES.map(who => (
-                <SelectItem key={who} value={who}>{who}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div>
-        <Label htmlFor="notes">Observações</Label>
-        <Textarea
-          id="notes"
-          value={formData.notes}
-          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-          className="mt-1"
-          rows={2}
-        />
-      </div>
-    </div>
-  )
 
   return (
     <div className="space-y-4">
@@ -543,7 +551,7 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
           <DialogHeader>
             <DialogTitle>Adicionar Convidado</DialogTitle>
           </DialogHeader>
-          <GuestForm onSubmit={handleAddGuest} submitLabel="Adicionar" />
+          <GuestForm formData={formData} setFormData={setFormData} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
               Cancelar
@@ -561,7 +569,7 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
           <DialogHeader>
             <DialogTitle>Editar Convidado</DialogTitle>
           </DialogHeader>
-          <GuestForm onSubmit={handleUpdateGuest} submitLabel="Salvar" />
+          <GuestForm formData={formData} setFormData={setFormData} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingGuest(null)}>
               Cancelar
