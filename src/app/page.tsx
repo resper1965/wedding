@@ -22,6 +22,9 @@ import { SeatingPlanner } from '@/components/seating/SeatingPlanner'
 import { BudgetManager } from '@/components/budget/BudgetManager'
 import { VendorManager } from '@/components/vendors/VendorManager'
 import { ChecklistManager } from '@/components/checklist/ChecklistManager'
+import { SaveTheDateManager } from '@/components/save-the-date/SaveTheDateManager'
+import { GiftManagerEnhanced } from '@/components/gifts/GiftManagerEnhanced'
+import { AIAgentPanel } from '@/components/ai-agent/AIAgentPanel'
 import Link from 'next/link'
 
 // Types
@@ -314,6 +317,24 @@ export function WeddingGuestPlatform() {
               {activeTab === 'checklist' && (
                 <PageTransition key="checklist">
                   <ChecklistManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'save-the-date' && (
+                <PageTransition key="save-the-date">
+                  <SaveTheDateManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'gifts' && (
+                <PageTransition key="gifts">
+                  <GiftManagerEnhanced />
+                </PageTransition>
+              )}
+
+              {activeTab === 'ai-agent' && (
+                <PageTransition key="ai-agent">
+                  <AIAgentPanel />
                 </PageTransition>
               )}
             </AnimatePresence>
