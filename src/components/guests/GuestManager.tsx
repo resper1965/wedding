@@ -97,24 +97,27 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [whoInvitesFilter, setWhoInvitesFilter] = useState('all')
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null)
   const [formData, setFormData] = useState(emptyForm)
   const [qrDialogGuest, setQrDialogGuest] = useState<Guest | null>(null)
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null)
+  const [weddingInfo, setWeddingInfo] = useState<{ partner1Name: string; partner2Name: string; weddingDate: string } | null>(null)
 
   // Filter guests
   const filteredGuests = guests.filter(guest => {
-    const matchesSearch = 
+    const matchesSearch =
       guest.firstName.toLowerCase().includes(search.toLowerCase()) ||
       guest.lastName.toLowerCase().includes(search.toLowerCase()) ||
       guest.email?.toLowerCase().includes(search.toLowerCase()) ||
       guest.phone?.includes(search)
-    
+
     const matchesStatus = statusFilter === 'all' || guest.inviteStatus === statusFilter
     const matchesCategory = categoryFilter === 'all' || guest.category === categoryFilter
+    const matchesWhoInvites = whoInvitesFilter === 'all' || guest.relationship === whoInvitesFilter
 
-    return matchesSearch && matchesStatus && matchesCategory
+    return matchesSearch && matchesStatus && matchesCategory && matchesWhoInvites
   })
 
   const handleAddGuest = async () => {
@@ -254,6 +257,12 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
   useEffect(() => {
     setGuests(initialGuests)
   }, [initialGuests])
+
+  useEffect(() => {
+    fetch('/api/wedding').then(r => r.json()).then(data => {
+      if (data.success) setWeddingInfo(data.data)
+    }).catch(() => {})
+  }, [])
 
   const GuestForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
     <div className="grid gap-4 py-4">
@@ -397,6 +406,17 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
             <SelectItem value="all">Todas</SelectItem>
             {CATEGORIES.map(cat => (
               <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={whoInvitesFilter} onValueChange={setWhoInvitesFilter}>
+          <SelectTrigger className="w-full sm:w-44 border-stone-200 bg-white">
+            <SelectValue placeholder="Quem Convida" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os lados</SelectItem>
+            {WHO_INVITES.map(who => (
+              <SelectItem key={who} value={who}>{who}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -579,12 +599,32 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
           <DialogHeader>
             <DialogTitle>QR Code do Convite</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-stone-500">
-            {qrDialogGuest?.firstName} {qrDialogGuest?.lastName}
-          </p>
-          <div className="flex justify-center py-4">
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-stone-700">
+              {qrDialogGuest?.firstName} {qrDialogGuest?.lastName}
+            </p>
+            {weddingInfo && (
+              <p className="text-xs text-stone-400">
+                {weddingInfo.partner1Name} & {weddingInfo.partner2Name} •{' '}
+                {new Date(weddingInfo.weddingDate).toLocaleDateString('pt-BR')}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col items-center gap-2 py-4">
             {qrCodeUrl ? (
-              <img src={qrCodeUrl} alt="QR Code" className="rounded-lg shadow-sm" width={200} height={200} />
+              <div className="rounded-xl border border-stone-100 bg-white p-3 shadow-sm">
+                <img src={qrCodeUrl} alt="QR Code" className="rounded-lg" width={200} height={200} />
+                {weddingInfo && (
+                  <div className="mt-2 border-t border-stone-100 pt-2 text-center">
+                    <p className="text-[11px] font-medium text-stone-600">
+                      {weddingInfo.partner1Name} & {weddingInfo.partner2Name}
+                    </p>
+                    <p className="text-[10px] text-stone-400">
+                      {new Date(weddingInfo.weddingDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    </p>
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="h-[200px] w-[200px] animate-pulse rounded-lg bg-stone-100" />
             )}

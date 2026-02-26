@@ -1,13 +1,15 @@
 {
-  "name": "Wedding Check-in",
-  "short_name": "Check-in",
-  "description": "PWA for guest check-in at wedding reception",
-  "start_url": "/checkin",
+  "name": "Meu Casamento — Gestão",
+  "short_name": "Casamento",
+  "description": "Plataforma completa de gestão de casamento: convidados, RSVP, presentes, save the date e muito mais.",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#fafaf9",
   "theme_color": "#d97706",
-  "orientation": "portrait",
-  "scope": "/checkin",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -22,16 +24,31 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["lifestyle", "utilities"],
+  "categories": ["lifestyle", "utilities", "productivity"],
   "shortcuts": [
     {
-      "name": "Scan QR Code",
-      "short_name": "Scan",
-      "description": "Open QR code scanner",
-      "url": "/checkin?tab=qr",
+      "name": "Convidados",
+      "short_name": "Convidados",
+      "description": "Gerenciar lista de convidados",
+      "url": "/?tab=guests",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Check-in na Porta",
+      "short_name": "Check-in",
+      "description": "Módulo do porteiro para check-in de convidados",
+      "url": "/porteiro",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Presentes",
+      "short_name": "Presentes",
+      "description": "Lista de presentes e wishlist",
+      "url": "/?tab=gifts",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "related_applications": []
 }
