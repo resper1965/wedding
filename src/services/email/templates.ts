@@ -34,7 +34,7 @@ export interface TemplateData {
  * Generate invitation email template
  */
 export function invitationTemplate(data: TemplateData): EmailTemplate {
-  const subject = `Convite: Casamento de ${data.partner1Name} & ${data.partner2Name}`
+  const subject = `✨ Convite Especial: Casamento de ${data.partner1Name} & ${data.partner2Name}`
   
   const html = `
 <!DOCTYPE html>
@@ -42,109 +42,124 @@ export function invitationTemplate(data: TemplateData): EmailTemplate {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Convite de Casamento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
-<body style="margin: 0; padding: 0; background-color: #faf7f2; font-family: 'Georgia', serif;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+<body style="margin: 0; padding: 0; background-color: #fcfbf7; font-family: 'Montserrat', sans-serif; -webkit-font-smoothing: antialiased;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #fcfbf7;">
     <tr>
-      <td align="center" style="padding: 40px 20px;">
-        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-          <!-- Header -->
+      <td align="center" style="padding: 60px 20px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #e5e0d5; border-radius: 4px; overflow: hidden;">
+          <!-- Top Border Accent -->
           <tr>
-            <td align="center" style="padding: 50px 40px 30px;">
-              <h1 style="margin: 0; font-size: 32px; font-weight: 400; color: #92400e; letter-spacing: 2px;">
-                ${data.partner1Name}
-              </h1>
-              <p style="margin: 10px 0; font-size: 24px; color: #f59e0b;">♥</p>
-              <h1 style="margin: 0; font-size: 32px; font-weight: 400; color: #92400e; letter-spacing: 2px;">
-                ${data.partner2Name}
-              </h1>
-              <p style="margin: 20px 0 0; font-size: 16px; color: #78716c; font-style: italic;">
-                Convidam para o casamento
+            <td height="8" style="background: linear-gradient(90deg, #d4af37, #f1e5ac, #d4af37);"></td>
+          </tr>
+          
+          <!-- Hero Section -->
+          <tr>
+            <td align="center" style="padding: 60px 40px 40px;">
+              <p style="margin: 0; font-size: 14px; color: #a6927a; text-transform: uppercase; letter-spacing: 4px; font-weight: 400;">
+                Save the Date
+              </p>
+              <div style="margin: 30px 0;">
+                <h1 style="margin: 0; font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 400; color: #4a4138; line-height: 1.2;">
+                  ${data.partner1Name} <span style="font-family: 'Playfair Display', serif; font-style: italic; color: #d4af37;">&</span> ${data.partner2Name}
+                </h1>
+              </div>
+              <p style="margin: 0; font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #8c7f6d;">
+                Convidam com imensa alegria para o seu casamento
               </p>
             </td>
           </tr>
           
-          <!-- Divider -->
+          <!-- Decorative Divider -->
           <tr>
-            <td style="padding: 0 60px;">
-              <div style="height: 1px; background: linear-gradient(to right, transparent, #d97706, transparent);"></div>
-            </td>
-          </tr>
-          
-          <!-- Date -->
-          <tr>
-            <td align="center" style="padding: 30px 40px;">
-              <p style="margin: 0; font-size: 14px; color: #78716c; text-transform: uppercase; letter-spacing: 3px;">
-                ${data.weddingDate}
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Events -->
-          <tr>
-            <td style="padding: 0 40px 30px;">
+            <td align="center" style="padding: 0 60px;">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                ${data.events.map(e => `
                 <tr>
-                  <td style="padding: 15px 0; border-bottom: 1px solid #f5f5f4;">
-                    <p style="margin: 0; font-size: 16px; color: #292524; font-weight: 500;">${e.name}</p>
-                    ${e.venue ? `<p style="margin: 5px 0 0; font-size: 14px; color: #78716c;">${e.venue}</p>` : ''}
-                  </td>
+                  <td height="1" style="background-color: #e5e0d5;"></td>
+                  <td width="20" align="center" style="padding: 0 10px; color: #d4af37; font-size: 10px;">✦</td>
+                  <td height="1" style="background-color: #e5e0d5;"></td>
                 </tr>
-                `).join('')}
               </table>
             </td>
           </tr>
           
-          <!-- Guest Name -->
+          <!-- Invitation Content -->
           <tr>
-            <td align="center" style="padding: 20px 40px;">
-              <p style="margin: 0; font-size: 18px; color: #292524;">
-                ${data.familyName ? `Caro(a) ${data.familyName}` : `Caro(a) ${data.guestName}`},
+            <td align="center" style="padding: 40px 50px 20px;">
+              <p style="margin: 0; font-size: 16px; color: #4a4138; line-height: 1.8;">
+                Caro(a) <strong style="color: #4a4138;">${data.familyName || data.guestName}</strong>,
               </p>
-              <p style="margin: 15px 0 0; font-size: 16px; color: #57534e; line-height: 1.6;">
-                Ficaremos muito felizes com a sua presença neste dia tão especial.
-              </p>
-            </td>
-          </tr>
-          
-          <!-- CTA Button -->
-          <tr>
-            <td align="center" style="padding: 30px 40px 40px;">
-              <a href="${data.rsvpLink}" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 500; border-radius: 50px; letter-spacing: 1px;">
-                Confirmar Presença
-              </a>
-            </td>
-          </tr>
-          
-          <!-- Reply By -->
-          ${data.replyByDate ? `
-          <tr>
-            <td align="center" style="padding: 0 40px 30px;">
-              <p style="margin: 0; font-size: 14px; color: #a8a29e;">
-                Por favor, confirme sua presença até ${data.replyByDate}
+              <p style="margin: 20px 0; font-size: 15px; color: #6e655a; line-height: 1.8;">
+                Sua presença é fundamental para tornar este momento inesquecível. Reserve esta data em seu coração para celebrarmos o amor.
               </p>
             </td>
           </tr>
-          ` : ''}
+
+          <!-- Date and Venue -->
+          <tr>
+            <td align="center" style="padding: 20px 50px 40px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f9f8f4; border-radius: 4px; padding: 30px;">
+                <tr>
+                  <td align="center" style="padding-bottom: 25px; border-bottom: 1px solid #e5e0d5;">
+                    <p style="margin: 0; font-size: 12px; color: #a6927a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Quando</p>
+                    <p style="margin: 0; font-family: 'Playfair Display', serif; font-size: 18px; color: #4a4138;">${data.weddingDate}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding-top: 25px;">
+                    <p style="margin: 0; font-size: 12px; color: #a6927a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Onde</p>
+                    <p style="margin: 0; font-family: 'Playfair Display', serif; font-size: 18px; color: #4a4138;">${data.venue || 'Local a ser definido'}</p>
+                    ${data.venueAddress ? `<p style="margin: 5px 0 0; font-size: 13px; color: #8c7f6d;">${data.venueAddress}</p>` : ''}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
           
-          <!-- Footer -->
+          <!-- RSVP Section -->
+          <tr>
+            <td align="center" style="padding: 0 50px 50px;">
+              <table role="presentation" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center">
+                    <a href="${data.rsvpLink}" style="display: inline-block; padding: 18px 45px; background-color: #4a4138; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; border-radius: 2px; box-shadow: 0 4px 10px rgba(74, 65, 56, 0.2);">
+                      Confirmar sua Presença
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              ${data.replyByDate ? `
+              <p style="margin: 25px 0 0; font-size: 12px; color: #a6927a; font-style: italic;">
+                Favor confirmar até ${data.replyByDate}
+              </p>` : ''}
+            </td>
+          </tr>
+          
+          <!-- Footer Message -->
           ${data.messageFooter ? `
           <tr>
-            <td style="padding: 20px 40px; background-color: #fef3c7; border-radius: 0 0 12px 12px;">
-              <p style="margin: 0; font-size: 14px; color: #78350f; text-align: center; font-style: italic;">
-                ${data.messageFooter}
-              </p>
+            <td align="center" style="padding: 30px 50px; background-color: #f7f5f1; color: #8c7f6d; font-size: 14px; font-style: italic; line-height: 1.6;">
+              "${data.messageFooter}"
             </td>
           </tr>
           ` : ''}
         </table>
         
-        <!-- Powered by -->
-        <p style="margin: 30px 0 0; font-size: 12px; color: #a8a29e;">
-          Powered by casamento.louise.com.br
-        </p>
+        <!-- Bottom Footer -->
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center" style="padding-top: 30px;">
+              <p style="margin: 0; font-size: 11px; color: #a6927a; text-transform: uppercase; letter-spacing: 1px;">
+                casamento.louise.com.br
+              </p>
+              <p style="margin: 15px 0 0; font-size: 10px; color: #ccc4ba;">
+                Se você não consegue clicar no botão acima, copie e cole este link:<br>
+                <a href="${data.rsvpLink}" style="color: #a6927a;">${data.rsvpLink}</a>
+              </p>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   </table>
@@ -153,34 +168,29 @@ export function invitationTemplate(data: TemplateData): EmailTemplate {
   `.trim()
 
   const text = `
-Convite de Casamento
+Convite: Casamento de ${data.partner1Name} & ${data.partner2Name}
 
-${data.partner1Name} ♥ ${data.partner2Name}
+Caro(a) ${data.familyName || data.guestName},
 
-Convidam para o casamento
+É com imensa alegria que convidamos você para o nosso casamento.
 
-Data: ${data.weddingDate}
+QUANDO: ${data.weddingDate}
+ONDE: ${data.venue || 'Local a ser definido'}
+${data.venueAddress ? `ENDEREÇO: ${data.venueAddress}` : ''}
 
-Eventos:
-${data.events.map(e => `• ${e.name}${e.venue ? ` - ${e.venue}` : ''}`).join('\n')}
-
-${data.familyName ? `Caro(a) ${data.familyName}` : `Caro(a) ${data.guestName}`},
-
-Ficaremos muito felizes com a sua presença neste dia tão especial.
-
-Acesse o link para confirmar sua presença:
+Por favor, confirme sua presença através do link:
 ${data.rsvpLink}
-
-${data.replyByDate ? `Por favor, confirme sua presença até ${data.replyByDate}` : ''}
+${data.replyByDate ? `Favor confirmar até ${data.replyByDate}` : ''}
 
 ${data.messageFooter || ''}
 
 ---
-Powered by casamento.louise.com.br
+casamento.louise.com.br
   `.trim()
 
   return { subject, html, text }
 }
+
 
 /**
  * Generate RSVP confirmation email template
