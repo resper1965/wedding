@@ -46,6 +46,7 @@ interface GuestListItem {
   lastName: string
   checkedIn: boolean
   checkedInAt: string | null
+  invitationId: string | null
   groupName?: string | null
   phone?: string | null
   dietaryRestrictions?: string | null
@@ -175,18 +176,22 @@ export default function PorteiroPage() {
     fetchStats()
   }
 
-  const handleCheckInFromList = async (guestId: string, guestName: string) => {
+  const handleCheckInFromList = async (guest: GuestListItem) => {
+    if (!guest.invitationId) {
+      toast.error('Convidado não possui convite vinculado')
+      return
+    }
     try {
       const res = await fetch(`/api/checkin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestId }),
+        body: JSON.stringify({ invitationId: guest.invitationId }),
       })
       const data = await res.json()
       if (data.success) {
-        toast.success(`✓ ${guestName} fez check-in!`)
+        toast.success(`✓ ${guest.firstName} ${guest.lastName} fez check-in!`)
         setGuestList(prev =>
-          prev.map(g => g.id === guestId
+          prev.map(g => g.id === guest.id
             ? { ...g, checkedIn: true, checkedInAt: new Date().toISOString() }
             : g
           )
@@ -507,7 +512,7 @@ export default function PorteiroPage() {
                       {!guest.checkedIn && (
                         <Button
                           size="sm"
-                          onClick={() => handleCheckInFromList(guest.id, `${guest.firstName} ${guest.lastName}`)}
+                          onClick={() => handleCheckInFromList(guest)}
                           className="h-8 shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3"
                         >
                           <UserCheck className="mr-1 h-3.5 w-3.5" />
