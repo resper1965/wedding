@@ -20,6 +20,14 @@ export async function authFetch(
   if (token) {
     headers.set('Authorization', `Bearer ${token}`)
   }
+
+  // Auto-inject tenant ID for SaaS Multi-Tenant architecture
+  if (typeof window !== 'undefined') {
+    const activeWeddingId = localStorage.getItem('ness_active_wedding')
+    if (activeWeddingId) {
+      headers.set('x-wedding-id', activeWeddingId)
+    }
+  }
   
   return fetch(url, {
     ...options,

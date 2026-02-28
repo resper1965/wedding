@@ -6,27 +6,45 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, Heart, Info } from 'lucide-react'
 import { authFetch } from '@/lib/auth-fetch'
 import { useAuth } from '@/components/auth/SessionProvider'
+import { useWedding } from '@/components/auth/WeddingProvider'
 
-// Components
+import dynamic from 'next/dynamic'
+import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
+
+// Components (Eagerly loaded for above the fold)
 import { Navigation, PageTransition, SidebarNav, BottomNav } from '@/components/ui-custom/Navigation'
 import { WeddingHero } from '@/components/dashboard/WeddingHero'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
 import { RecentActivity } from '@/components/dashboard/RecentActivity'
-import { GuestManager } from '@/components/guests/GuestManager'
-import { MessageCenter } from '@/components/messages/MessageCenter'
 import { AppFooter } from '@/components/layout/AppFooter'
 import { UserMenu } from '@/components/auth/UserMenu'
-import { SettingsManager } from '@/components/settings/SettingsManager'
-import { AnalyticsDashboard } from '@/components/analytics/AnalyticsDashboard'
-import { SeatingPlanner } from '@/components/seating/SeatingPlanner'
-import { BudgetManager } from '@/components/budget/BudgetManager'
-import { VendorManager } from '@/components/vendors/VendorManager'
-import { ChecklistManager } from '@/components/checklist/ChecklistManager'
-import { UserManager } from '@/components/users/UserManager'
-import { SaveTheDateManager } from '@/components/save-the-date/SaveTheDateManager'
-import { GiftManagerEnhanced } from '@/components/gifts/GiftManagerEnhanced'
-import { AIAgentPanel } from '@/components/ai-agent/AIAgentPanel'
-import Link from 'next/link'
+
+// Tab Skeleton Loader
+const TabSkeleton = () => (
+  <div className="w-full space-y-6 animate-pulse">
+    <div className="flex items-center justify-between mb-6">
+      <Skeleton className="h-8 w-48" />
+      <Skeleton className="h-10 w-32" />
+    </div>
+    <Skeleton className="h-64 w-full rounded-xl" />
+    <Skeleton className="h-64 w-full rounded-xl" />
+  </div>
+)
+
+// Dynamic imports for heavy content tabs (Code Splitting)
+const GuestManager = dynamic(() => import('@/components/guests/GuestManager').then(mod => mod.GuestManager), { loading: () => <TabSkeleton /> })
+const MessageCenter = dynamic(() => import('@/components/messages/MessageCenter').then(mod => mod.MessageCenter), { loading: () => <TabSkeleton /> })
+const SettingsManager = dynamic(() => import('@/components/settings/SettingsManager').then(mod => mod.SettingsManager), { loading: () => <TabSkeleton /> })
+const AnalyticsDashboard = dynamic(() => import('@/components/analytics/AnalyticsDashboard').then(mod => mod.AnalyticsDashboard), { loading: () => <TabSkeleton /> })
+const SeatingPlanner = dynamic(() => import('@/components/seating/SeatingPlanner').then(mod => mod.SeatingPlanner), { loading: () => <TabSkeleton /> })
+const BudgetManager = dynamic(() => import('@/components/budget/BudgetManager').then(mod => mod.BudgetManager), { loading: () => <TabSkeleton /> })
+const VendorManager = dynamic(() => import('@/components/vendors/VendorManager').then(mod => mod.VendorManager), { loading: () => <TabSkeleton /> })
+const ChecklistManager = dynamic(() => import('@/components/checklist/ChecklistManager').then(mod => mod.ChecklistManager), { loading: () => <TabSkeleton /> })
+const UserManager = dynamic(() => import('@/components/users/UserManager').then(mod => mod.UserManager), { loading: () => <TabSkeleton /> })
+const SaveTheDateManager = dynamic(() => import('@/components/save-the-date/SaveTheDateManager').then(mod => mod.SaveTheDateManager), { loading: () => <TabSkeleton /> })
+const GiftManagerEnhanced = dynamic(() => import('@/components/gifts/GiftManagerEnhanced').then(mod => mod.GiftManagerEnhanced), { loading: () => <TabSkeleton /> })
+const AIAgentPanel = dynamic(() => import('@/components/ai-agent/AIAgentPanel').then(mod => mod.AIAgentPanel), { loading: () => <TabSkeleton /> })
 
 // Types
 interface DashboardData {
@@ -88,8 +106,10 @@ export function WeddingGuestPlatform() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [guests, setGuests] = useState<Guest[]>([])
   const [groups, setGroups] = useState<Group[]>([])
+  const [groups, setGroups] = useState<Group[]>([])
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const { user, loading: authLoading } = useAuth()
+  const { activeWeddingId, loading: weddingLoading } = useWedding()
 
   // Fetch dashboard data
   const fetchDashboardData = useCallback(async () => {
@@ -137,12 +157,14 @@ export function WeddingGuestPlatform() {
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login')
+    } else if (!authLoading && !weddingLoading && user && !activeWeddingId) {
+      router.push('/onboarding')
     }
-  }, [authLoading, user, router])
+  }, [authLoading, weddingLoading, user, activeWeddingId, router])
 
-  // Initial data fetch (only when authenticated)
+  // Initial data fetch (only when authenticated and tenant is ready)
   useEffect(() => {
-    if (!user) return
+    if (!user || weddingLoading || !activeWeddingId) return
 
     const initialize = async () => {
       setIsLoading(true)
@@ -157,7 +179,7 @@ export function WeddingGuestPlatform() {
     }
     
     initialize()
-  }, [user, fetchDashboardData, fetchGuests, fetchGroups])
+  }, [user, weddingLoading, activeWeddingId, fetchDashboardData, fetchGuests, fetchGroups])
 
   // Refresh data
   const handleRefresh = useCallback(async () => {
@@ -167,8 +189,8 @@ export function WeddingGuestPlatform() {
     ])
   }, [fetchDashboardData, fetchGuests])
 
-  // Loading state (auth or data)
-  if (authLoading || isLoading || !user) {
+  // Loading state (auth, tenant or data)
+  if (authLoading || weddingLoading || isLoading || !user || !activeWeddingId) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-stone-50">
         <motion.div

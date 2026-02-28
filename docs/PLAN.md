@@ -1,34 +1,50 @@
-# PR #1 Review & Implementation Plan
+# Orchestration Plan: SaaS Multi-Tenant Conversion
 
-This plan was generated during Phase 1 of the `[/orchestrate]` workflow.
+**Goal:** Transform the single-event wedding app into a Multi-Tenant SaaS platform with self-service registration, subscription tiers, and a SuperAdmin dashboard. Guests interact exclusively via WhatsApp.
+**Mode:** ORCHESTRATION (Phase 1)
+**Orchestrator:** Antigravity
 
-## 1. Goal Description
-The objective is to fix the build errors introduced in PR #1 (migrating from Prisma to Supabase JS SDK) and successfully deploy the application. 
+## Architectural Decisions based on Socratic Review
+1. **P0 (Mapping): Self-Service.** Couples sign up, creating a User and their own Wedding instance automatically.
+2. **P1 (Finance): SaaS Tiers.** We need a subscription model (e.g., Free, Premium) enforced at the DB and API levels.
+3. **P2 (Guest UX): WhatsApp Only.** Guests do not log in. Web app is strictly for Admins and Couples.
 
-Currently, `npm run build` fails with two target module export errors:
-1. `src/app/api/email/send/route.ts`: Fails to import `EmailService`.
-2. `src/app/api/weather/route.ts`: Fails to import `WeatherService`.
+---
 
-## 2. Proposed Changes
+## Task Breakdown & Agent Assignments
 
-### Build Fixes Configuration
+The execution will be fully parallelized across specialized agents once this plan is approved.
 
-#### [MODIFY] src/app/api/email/send/route.ts
-- Change `import { EmailService }` to `import { emailService }`.
-- Remove the `const emailService = new EmailService()` instantiation inside the loop, using the imported `emailService` singleton directly.
+### 1. Database & Multi-Tenancy (Foundation)
+**Assigned Agents:** `@database-architect`, `@security-auditor`
+- **Schema Updates:** 
+  - Create `WeddingUser` junction table to map Auth Users to Weddings with roles (owner, editor).
+  - Add `subscriptionTier` (e.g., 'free', 'pro', 'premium') and `stripeCustomerId` to the `Wedding` table.
+  - Create `PlatformAdmin` role in `profiles` for SuperAdmin access.
+- **RLS Policies:** Rewrite all RLS policies. Instead of `is_admin_or_editor()`, policies must verify if the user belongs to the specific `weddingId` via the `WeddingUser` table. SuperAdmins bypass this.
+- **Migration Script:** Generate and verify `006_saas_multi_tenant.sql`.
 
-#### [MODIFY] src/app/api/weather/route.ts
-- Change `import { WeatherService }` to `import { getWeatherForecast }`.
-- Update the instantiation logic to directly call `getWeatherForecast(weddingDate, lat, lon)` instead of using `weatherService.getWeather()`.
-- Add parsing for `weddingDate` to ensure a valid `Date` object is passed to `getWeatherForecast`.
+### 2. Backend & API Scoping (Core)
+**Assigned Agents:** `@backend-specialist`, `@security-auditor`
+- **Context Injection:** Update all `/api/*` routes to extract the `weddingId` from the authenticated user's context (or headers) and strictly filter queries. A user must NEVER be able to query RSVPs from another wedding.
+- **Subscription Middleware:** Create helpers to check if a Wedding's `subscriptionTier` allows access to premium features (e.g., AI Agent, custom WhatsApp templates).
+- **Guest API:** Ensure all guest-facing APIs (like RSVP links) remain public but rate-limited, relying on secure tokens instead of auth.
 
-## 3. Verification Plan
+### 3. Frontend & Self-Service Flow (Core)
+**Assigned Agents:** `@frontend-specialist`
+- **Onboarding Flow:** Create `/register` and `/onboarding` pages. When a user signs up, prompt for "Partner Names" and "Wedding Date" to automatically bootstrap their `Wedding` record.
+- **Context Provider:** Create a `WeddingProvider` React context to store the active `weddingId` and pass it to all API calls.
+- **SuperAdmin Dashboard:** Create `/admin` route (protected) to list all weddings, view metrics (total couples, MRR), and manage bans/tiers.
 
-### Automated Tests
-- Run `npm run build` locally to verify that the TypeScript compiler successfully compiles all API routes and pages without throwing export errors.
-- Run `python .agent/skills/lint-and-validate/scripts/lint_runner.py .` to ensure codebase meets linting rules. 
-- Run `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .` to ensure no vulnerabilities exist.
+### 4. Billing & DevOps (Polish)
+**Assigned Agents:** `@devops-engineer`
+- **Stripe Integration (Stub):** Prepare webhooks and API routes for Stripe Checkout completion to upgrade a wedding's `subscriptionTier`.
+- **Environment Setup:** Ensure Vercel environment variables are ready for the SaaS scale.
 
-### Manual Verification
-- Deploy to Vercel/production using the `gh pr merge` and trigger Vercel deploy, or run the deployment script if applicable.
-- Confirm that the errors in the GitHub PR block are resolved.
+---
+
+## 🛑 User Approval Required
+
+**Do you approve this SaaS conversion orchestration plan? (Y/N)**
+- **Y**: I will dispatch the specialized agents (`database-architect`, `backend-specialist`, `frontend-specialist`) to begin the implementation phase in parallel.
+- **N**: Let me know what to change or remove.

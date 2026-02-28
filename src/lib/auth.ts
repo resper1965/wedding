@@ -127,3 +127,45 @@ export async function verifySupabaseToken(
 
 // Keep backward-compatible alias
 export const verifyFirebaseToken = verifySupabaseToken
+
+// ==========================================
+// MULTI-TENANT SAAS HELPERS
+// ==========================================
+
+export async function getUserWeddings(userId: string) {
+  // Query WeddingUser to get accessible weddings, along with subscription tier
+  const { data, error } = await db
+    .from('WeddingUser')
+    .select(`
+      role,
+      weddingId,
+      Wedding (
+        partner1Name,
+        partner2Name,
+        weddingDate,
+        subscriptionTier
+      )
+    `)
+    .eq('userId', userId)
+    
+  if (error || !data) return []
+  return data
+}
+
+export async function verifyWeddingAccess(userId: string, weddingId: string): Promise<boolean> {
+  // Check if superadmin
+  const { data: profile } = await db.from('profiles').select('role, is_approved').eq('id', userId).maybeSingle()
+  if (profile?.role === 'superadmin' && profile.is_approved) {
+    return true
+  }
+  
+  // Check specific mapping
+  const { data, error } = await db
+    .from('WeddingUser')
+    .select('id')
+    .eq('userId', userId)
+    .eq('weddingId', weddingId)
+    .maybeSingle()
+    
+  return !!data && !error
+}

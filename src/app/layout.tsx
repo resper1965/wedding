@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "@/components/auth/SessionProvider";
+import { WeddingProvider } from "@/components/auth/WeddingProvider";
 import { PWAInstallPrompt } from "@/components/ui-custom/PWAInstallPrompt";
 
 const geistSans = Geist({
@@ -56,9 +57,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen`}
       >
         <SessionProvider>
-          {children}
-          <Toaster />
-          <PWAInstallPrompt />
+          <WeddingProvider>
+            {children}
+            <Toaster />
+            <PWAInstallPrompt />
+          </WeddingProvider>
         </SessionProvider>
       </body>
     </html>
