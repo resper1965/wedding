@@ -3,11 +3,14 @@
  * Provides offline functionality for the reception app
  */
 
-const CACHE_NAME = 'wedding-checkin-v1';
+const CACHE_NAME = 'wedding-app-v2';
 const STATIC_ASSETS = [
+  '/',
   '/checkin',
+  '/porteiro',
   '/icon-192.png',
-  '/manifest.json'
+  '/manifest.json',
+  '/logo.svg'
 ];
 
 // Install event - cache static assets

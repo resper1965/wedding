@@ -23,6 +23,9 @@ import { BudgetManager } from '@/components/budget/BudgetManager'
 import { VendorManager } from '@/components/vendors/VendorManager'
 import { ChecklistManager } from '@/components/checklist/ChecklistManager'
 import { UserManager } from '@/components/users/UserManager'
+import { SaveTheDateManager } from '@/components/save-the-date/SaveTheDateManager'
+import { GiftManagerEnhanced } from '@/components/gifts/GiftManagerEnhanced'
+import { AIAgentPanel } from '@/components/ai-agent/AIAgentPanel'
 import Link from 'next/link'
 
 // Types
@@ -321,6 +324,24 @@ export function WeddingGuestPlatform() {
               {activeTab === 'users' && user?.role === 'admin' && (
                 <PageTransition key="users">
                   <UserManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'save-the-date' && (
+                <PageTransition key="save-the-date">
+                  <SaveTheDateManager />
+                </PageTransition>
+              )}
+
+              {activeTab === 'gifts' && (
+                <PageTransition key="gifts">
+                  <GiftManagerEnhanced />
+                </PageTransition>
+              )}
+
+              {activeTab === 'ai-agent' && (
+                <PageTransition key="ai-agent">
+                  <AIAgentPanel />
                 </PageTransition>
               )}
             </AnimatePresence>

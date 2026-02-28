@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "@/components/auth/SessionProvider";
+import { PWAInstallPrompt } from "@/components/ui-custom/PWAInstallPrompt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,10 +22,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Louise & Nicolas | Casamento",
-  description: "Plataforma para gestão de convidados do casamento de Louise e Nicolas. São Paulo.",
-  keywords: ["casamento", "wedding", "Louise", "Nicolas", "convidados", "RSVP"],
-  authors: [{ name: "Louise & Nicolas" }],
+  title: "Meu Casamento — Gestão",
+  description: "Plataforma completa de gestão de casamento: convidados, RSVP, presentes, save the date e muito mais.",
+  keywords: ["casamento", "wedding", "convidados", "RSVP", "presentes", "save the date"],
   icons: {
     icon: "/logo.svg",
     apple: "/icon-192.png",
@@ -33,10 +33,15 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Wedding Check-in",
+    title: "Meu Casamento",
   },
   formatDetection: {
     telephone: false,
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
   },
 };
 
@@ -53,6 +58,7 @@ export default function RootLayout({
         <SessionProvider>
           {children}
           <Toaster />
+          <PWAInstallPrompt />
         </SessionProvider>
       </body>
     </html>
