@@ -35,6 +35,18 @@ export async function POST(request: NextRequest) {
 
     const userId = auth.uid
 
+    // 0. AUTO-BACKFILL para Contas criadas ANTES da Trigger SQL (Ex: resper@gmail.com)
+    const { data: existingProfile } = await db.from('Profile').select('id, is_super_admin').eq('id', userId).maybeSingle()
+    if (!existingProfile) {
+      const isSuper = ['resper@gmail.com', 'resper@ness.com.br', 'resper@bekaa.eu'].includes(auth.email || '');
+      await db.from('Profile').insert({
+        id: userId,
+        email: auth.email || 'unknown@email.com',
+        is_super_admin: isSuper,
+        max_weddings: isSuper ? 9999 : 1
+      })
+    }
+
     // 1. GATING (Trava): Call the Supabase function to check quota
     const { data: canCreate, error: rlsError } = await db.rpc('can_create_wedding', {
       user_id: userId

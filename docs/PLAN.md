@@ -1,34 +1,42 @@
-# PR #1 Review & Implementation Plan
+# PLAN: Repositorio Hygienic Cleanup & Enterprise Documentation
 
-This plan was generated during Phase 1 of the `[/orchestrate]` workflow.
+**Orquestração de Agentes Envolvidos:**
+- `explorer-agent` (Mapeamento do Repositório)
+- `devops-engineer` (Limpeza de Dependências e Build)
+- `documentation-writer` (Produção dos Documentos)
+- `security-auditor` & `test-engineer` (Validação Final)
 
-## 1. Goal Description
-The objective is to fix the build errors introduced in PR #1 (migrating from Prisma to Supabase JS SDK) and successfully deploy the application. 
+---
 
-Currently, `npm run build` fails with two target module export errors:
-1. `src/app/api/email/send/route.ts`: Fails to import `EmailService`.
-2. `src/app/api/weather/route.ts`: Fails to import `WeatherService`.
+## Phase 1: Codebase Hygiene & Cleanup
+*Objetivo: Escanear todas as sobras do ciclo MVP e reduzir o peso do repo.*
 
-## 2. Proposed Changes
+1. **Varredura de Arquivos Órfãos:**
+   - Buscar e excluir componentes que não estão sendo instanciados ou arquivos `.bak`, `.old`.
+   - Limpar rastros de imagens ou SVGs inutilizados (pasta `/public`).
+2. **Higiene de Dependências:**
+   - Executar análise estática para parear o `package.json` com o uso real no código, expurgando pacotes mortos.
+3. **Limpeza de Terminal/Console:**
+   - Remover resíduos de `console.log()` focados puramente em debug local.
+   - Apagar lixo residual de configurações velhas.
 
-### Build Fixes Configuration
+## Phase 2: Enterprise-Grade Documentation
+*Objetivo: Subir a régua da documentação do sistema a um padrão de adoção Open-Source/Enterprise.*
 
-#### [MODIFY] src/app/api/email/send/route.ts
-- Change `import { EmailService }` to `import { emailService }`.
-- Remove the `const emailService = new EmailService()` instantiation inside the loop, using the imported `emailService` singleton directly.
+1. **`README.md` (Vitrine Global):**
+   - Introduzir Shields (Badges de Build, Licença, etc).
+   - Diagrama alto-nível da Arquitetura e Tech Stack (Next.js, Supabase, Cloud Run).
+   - Quickstart detalhado p/ Desenvolvedores (Variáveis de Ambiente, Node.js version).
+2. **`docs/ARCHITECTURE.md`:**
+   - Detalhamento de como o Multi-Tenancy opera dentro do NextJS App Router;
+   - Separação de competências entre o Vercel Frontend e a API de WhatsApp (Python/Go - Cloud Run).
+3. **`docs/API_REFERENCE.md`:**
+   - Documentar os endpoints REST (/api/rsvp, /api/users, etc) para integração de sistemas terceiros ou apps mobile futuros.
+4. **`docs/DEVSECOPS.md`:**
+   - Atestar sobre as diretrizes de CI/CD que foram integradas recentemente, explicitando o Fluxo de Pentest, CSP, Headers, e Hooks de Segurança (Husky).
 
-#### [MODIFY] src/app/api/weather/route.ts
-- Change `import { WeatherService }` to `import { getWeatherForecast }`.
-- Update the instantiation logic to directly call `getWeatherForecast(weddingDate, lat, lon)` instead of using `weatherService.getWeather()`.
-- Add parsing for `weddingDate` to ensure a valid `Date` object is passed to `getWeatherForecast`.
-
-## 3. Verification Plan
-
-### Automated Tests
-- Run `npm run build` locally to verify that the TypeScript compiler successfully compiles all API routes and pages without throwing export errors.
-- Run `python .agent/skills/lint-and-validate/scripts/lint_runner.py .` to ensure codebase meets linting rules. 
-- Run `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .` to ensure no vulnerabilities exist.
-
-### Manual Verification
-- Deploy to Vercel/production using the `gh pr merge` and trigger Vercel deploy, or run the deployment script if applicable.
-- Confirm that the errors in the GitHub PR block are resolved.
+## Phase 3: Verification & Auditing
+1. Validar integridade após o apagão rodando `npm run build`;
+2. Executar `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .`;
+3. Executar `python .agent/skills/lint-and-validate/scripts/lint_runner.py .`;
+4. Emitir `Orchestration Report` completo na tela.
