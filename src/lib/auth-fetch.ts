@@ -21,20 +21,23 @@ export async function authFetch(
     headers.set('Authorization', `Bearer ${token}`)
   }
 
-  // Multi-tenant: extract tenantId from the current browser URL (e.g., /[tenantId]/...)
+  // Multi-tenant: extract tenantId from the current browser URL
   if (typeof window !== 'undefined') {
     const pathname = window.location.pathname
-    // skip root, api, _next
-    if (pathname !== '/' && !pathname.startsWith('/api/') && !pathname.startsWith('/_next/')) {
-      const tenantId = pathname.split('/')[1]
-      if (tenantId) {
-        headers.set('x-tenant-id', tenantId)
-      }
-    } else if (pathname === '/') {
-      // Temporary fallback for admin dashboard on root until moved
-      const searchParams = new URLSearchParams(window.location.search)
-      const tenantId = searchParams.get('tenantId') || localStorage.getItem('tenantId') || 'wedding-1'
+    const searchParams = new URLSearchParams(window.location.search)
+    let tenantId = searchParams.get('tenantId')
+
+    if (!tenantId && pathname !== '/' && !pathname.startsWith('/api/') && !pathname.startsWith('/_next/') && pathname !== '/dashboard' && pathname !== '/projects' && pathname !== '/planos' && pathname !== '/login') {
+      tenantId = pathname.split('/')[1]
+    }
+
+    if (!tenantId) {
+      tenantId = localStorage.getItem('tenantId') || 'wedding-1'
+    }
+
+    if (tenantId && tenantId !== 'dashboard' && tenantId !== 'projects' && tenantId !== 'login') {
       headers.set('x-tenant-id', tenantId)
+      localStorage.setItem('tenantId', tenantId)
     }
   }
 

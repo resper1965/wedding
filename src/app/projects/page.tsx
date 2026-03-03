@@ -141,7 +141,7 @@ export default function ProjectsDashboard() {
                             </p>
 
                             <button
-                                onClick={() => router.push(`/?tenantId=${project.id}`)}
+                                onClick={() => router.push(`/dashboard?tenantId=${project.id}`)}
                                 className="w-full text-center bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium py-2 rounded-lg transition-colors text-sm"
                             >
                                 Acessar Painel
