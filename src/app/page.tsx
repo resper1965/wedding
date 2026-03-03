@@ -7,18 +7,18 @@ import Link from 'next/link'
 export default function MarketingLandingPage() {
     const features = [
         {
-            title: "Inteligência Artificial (Concierge)",
-            description: "Um assistente que tira dúvidas dos seus convidados 24/7 via WhatsApp sobre dress code, local e muito mais.",
+            title: "Concierge Inteligente 24h",
+            description: "Um assistente amigável no WhatsApp que responde às dúvidas dos convidados sobre dress code, local e presentes.",
             icon: <Bot className="w-6 h-6 text-amber-500" />
         },
         {
-            title: "Gestão Multi-Casais (SaaS)",
-            description: "Plataforma escalável para Assessorias e Cerimonialistas organizarem múltiplos casamentos num único painel.",
+            title: "O Ponto de Paz da Assessoria",
+            description: "Diga adeus às dezenas de planilhas. Organize cronogramas, fornecedores e checklists de múltiplos casais em um único painel elegante.",
             icon: <Star className="w-6 h-6 text-amber-500" />
         },
         {
-            title: "Confirmação Automática (RSVP)",
-            description: "Adeus planilhas! RSVP tracking instantâneo que se conecta direto à lista de convidados e tabelas de assentos.",
+            title: "RSVP Sem Estresse",
+            description: "Chega de implorar por confirmações! Gerenciamento automatizado de convidados conectado diretamente à montagem das mesas.",
             icon: <CheckCircle2 className="w-6 h-6 text-amber-500" />
         }
     ]
@@ -32,7 +32,7 @@ export default function MarketingLandingPage() {
                     <div className="flex items-center gap-2">
                         <HeartHandshake className="w-8 h-8 text-amber-500" />
                         <span className="text-xl font-bold tracking-tight text-white">
-                            Wedding<span className="text-amber-500">SaaS</span>
+                            Wedding<span className="text-amber-500">App</span>
                         </span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -62,26 +62,38 @@ export default function MarketingLandingPage() {
                     >
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 text-sm font-medium mb-8">
                             <Sparkles className="w-4 h-4" />
-                            <span>A Revolução 2.0 da Assessoria</span>
+                            <span>Para Noivos e Cerimonialistas Exigentes</span>
                         </div>
 
-                        <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-white mb-8 leading-tight">
-                            Organize <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Casamentos</span><br />
-                            Com o Poder da Inteligência Artificial
+                        {/* Tipografia Fluida (Clamp) e Tracking Ajustado para não sufocar letras */}
+                        <h1 className="text-[clamp(2.5rem,5vw,4.5rem)] font-bold tracking-tight text-white mb-8 leading-tight">
+                            A Jornada até o <span className="font-serif italic font-light text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Casamento</span> Perfeito<br />
+                            Sem o Estresse da Organização
                         </h1>
 
-                        <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-400 mb-12 leading-relaxed">
-                            O primeiro sistema operacional de casamentos Multi-Tenant com um microserviço de AI autônomo acoplado via WhatsApp. Ideal para Cerimonialistas.
+                        {/* Limite de Char/Linha: max-w-[65ch] ou max-w-prose + Line height */}
+                        <p className="max-w-[65ch] mx-auto text-lg sm:text-xl text-slate-400 mb-10 leading-relaxed">
+                            A plataforma definitiva que une cerimonialistas e noivos. Nossa Inteligência Artificial responde às dúvidas dos convidados, para que você foque no que realmente importa: celebrar o amor.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
                             <Link
                                 href="/login"
                                 className="group w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-lg font-semibold px-8 py-4 rounded-full transition-all shadow-lg shadow-amber-500/25"
                             >
-                                Criar Primeiro Projeto
+                                Comece Agora Gratuitamente
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
+                        </div>
+
+                        {/* TRUST SECTION: Social Proof */}
+                        <div className="pt-8 border-t border-white/10 w-full max-w-3xl mx-auto flex flex-col items-center">
+                            <p className="text-sm text-slate-500 font-medium mb-4 uppercase tracking-wider">Escolhida para mais de 10,000+ Casamentos por</p>
+                            <div className="flex flex-wrap justify-center gap-6 sm:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-300">
+                                <span className="text-lg font-serif italic text-white/80">Revista Inesquecível</span>
+                                <span className="text-lg font-serif italic text-white/80">Lápis de Noiva</span>
+                                <span className="text-lg font-serif italic text-white/80">CZ Casamentos</span>
+                            </div>
                         </div>
                     </motion.div>
 
@@ -96,8 +108,8 @@ export default function MarketingLandingPage() {
                                 <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center mb-6">
                                     {feat.icon}
                                 </div>
-                                <h3 className="text-xl font-semibold text-white mb-3">{feat.title}</h3>
-                                <p className="text-slate-400 leading-relaxed">{feat.description}</p>
+                                <h3 className="text-xl font-semibold text-white mb-3 tracking-tight">{feat.title}</h3>
+                                <p className="text-slate-400 leading-relaxed max-w-[45ch]">{feat.description}</p>
                             </div>
                         ))}
                     </motion.div>

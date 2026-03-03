@@ -31,63 +31,63 @@ const AGENT_MODES: {
   color: string
   suggestions: string[]
 }[] = [
-  {
-    id: 'concierge',
-    label: 'Assistente de Convidados',
-    icon: MessageCircle,
-    description: 'Responde dúvidas dos convidados sobre local, horário, dress code, estacionamento...',
-    color: 'text-blue-600 bg-blue-50',
-    suggestions: [
-      'Qual é o dress code do casamento?',
-      'Como chego até o local?',
-      'Tem estacionamento no local?',
-      'Posso levar crianças?',
-      'Qual é o horário da cerimônia?',
-    ],
-  },
-  {
-    id: 'writer',
-    label: 'Redator de Mensagens',
-    icon: PenLine,
-    description: 'Cria convites, mensagens de agradecimento, lembretes e save-the-dates personalizados',
-    color: 'text-rose-600 bg-rose-50',
-    suggestions: [
-      'Escreva uma mensagem de convite elegante para WhatsApp',
-      'Crie uma mensagem de agradecimento pós-casamento',
-      'Redija um lembrete gentil para quem ainda não confirmou',
-      'Escreva uma mensagem de Save the Date para as redes sociais',
-      'Crie um texto para o site do casamento',
-    ],
-  },
-  {
-    id: 'planner',
-    label: 'Planejador de Casamento',
-    icon: CalendarHeart,
-    description: 'Sugere fornecedores, aloca orçamento, cria checklist e dá dicas de organização',
-    color: 'text-amber-600 bg-amber-50',
-    suggestions: [
-      'Crie um checklist de 6 meses antes do casamento',
-      'Como distribuir o orçamento entre os fornecedores?',
-      'Quais fornecedores eu preciso contratar primeiro?',
-      'Dicas para economizar sem perder qualidade',
-      'Como organizar o cronograma do dia do casamento?',
-    ],
-  },
-  {
-    id: 'coordinator',
-    label: 'Coordenador do Dia',
-    icon: Users,
-    description: 'No dia do casamento: check-in inteligente, alertas e sugestões de ajuste',
-    color: 'text-emerald-600 bg-emerald-50',
-    suggestions: [
-      'Crie um cronograma para o dia do casamento',
-      'O que fazer se um fornecedor atrasar?',
-      'Como gerenciar o fluxo de entrada dos convidados?',
-      'Protocolo para o brinde e corte do bolo',
-      'Como lidar com imprevistos no dia?',
-    ],
-  },
-]
+    {
+      id: 'concierge',
+      label: 'Assistente de Convidados',
+      icon: MessageCircle,
+      description: 'Responde dúvidas dos convidados sobre local, horário, dress code, estacionamento...',
+      color: 'text-blue-600 bg-blue-50',
+      suggestions: [
+        'Qual é o dress code do casamento?',
+        'Como chego até o local?',
+        'Tem estacionamento no local?',
+        'Posso levar crianças?',
+        'Qual é o horário da cerimônia?',
+      ],
+    },
+    {
+      id: 'writer',
+      label: 'Redator de Mensagens',
+      icon: PenLine,
+      description: 'Cria convites, mensagens de agradecimento, lembretes e save-the-dates personalizados',
+      color: 'text-rose-600 bg-rose-50',
+      suggestions: [
+        'Escreva uma mensagem de convite elegante para WhatsApp',
+        'Crie uma mensagem de agradecimento pós-casamento',
+        'Redija um lembrete gentil para quem ainda não confirmou',
+        'Escreva uma mensagem de Save the Date para as redes sociais',
+        'Crie um texto para o site do casamento',
+      ],
+    },
+    {
+      id: 'planner',
+      label: 'Planejador de Casamento',
+      icon: CalendarHeart,
+      description: 'Sugere fornecedores, aloca orçamento, cria checklist e dá dicas de organização',
+      color: 'text-amber-600 bg-amber-50',
+      suggestions: [
+        'Crie um checklist de 6 meses antes do casamento',
+        'Como distribuir o orçamento entre os fornecedores?',
+        'Quais fornecedores eu preciso contratar primeiro?',
+        'Dicas para economizar sem perder qualidade',
+        'Como organizar o cronograma do dia do casamento?',
+      ],
+    },
+    {
+      id: 'coordinator',
+      label: 'Coordenador do Dia',
+      icon: Users,
+      description: 'No dia do casamento: check-in inteligente, alertas e sugestões de ajuste',
+      color: 'text-emerald-600 bg-emerald-50',
+      suggestions: [
+        'Crie um cronograma para o dia do casamento',
+        'O que fazer se um fornecedor atrasar?',
+        'Como gerenciar o fluxo de entrada dos convidados?',
+        'Protocolo para o brinde e corte do bolo',
+        'Como lidar com imprevistos no dia?',
+      ],
+    },
+  ]
 
 async function callAIAgent(mode: AgentMode, message: string, history: Message[]): Promise<string> {
   const res = await authFetch('/api/ai-agent/chat', {
@@ -179,8 +179,8 @@ export function AIAgentPanel() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50">
-            <Bot className="h-5 w-5 text-violet-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50">
+            <Bot className="h-5 w-5 text-teal-600" />
           </div>
           <div>
             <h2 className="text-xl font-semibold text-stone-800">Assistente IA</h2>
@@ -263,8 +263,8 @@ export function AIAgentPanel() {
                   )}
                 >
                   {message.role === 'assistant' && (
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100">
-                      <Bot className="h-4 w-4 text-violet-600" />
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-100">
+                      <Bot className="h-4 w-4 text-teal-600" />
                     </div>
                   )}
 
@@ -302,8 +302,8 @@ export function AIAgentPanel() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100">
-                    <Bot className="h-4 w-4 text-violet-600" />
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-100">
+                    <Bot className="h-4 w-4 text-teal-600" />
                   </div>
                   <div className="rounded-2xl rounded-bl-sm bg-stone-50 px-4 py-3">
                     <div className="flex gap-1">

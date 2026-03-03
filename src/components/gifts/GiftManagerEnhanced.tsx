@@ -53,7 +53,7 @@ const STORES = [
   { id: 'Casas Bahia', label: 'Casas Bahia', color: 'bg-yellow-100 text-yellow-700', emoji: '🏠' },
   { id: 'Americanas', label: 'Americanas', color: 'bg-red-100 text-red-700', emoji: '🇧🇷' },
   { id: 'Havan', label: 'Havan', color: 'bg-green-100 text-green-700', emoji: '🟢' },
-  { id: 'Etna', label: 'Etna', color: 'bg-purple-100 text-purple-700', emoji: '🏺' },
+  { id: 'Etna', label: 'Etna', color: 'bg-blue-100 text-blue-700', emoji: '🏺' },
   { id: 'Outro', label: 'Outra loja', color: 'bg-stone-100 text-stone-600', emoji: '🔗' },
 ]
 

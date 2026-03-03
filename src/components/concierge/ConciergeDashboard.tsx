@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react'
 import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  MessageSquare, 
-  QrCode, 
-  Send, 
-  Users, 
-  CheckCircle, 
+import {
+  MessageSquare,
+  QrCode,
+  Send,
+  Users,
+  CheckCircle,
   Clock,
   Sparkles,
   Copy,
@@ -64,24 +64,24 @@ export function ConciergeDashboard() {
   const [stats, setStats] = useState<ConciergeStats | null>(null)
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  
+
   // QR Code generation state
   const [qrFamilyName, setQrFamilyName] = useState('')
   const [generatedQR, setGeneratedQR] = useState<GeneratedQR | null>(null)
-  
+
   // Media generation state
   const [mediaFamilyName, setMediaFamilyName] = useState('')
   const [generatedMediaUrl, setGeneratedMediaUrl] = useState<string | null>(null)
-  
+
   // Test message state
   const [testPhone, setTestPhone] = useState('')
   const [testMessage, setTestMessage] = useState('')
-  
+
   // Fetch data on mount
   useEffect(() => {
     fetchConciergeData()
   }, [])
-  
+
   const fetchConciergeData = async () => {
     setIsLoading(true)
     try {
@@ -91,7 +91,7 @@ export function ConciergeDashboard() {
         const data = await statsRes.json()
         setStats(data)
       }
-      
+
       // Fetch conversations
       const convRes = await authFetch('/api/concierge/conversations')
       if (convRes.ok) {
@@ -104,22 +104,22 @@ export function ConciergeDashboard() {
       setIsLoading(false)
     }
   }
-  
+
   const generateQRCode = async () => {
     if (!qrFamilyName.trim()) {
       toast.error('Digite o nome da família')
       return
     }
-    
+
     try {
       const res = await authFetch('/api/concierge/qrcode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ familyName: qrFamilyName })
       })
-      
+
       const data = await res.json()
-      
+
       if (data.success) {
         setGeneratedQR(data)
         toast.success('QR Code gerado com sucesso!')
@@ -130,22 +130,22 @@ export function ConciergeDashboard() {
       toast.error('Erro ao gerar QR Code')
     }
   }
-  
+
   const generateMedia = async () => {
     if (!mediaFamilyName.trim()) {
       toast.error('Digite o nome da família')
       return
     }
-    
+
     try {
       const res = await authFetch('/api/concierge/media', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ familyName: mediaFamilyName })
       })
-      
+
       const data = await res.json()
-      
+
       if (data.success) {
         setGeneratedMediaUrl(data.publicUrl)
         toast.success('Convite gerado com sucesso!')
@@ -156,22 +156,22 @@ export function ConciergeDashboard() {
       toast.error('Erro ao gerar convite')
     }
   }
-  
+
   const sendTestMessage = async () => {
     if (!testPhone.trim() || !testMessage.trim()) {
       toast.error('Preencha o telefone e a mensagem')
       return
     }
-    
+
     try {
       const res = await authFetch('/api/concierge/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: testPhone, message: testMessage })
       })
-      
+
       const data = await res.json()
-      
+
       if (data.success) {
         toast.success('Mensagem enviada!')
         setTestMessage('')
@@ -182,7 +182,7 @@ export function ConciergeDashboard() {
       toast.error('Erro ao enviar mensagem')
     }
   }
-  
+
   return (
     <div className="space-y-6">
       {/* Tab Navigation */}
@@ -206,7 +206,7 @@ export function ConciergeDashboard() {
           </Button>
         ))}
       </div>
-      
+
       <AnimatePresence mode="wait">
         {/* Overview Tab */}
         {activeTab === 'overview' && (
@@ -247,7 +247,7 @@ export function ConciergeDashboard() {
                 title="QRs Gerados"
                 value={stats?.qrCodesGenerated || 0}
                 icon={QrCode}
-                color="purple"
+                color="cyan"
               />
               <StatCard
                 title="Check-ins Hoje"
@@ -256,7 +256,7 @@ export function ConciergeDashboard() {
                 color="rose"
               />
             </div>
-            
+
             {/* Quick Actions */}
             <Card>
               <CardHeader>
@@ -265,32 +265,32 @@ export function ConciergeDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="h-auto py-4 flex-col gap-2"
                     onClick={() => setActiveTab('qrcode')}
                   >
                     <QrCode className="h-5 w-5 text-amber-600" />
                     <span>Gerar QR Code</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="h-auto py-4 flex-col gap-2"
                     onClick={() => setActiveTab('media')}
                   >
                     <ImageIcon className="h-5 w-5 text-rose-600" />
                     <span>Criar Convite</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="h-auto py-4 flex-col gap-2"
                     onClick={fetchConciergeData}
                   >
                     <RefreshCw className="h-5 w-5 text-blue-600" />
                     <span>Atualizar Dados</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="h-auto py-4 flex-col gap-2"
                     onClick={() => setActiveTab('settings')}
                   >
@@ -300,7 +300,7 @@ export function ConciergeDashboard() {
                 </div>
               </CardContent>
             </Card>
-            
+
             {/* AI Status */}
             <Card className="border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
               <CardContent className="py-4">
@@ -322,7 +322,7 @@ export function ConciergeDashboard() {
             </Card>
           </motion.div>
         )}
-        
+
         {/* Conversations Tab */}
         {activeTab === 'conversations' && (
           <motion.div
@@ -369,7 +369,7 @@ export function ConciergeDashboard() {
                             {conv.lastMessage}
                           </p>
                           <p className="text-xs text-stone-400 mt-1">
-                            {conv.lastMessageAt 
+                            {conv.lastMessageAt
                               ? new Date(conv.lastMessageAt).toLocaleString('pt-BR')
                               : 'Sem mensagens'}
                           </p>
@@ -380,7 +380,7 @@ export function ConciergeDashboard() {
                 )}
               </CardContent>
             </Card>
-            
+
             {/* Test Message */}
             <Card>
               <CardHeader>
@@ -417,7 +417,7 @@ export function ConciergeDashboard() {
             </Card>
           </motion.div>
         )}
-        
+
         {/* QR Code Tab */}
         {activeTab === 'qrcode' && (
           <motion.div
@@ -450,7 +450,7 @@ export function ConciergeDashboard() {
                 </Button>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">QR Code Gerado</CardTitle>
@@ -459,9 +459,9 @@ export function ConciergeDashboard() {
                 {generatedQR ? (
                   <div className="space-y-4">
                     <div className="flex justify-center p-4 bg-white rounded-lg border">
-                      <img 
-                        src={generatedQR.qrDataUrl} 
-                        alt="QR Code" 
+                      <img
+                        src={generatedQR.qrDataUrl}
+                        alt="QR Code"
                         className="w-48 h-48"
                       />
                     </div>
@@ -471,8 +471,8 @@ export function ConciergeDashboard() {
                         Válido por 30 dias
                       </p>
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full gap-2"
                       onClick={() => {
                         navigator.clipboard.writeText(generatedQR.qrDataUrl)
@@ -493,7 +493,7 @@ export function ConciergeDashboard() {
             </Card>
           </motion.div>
         )}
-        
+
         {/* Media Tab */}
         {activeTab === 'media' && (
           <motion.div
@@ -526,7 +526,7 @@ export function ConciergeDashboard() {
                 </Button>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Convite Gerado</CardTitle>
@@ -535,15 +535,15 @@ export function ConciergeDashboard() {
                 {generatedMediaUrl ? (
                   <div className="space-y-4">
                     <div className="flex justify-center p-2 bg-stone-100 rounded-lg">
-                      <img 
-                        src={generatedMediaUrl} 
-                        alt="Convite" 
+                      <img
+                        src={generatedMediaUrl}
+                        alt="Convite"
                         className="max-w-full h-auto rounded-lg shadow-lg"
                         style={{ maxHeight: '400px' }}
                       />
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full gap-2"
                       onClick={() => {
                         navigator.clipboard.writeText(window.location.origin + generatedMediaUrl)
@@ -564,7 +564,7 @@ export function ConciergeDashboard() {
             </Card>
           </motion.div>
         )}
-        
+
         {/* Settings Tab */}
         {activeTab === 'settings' && (
           <motion.div
@@ -586,13 +586,13 @@ export function ConciergeDashboard() {
                   <div className="grid gap-2">
                     <Label>Webhook URL</Label>
                     <div className="flex gap-2">
-                      <Input 
-                        readOnly 
+                      <Input
+                        readOnly
                         value={`${typeof window !== 'undefined' ? window.location.origin : ''}/api/webhook/whatsapp`}
                         className="bg-stone-50"
                       />
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="icon"
                         onClick={() => {
                           navigator.clipboard.writeText(`${window.location.origin}/api/webhook/whatsapp`)
@@ -606,19 +606,19 @@ export function ConciergeDashboard() {
                       Configure esta URL no Meta Business Suite
                     </p>
                   </div>
-                  
+
                   <Separator />
-                  
+
                   <div className="grid gap-2">
                     <Label>Verify Token</Label>
                     <div className="flex gap-2">
-                      <Input 
-                        readOnly 
+                      <Input
+                        readOnly
                         value="wedding_concierge_2025"
                         className="bg-stone-50"
                       />
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="icon"
                         onClick={() => {
                           navigator.clipboard.writeText('wedding_concierge_2025')
@@ -635,7 +635,7 @@ export function ConciergeDashboard() {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Variáveis de Ambiente Necessárias</CardTitle>
@@ -668,26 +668,26 @@ export function ConciergeDashboard() {
 // STAT CARD COMPONENT
 // ============================================================================
 
-function StatCard({ 
-  title, 
-  value, 
-  icon: Icon, 
-  color 
-}: { 
+function StatCard({
+  title,
+  value,
+  icon: Icon,
+  color
+}: {
   title: string
   value: number
   icon: React.ElementType
-  color: 'amber' | 'blue' | 'green' | 'orange' | 'purple' | 'rose'
+  color: 'amber' | 'blue' | 'green' | 'orange' | 'cyan' | 'rose'
 }) {
   const colorClasses = {
     amber: 'bg-amber-50 text-amber-600 border-amber-200',
     blue: 'bg-blue-50 text-blue-600 border-blue-200',
     green: 'bg-green-50 text-green-600 border-green-200',
     orange: 'bg-orange-50 text-orange-600 border-orange-200',
-    purple: 'bg-purple-50 text-purple-600 border-purple-200',
+    cyan: 'bg-cyan-50 text-cyan-600 border-cyan-200',
     rose: 'bg-rose-50 text-rose-600 border-rose-200'
   }
-  
+
   return (
     <Card className={colorClasses[color]}>
       <CardContent className="py-3">

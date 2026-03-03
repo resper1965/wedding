@@ -38,9 +38,9 @@ const categoryColors: Record<string, string> = {
   'Cozinha': 'bg-amber-100 text-amber-800 border-amber-200',
   'Quarto': 'bg-rose-100 text-rose-800 border-rose-200',
   'Sala': 'bg-sage-100 text-sage-800 border-sage-200',
-  'Viagem': 'bg-blue-100 text-blue-800 border-blue-200',
-  'Decoração': 'bg-purple-100 text-purple-800 border-purple-200',
-  'Experiência': 'bg-teal-100 text-teal-800 border-teal-200',
+  'Eletrodomésticos': 'bg-blue-100 text-blue-800 border-blue-200',
+  'Decoração': 'bg-cyan-100 text-cyan-800 border-cyan-200',
+  'Cama, Mesa e Banho': 'bg-pink-100 text-pink-800 border-pink-200',
 }
 
 const storeLogos: Record<string, string> = {
@@ -52,13 +52,13 @@ const storeLogos: Record<string, string> = {
   'Ponto': '📍',
 }
 
-export function GiftCard({ 
-  gift, 
-  onReserve, 
-  isAdmin = false, 
-  onEdit, 
+export function GiftCard({
+  gift,
+  onReserve,
+  isAdmin = false,
+  onEdit,
   onDelete,
-  onCancelReservation 
+  onCancelReservation
 }: GiftCardProps) {
   const [imageError, setImageError] = useState(false)
 
@@ -105,8 +105,8 @@ export function GiftCard({
     >
       <Card className={cn(
         "group overflow-hidden border-0 shadow-lg transition-all duration-300",
-        gift.status === 'available' 
-          ? "bg-white hover:shadow-xl hover:shadow-amber-100/50" 
+        gift.status === 'available'
+          ? "bg-white hover:shadow-xl hover:shadow-amber-100/50"
           : "bg-stone-50/80"
       )}>
         {/* Image Section */}
@@ -123,17 +123,17 @@ export function GiftCard({
               <Gift className="w-16 h-16 text-amber-300" />
             </div>
           )}
-          
+
           {/* Overlay for reserved items */}
           {gift.status !== 'available' && (
             <div className="absolute inset-0 bg-stone-900/30 backdrop-blur-[1px]" />
           )}
-          
+
           {/* Status Badge */}
           <div className="absolute top-3 left-3">
             {getStatusBadge()}
           </div>
-          
+
           {/* Store Badge */}
           {gift.store && (
             <div className="absolute top-3 right-3">
@@ -147,8 +147,8 @@ export function GiftCard({
         <CardContent className="p-4 space-y-3">
           {/* Category */}
           {gift.category && (
-            <Badge 
-              variant="outline" 
+            <Badge
+              variant="outline"
               className={cn(
                 "text-xs",
                 categoryColors[gift.category] || "bg-stone-100 text-stone-600 border-stone-200"
@@ -157,7 +157,7 @@ export function GiftCard({
               {gift.category}
             </Badge>
           )}
-          
+
           {/* Name */}
           <h3 className={cn(
             "font-serif text-lg font-semibold line-clamp-2",
@@ -165,21 +165,21 @@ export function GiftCard({
           )}>
             {gift.name}
           </h3>
-          
+
           {/* Description */}
           {gift.description && (
             <p className="text-sm text-stone-500 line-clamp-2">
               {gift.description}
             </p>
           )}
-          
+
           {/* Price */}
           {gift.price && (
             <p className="text-lg font-bold text-amber-700">
               {formatPrice(gift.price, gift.currency)}
             </p>
           )}
-          
+
           {/* Reserved by info */}
           {gift.status === 'reserved' && gift.reservedByName && (
             <div className="flex items-center gap-2 p-2 bg-amber-50 rounded-lg border border-amber-100">
@@ -189,7 +189,7 @@ export function GiftCard({
               </span>
             </div>
           )}
-          
+
           {/* Action Buttons */}
           <div className="flex gap-2 pt-2">
             {gift.status === 'available' && (
@@ -214,7 +214,7 @@ export function GiftCard({
                 )}
               </>
             )}
-            
+
             {gift.status === 'reserved' && isAdmin && (
               <>
                 <Button
@@ -237,7 +237,7 @@ export function GiftCard({
                 )}
               </>
             )}
-            
+
             {isAdmin && (
               <div className="flex gap-1">
                 {onEdit && (
