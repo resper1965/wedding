@@ -6,6 +6,8 @@ import { Heart, Gift, Sparkles, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { GiftList } from '@/components/gifts/GiftList'
 import { Button } from '@/components/ui/button'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 interface WeddingData {
   partner1Name: string
@@ -20,7 +22,7 @@ export default function GiftListPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const weddingRes = await fetch('/api/wedding')
+        const weddingRes = await publicFetch('/api/wedding')
         const weddingData = await weddingRes.json()
 
         if (weddingData.success) {

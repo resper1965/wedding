@@ -7,6 +7,8 @@ import { useAuth } from '@/components/auth/SessionProvider'
 import { Heart, LogIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getSupabase } from '@/lib/supabase'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -20,7 +22,7 @@ export default function LoginPage() {
   const { signIn } = useAuth()
 
   useEffect(() => {
-    fetch('/api/wedding')
+    publicFetch('/api/wedding')
       .then(r => r.json())
       .then(data => {
         if (data.success) {
@@ -28,7 +30,7 @@ export default function LoginPage() {
           setPartner2Name(data.data.partner2Name)
         }
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +39,7 @@ export default function LoginPage() {
     setError(null)
     try {
       await signIn(email, password)
-      router.push('/')
+      router.push('/projects')
     } catch (err: unknown) {
       console.error('Login error:', err)
       setError('Email ou senha incorretos.')
@@ -53,7 +55,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/projects`,
           queryParams: { access_type: 'offline', prompt: 'consent' },
         },
       })

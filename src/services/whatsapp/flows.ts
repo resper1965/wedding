@@ -188,19 +188,19 @@ export interface RsvpFlowOptions {
 
 export function createRsvpFlow(options: RsvpFlowOptions): WhatsAppFlow {
   const { familyName, guests, events } = options
-  
+
   // Create guest selection options
   const guestOptions = guests.map(g => ({
     id: g.id,
     title: g.name
   }))
-  
+
   // Create event selection options
   const eventOptions = events.map(e => ({
     id: e.id,
     title: `${e.name} - ${e.date}`
   }))
-  
+
   return {
     version: '3.0',
     data_api_version: '3.0',
@@ -297,17 +297,17 @@ export function createRsvpFlow(options: RsvpFlowOptions): WhatsAppFlow {
 
 export function createCompleteFlow(options: RsvpFlowOptions): WhatsAppFlow {
   const { familyName, guests, events } = options
-  
+
   const guestOptions = guests.map(g => ({
     id: g.id,
     title: g.name
   }))
-  
+
   const eventOptions = events.map(e => ({
     id: e.id,
     title: `${e.name} - ${e.date}`
   }))
-  
+
   return {
     version: '3.0',
     data_api_version: '3.0',
@@ -570,7 +570,7 @@ function handleRsvpFlow(screenId: string, data: Record<string, unknown>): FlowRe
  */
 export function flowToInteractiveMessage(flow: WhatsAppFlow): Record<string, unknown> {
   const firstScreen = flow.screens[0]
-  
+
   return {
     type: 'interactive',
     interactive: {
@@ -582,8 +582,8 @@ export function flowToInteractiveMessage(flow: WhatsAppFlow): Record<string, unk
         name: 'flow',
         parameters: {
           flow_message_version: flow.version,
-          flow_token: 'generated_token',
-          flow_id: 'flow_id_placeholder',
+          flow_token: process.env.WHATSAPP_FLOW_TOKEN || 'flow_token_placeholder',
+          flow_id: process.env.WHATSAPP_FLOW_ID || 'flow_id_placeholder',
           flow_cta: firstScreen.title,
           flow_action: 'navigate',
           flow_action_payload: {

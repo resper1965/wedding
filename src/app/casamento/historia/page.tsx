@@ -7,6 +7,8 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { PublicNav } from '@/components/public/PublicNav'
 import { PublicFooter } from '@/components/public/PublicFooter'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 interface WeddingData {
   partner1Name: string
@@ -64,7 +66,7 @@ export default function HistoriaPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/wedding')
+        const response = await publicFetch('/api/wedding')
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)

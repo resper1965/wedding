@@ -58,3 +58,4 @@ db/
 
 # Prisma
 prisma/*.db
+.env*.local

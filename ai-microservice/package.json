@@ -1,0 +1,24 @@
+{
+  "name": "ai-microservice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^25.3.3",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.7.4",
+    "fastify-plugin": "^5.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "z-ai-web-dev-sdk": "^0.0.10"
+  }
+}

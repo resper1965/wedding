@@ -11,6 +11,8 @@ import {
 import { PublicNav } from '@/components/public/PublicNav'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { Button } from '@/components/ui/button'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 interface EventData {
   id: string
@@ -46,8 +48,8 @@ export default function EventsPage() {
     const fetchData = async () => {
       try {
         const [eventsRes, weddingRes] = await Promise.all([
-          fetch('/api/events'),
-          fetch('/api/wedding')
+          publicFetch('/api/events'),
+          publicFetch('/api/wedding')
         ])
         
         const eventsData = await eventsRes.json()

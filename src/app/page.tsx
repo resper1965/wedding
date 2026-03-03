@@ -1,369 +1,109 @@
 'use client'
 
-import { useState, useEffect, useCallback, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, Heart, Info } from 'lucide-react'
-import { authFetch } from '@/lib/auth-fetch'
-import { useAuth } from '@/components/auth/SessionProvider'
-
-// Components
-import { Navigation, PageTransition, SidebarNav, BottomNav } from '@/components/ui-custom/Navigation'
-import { WeddingHero } from '@/components/dashboard/WeddingHero'
-import { StatsOverview } from '@/components/dashboard/StatsOverview'
-import { RecentActivity } from '@/components/dashboard/RecentActivity'
-import { GuestManager } from '@/components/guests/GuestManager'
-import { MessageCenter } from '@/components/messages/MessageCenter'
-import { AppFooter } from '@/components/layout/AppFooter'
-import { UserMenu } from '@/components/auth/UserMenu'
-import { SettingsManager } from '@/components/settings/SettingsManager'
-import { AnalyticsDashboard } from '@/components/analytics/AnalyticsDashboard'
-import { SeatingPlanner } from '@/components/seating/SeatingPlanner'
-import { BudgetManager } from '@/components/budget/BudgetManager'
-import { VendorManager } from '@/components/vendors/VendorManager'
-import { ChecklistManager } from '@/components/checklist/ChecklistManager'
-import { UserManager } from '@/components/users/UserManager'
-import { SaveTheDateManager } from '@/components/save-the-date/SaveTheDateManager'
-import { GiftManagerEnhanced } from '@/components/gifts/GiftManagerEnhanced'
-import { AIAgentPanel } from '@/components/ai-agent/AIAgentPanel'
+import { motion } from 'framer-motion'
+import { ArrowRight, Bot, Star, Sparkles, CheckCircle2, HeartHandshake } from 'lucide-react'
 import Link from 'next/link'
 
-// Types
-interface DashboardData {
-  totalInvited: number
-  totalConfirmed: number
-  totalDeclined: number
-  totalPending: number
-  confirmedByEvent: { eventName: string; confirmed: number; total: number }[]
-  recentActivity: Array<{
-    id: string
-    type: 'rsvp' | 'message' | 'guest_added'
-    message: string
-    timestamp: string
-    guestName?: string
-  }>
-  weddingDate: string
-  daysUntilWedding: number
-  partner1Name: string
-  partner2Name: string
-  venue: string | null
-  events: { id: string; name: string }[]
-}
+export default function MarketingLandingPage() {
+    const features = [
+        {
+            title: "Inteligência Artificial (Concierge)",
+            description: "Um assistente que tira dúvidas dos seus convidados 24/7 via WhatsApp sobre dress code, local e muito mais.",
+            icon: <Bot className="w-6 h-6 text-amber-500" />
+        },
+        {
+            title: "Gestão Multi-Casais (SaaS)",
+            description: "Plataforma escalável para Assessorias e Cerimonialistas organizarem múltiplos casamentos num único painel.",
+            icon: <Star className="w-6 h-6 text-amber-500" />
+        },
+        {
+            title: "Confirmação Automática (RSVP)",
+            description: "Adeus planilhas! RSVP tracking instantâneo que se conecta direto à lista de convidados e tabelas de assentos.",
+            icon: <CheckCircle2 className="w-6 h-6 text-amber-500" />
+        }
+    ]
 
-interface Guest {
-  id: string
-  firstName: string
-  lastName: string
-  email: string | null
-  phone: string | null
-  category: string | null
-  relationship: string | null
-  inviteStatus: string
-  groupId: string | null
-  group?: { id: string; name: string } | null
-  rsvps: { id: string; status: string; event: { id: string; name: string } }[]
-  dietaryRestrictions?: string | null
-  specialNeeds?: string | null
-  notes?: string | null
-}
-
-interface Group {
-  id: string
-  name: string
-  _count?: { guests: number }
-}
-
-export function WeddingGuestPlatform() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const activeTab = searchParams.get('tab') || 'dashboard'
-
-  const setActiveTab = (tab: string) => {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('tab', tab)
-    router.push(`?${params.toString()}`, { scroll: false })
-  }
-
-  const [isLoading, setIsLoading] = useState(true)
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
-  const [guests, setGuests] = useState<Guest[]>([])
-  const [groups, setGroups] = useState<Group[]>([])
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const { user, loading: authLoading } = useAuth()
-
-  // Fetch dashboard data
-  const fetchDashboardData = useCallback(async () => {
-    try {
-      const response = await authFetch('/api/dashboard/stats')
-      const data = await response.json()
-      
-      if (data.success) {
-        setDashboardData(data.data)
-      }
-    } catch (error) {
-      console.error('Error fetching dashboard:', error)
-    }
-  }, [])
-
-  // Fetch guests
-  const fetchGuests = useCallback(async () => {
-    try {
-      const response = await authFetch('/api/guests')
-      const data = await response.json()
-      
-      if (data.success) {
-        setGuests(data.data)
-      }
-    } catch (error) {
-      console.error('Error fetching guests:', error)
-    }
-  }, [])
-
-  // Fetch groups
-  const fetchGroups = useCallback(async () => {
-    try {
-      const response = await authFetch('/api/groups')
-      const data = await response.json()
-      
-      if (data.success) {
-        setGroups(data.data)
-      }
-    } catch (error) {
-      console.error('Error fetching groups:', error)
-    }
-  }, [])
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login')
-    }
-  }, [authLoading, user, router])
-
-  // Initial data fetch (only when authenticated)
-  useEffect(() => {
-    if (!user) return
-
-    const initialize = async () => {
-      setIsLoading(true)
-      
-      await Promise.all([
-        fetchDashboardData(),
-        fetchGuests(),
-        fetchGroups()
-      ])
-      
-      setIsLoading(false)
-    }
-    
-    initialize()
-  }, [user, fetchDashboardData, fetchGuests, fetchGroups])
-
-  // Refresh data
-  const handleRefresh = useCallback(async () => {
-    await Promise.all([
-      fetchDashboardData(),
-      fetchGuests()
-    ])
-  }, [fetchDashboardData, fetchGuests])
-
-  // Loading state (auth or data)
-  if (authLoading || isLoading || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-stone-50">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center"
-        >
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-stone-400" />
-          <p className="mt-4 text-sm text-stone-500">Carregando...</p>
-        </motion.div>
-      </div>
-    )
-  }
+        <div className="min-h-screen bg-slate-950 text-white overflow-hidden selection:bg-amber-500/30">
 
-  // No data state
-  if (!dashboardData) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-stone-50">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center"
-        >
-          <p className="text-stone-500">Erro ao carregar dados</p>
-        </motion.div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="flex min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
-      {/* Sidebar — desktop */}
-      <SidebarNav
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        partner1Name={dashboardData.partner1Name}
-        partner2Name={dashboardData.partner2Name}
-        collapsed={sidebarCollapsed}
-        onCollapsedChange={setSidebarCollapsed}
-      />
-
-      {/* Right column */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header */}
-        <header className="border-b border-amber-100/50 bg-white/80 backdrop-blur-sm">
-          <div className="px-4 py-4">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="flex items-center gap-2.5 text-lg font-medium">
-                  <span className="bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-transparent">{dashboardData.partner1Name}</span>
-                  <Heart className="h-4 w-5 text-rose-400" fill="currentColor" />
-                  <span className="bg-gradient-to-r from-orange-600 to-amber-700 bg-clip-text text-transparent">{dashboardData.partner2Name}</span>
+            {/* Navbar Minimalista */}
+            <nav className="fixed inset-x-0 top-0 z-50 backdrop-blur-md border-b border-white/10 bg-slate-950/60">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <HeartHandshake className="w-8 h-8 text-amber-500" />
+                        <span className="text-xl font-bold tracking-tight text-white">
+                            Wedding<span className="text-amber-500">SaaS</span>
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <Link href="/login" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
+                            Entrar
+                        </Link>
+                        <Link
+                            href="/projects"
+                            className="text-sm font-medium bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-full transition-all"
+                        >
+                            Acessar Painel
+                        </Link>
+                    </div>
                 </div>
-              </Link>
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/info"
-                  className="flex items-center gap-1.5 rounded-full border border-amber-200/50 px-4 py-2 text-sm text-amber-700 transition-colors hover:bg-amber-50 hover:border-amber-300"
-                >
-                  <Info className="h-4 w-4" />
-                  <span className="hidden sm:inline">Informações</span>
-                </Link>
-                <UserMenu />
-              </div>
-            </div>
-          </div>
-        </header>
+            </nav>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-auto px-4 py-6 pb-24 md:pb-6">
-          <div className="mx-auto max-w-5xl">
-            <AnimatePresence mode="wait">
-              {activeTab === 'dashboard' && (
-                <PageTransition key="dashboard">
-                  <div className="space-y-6">
-                    <WeddingHero
-                      partner1Name={dashboardData.partner1Name}
-                      partner2Name={dashboardData.partner2Name}
-                      weddingDate={dashboardData.weddingDate}
-                      daysUntilWedding={dashboardData.daysUntilWedding}
-                      venue={dashboardData.venue}
-                    />
-                    <StatsOverview
-                      stats={{
-                        totalInvited: dashboardData.totalInvited,
-                        totalConfirmed: dashboardData.totalConfirmed,
-                        totalDeclined: dashboardData.totalDeclined,
-                        totalPending: dashboardData.totalPending
-                      }}
-                    />
-                    <RecentActivity activities={dashboardData.recentActivity} />
-                  </div>
-                </PageTransition>
-              )}
+            <main className="relative pt-32 pb-16 sm:pt-40 sm:pb-24 lg:pb-32 px-6">
 
-              {activeTab === 'guests' && (
-                <PageTransition key="guests">
-                  <GuestManager
-                    guests={guests}
-                    groups={groups}
-                    onRefresh={handleRefresh}
-                  />
-                </PageTransition>
-              )}
+                {/* Glow Effects */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-96 bg-amber-500/20 blur-[120px] rounded-full pointer-events-none" />
 
-              {activeTab === 'analytics' && (
-                <PageTransition key="analytics">
-                  <AnalyticsDashboard />
-                </PageTransition>
-              )}
+                <div className="max-w-7xl mx-auto text-center relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 text-sm font-medium mb-8">
+                            <Sparkles className="w-4 h-4" />
+                            <span>A Revolução 2.0 da Assessoria</span>
+                        </div>
 
-              {activeTab === 'seating' && (
-                <PageTransition key="seating">
-                  <SeatingPlanner />
-                </PageTransition>
-              )}
+                        <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-white mb-8 leading-tight">
+                            Organize <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Casamentos</span><br />
+                            Com o Poder da Inteligência Artificial
+                        </h1>
 
-              {activeTab === 'messages' && (
-                <PageTransition key="messages">
-                  <MessageCenter
-                    stats={{
-                      totalPending: dashboardData.totalPending,
-                      totalSent: dashboardData.totalInvited - dashboardData.totalPending
-                    }}
-                  />
-                </PageTransition>
-              )}
+                        <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-400 mb-12 leading-relaxed">
+                            O primeiro sistema operacional de casamentos Multi-Tenant com um microserviço de AI autônomo acoplado via WhatsApp. Ideal para Cerimonialistas.
+                        </p>
 
-              {activeTab === 'settings' && (
-                <PageTransition key="settings">
-                  <SettingsManager />
-                </PageTransition>
-              )}
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <Link
+                                href="/login"
+                                className="group w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-lg font-semibold px-8 py-4 rounded-full transition-all shadow-lg shadow-amber-500/25"
+                            >
+                                Criar Primeiro Projeto
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
+                    </motion.div>
 
-              {activeTab === 'budget' && (
-                <PageTransition key="budget">
-                  <BudgetManager />
-                </PageTransition>
-              )}
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                        className="mt-24 grid sm:grid-cols-3 gap-8 text-left"
+                    >
+                        {features.map((feat, idx) => (
+                            <div key={idx} className="p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center mb-6">
+                                    {feat.icon}
+                                </div>
+                                <h3 className="text-xl font-semibold text-white mb-3">{feat.title}</h3>
+                                <p className="text-slate-400 leading-relaxed">{feat.description}</p>
+                            </div>
+                        ))}
+                    </motion.div>
+                </div>
+            </main>
 
-              {activeTab === 'vendors' && (
-                <PageTransition key="vendors">
-                  <VendorManager />
-                </PageTransition>
-              )}
-
-              {activeTab === 'checklist' && (
-                <PageTransition key="checklist">
-                  <ChecklistManager />
-                </PageTransition>
-              )}
-
-              {activeTab === 'users' && user?.role === 'admin' && (
-                <PageTransition key="users">
-                  <UserManager />
-                </PageTransition>
-              )}
-
-              {activeTab === 'save-the-date' && (
-                <PageTransition key="save-the-date">
-                  <SaveTheDateManager />
-                </PageTransition>
-              )}
-
-              {activeTab === 'gifts' && (
-                <PageTransition key="gifts">
-                  <GiftManagerEnhanced />
-                </PageTransition>
-              )}
-
-              {activeTab === 'ai-agent' && (
-                <PageTransition key="ai-agent">
-                  <AIAgentPanel />
-                </PageTransition>
-              )}
-            </AnimatePresence>
-          </div>
-        </main>
-
-        {/* Footer — desktop only */}
-        <div className="hidden md:block">
-          <AppFooter />
         </div>
-      </div>
-
-      {/* Bottom Nav — mobile only */}
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
-    </div>
-  )
-}
-
-export default function Page() {
-  return (
-    <Suspense>
-      <WeddingGuestPlatform />
-    </Suspense>
-  )
+    )
 }

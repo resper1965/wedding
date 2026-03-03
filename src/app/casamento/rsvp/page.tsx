@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
+import { publicFetch } from '@/lib/public-fetch'
+
 import {
   Select,
   SelectContent,
@@ -84,8 +86,8 @@ export default function RSVPPage() {
     const fetchData = async () => {
       try {
         const [weddingRes, eventsRes] = await Promise.all([
-          fetch('/api/wedding'),
-          fetch('/api/events')
+          publicFetch('/api/wedding'),
+          publicFetch('/api/events')
         ])
         
         const weddingData = await weddingRes.json()
@@ -179,7 +181,7 @@ export default function RSVPPage() {
     
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/rsvp', {
+      const response = await publicFetch('/api/rsvp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

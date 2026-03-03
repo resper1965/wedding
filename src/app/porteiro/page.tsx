@@ -29,6 +29,8 @@ import { cn } from '@/lib/utils'
 import { QRScanner, QRScanResult } from '@/components/checkin/QRScanner'
 import { GuestSearch, GuestSearchResult } from '@/components/checkin/GuestSearch'
 import { CheckInCard, CheckInCardProps } from '@/components/checkin/CheckInCard'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 // ============================================================================
 // TYPES
@@ -83,7 +85,7 @@ export default function PorteiroPage() {
 
   // Fetch wedding name
   useEffect(() => {
-    fetch('/api/wedding')
+    publicFetch('/api/wedding')
       .then(r => r.json())
       .then(data => {
         if (data.success) {
@@ -95,7 +97,7 @@ export default function PorteiroPage() {
 
   const fetchStats = useCallback(async () => {
     try {
-      const res = await fetch('/api/checkin/stats')
+      const res = await publicFetch('/api/checkin/stats')
       if (res.ok) {
         const data = await res.json()
         setStats({
@@ -116,7 +118,7 @@ export default function PorteiroPage() {
   const fetchGuestList = useCallback(async () => {
     setIsLoadingList(true)
     try {
-      const res = await fetch('/api/checkin/guests')
+      const res = await publicFetch('/api/checkin/guests')
       if (res.ok) {
         const data = await res.json()
         setGuestList(data.guests || [])
@@ -175,7 +177,7 @@ export default function PorteiroPage() {
 
   const handleCheckIn = async (invitationId: string) => {
     try {
-      const res = await fetch('/api/checkin', {
+      const res = await publicFetch('/api/checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ invitationId }),

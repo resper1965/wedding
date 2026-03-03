@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, Camera, X, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react'
 import { PublicNav } from '@/components/public/PublicNav'
 import { PublicFooter } from '@/components/public/PublicFooter'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 interface WeddingData {
   partner1Name: string
@@ -49,7 +51,7 @@ export default function FotosPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/wedding')
+        const response = await publicFetch('/api/wedding')
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)

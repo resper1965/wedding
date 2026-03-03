@@ -9,6 +9,8 @@ import {
 import { PublicNav } from '@/components/public/PublicNav'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { Button } from '@/components/ui/button'
+import { publicFetch } from '@/lib/public-fetch'
+
 import {
   Accordion,
   AccordionContent,
@@ -78,7 +80,7 @@ export default function InfoPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/wedding')
+        const response = await publicFetch('/api/wedding')
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)

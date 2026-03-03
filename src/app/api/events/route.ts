@@ -2,12 +2,12 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: true, data: [] })
+    const tenantId = request.headers.get('x-tenant-id');
+    if (!tenantId) return NextResponse.json({ success: true, data: [] })
 
-    const { data: events, error } = await db.from('Event').select('*').eq('weddingId', wedding.id).order('order', { ascending: true })
+    const { data: events, error } = await db.from('Event').select('*').eq('weddingId', tenantId).order('order', { ascending: true })
     if (error) throw error
 
     return NextResponse.json({ success: true, data: events })
@@ -19,15 +19,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id');
+    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
 
     const body = await request.json()
     const { name, description, startTime, endTime, venue, address, dressCode, maxCapacity, order } = body
 
     const { data: event, error } = await db.from('Event').insert({
       id: crypto.randomUUID(),
-      weddingId: wedding.id,
+      weddingId: tenantId,
       name,
       description: description || null,
       startTime: new Date(startTime).toISOString(),

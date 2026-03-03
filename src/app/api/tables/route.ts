@@ -2,14 +2,14 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Wedding not found' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id');
+    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
 
     const [{ data: tables }, { data: unassignedGroups }] = await Promise.all([
-      db.from('Table').select('*, groups:GuestGroup(*, guests:Guest(*, rsvps:Rsvp(id, status)))').eq('weddingId', wedding.id).order('name'),
-      db.from('GuestGroup').select('*, guests:Guest(*, rsvps:Rsvp(id, status))').eq('weddingId', wedding.id).is('tableId', null).order('name'),
+      db.from('Table').select('*, groups:GuestGroup(*, guests:Guest(*, rsvps:Rsvp(id, status)))').eq('weddingId', tenantId).order('name'),
+      db.from('GuestGroup').select('*, guests:Guest(*, rsvps:Rsvp(id, status))').eq('weddingId', tenantId).is('tableId', null).order('name'),
     ])
 
     const formatGuests = (guests: any[]) => (guests || []).map((g: any) => ({
@@ -48,21 +48,21 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Wedding not found' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id');
+    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
 
     const body = await request.json()
     const { name, capacity, shape } = body
 
     let tableName = name
     if (!tableName) {
-      const { count } = await db.from('Table').select('*', { count: 'exact', head: true }).eq('weddingId', wedding.id)
+      const { count } = await db.from('Table').select('*', { count: 'exact', head: true }).eq('weddingId', tenantId)
       tableName = `Mesa ${(count ?? 0) + 1}`
     }
 
     const { data: table, error } = await db.from('Table').insert({
       id: crypto.randomUUID(),
-      weddingId: wedding.id,
+      weddingId: tenantId,
       name: tableName,
       capacity: capacity || 8,
       shape: shape || 'round',

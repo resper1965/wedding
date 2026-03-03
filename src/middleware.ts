@@ -10,15 +10,40 @@ import { verifySupabaseToken } from './lib/auth'
 
 export async function middleware(request: NextRequest) {
   try {
-    const auth = await verifySupabaseToken(request)
-    if (!auth.authorized) return auth.response
+    const auth = await verifySupabaseToken(request);
 
-    return NextResponse.next()
+    // SaaS Multi-tenant Path Routing Logic
+    // Extract tenantId (weddingId) from the URL path, assuming format: /[tenantId]/route
+    // Ex: /nicolas-louise/rsvp -> tenantId: nicolas-louise
+    const pathname = request.nextUrl.pathname;
+
+    // Ignore static files, api routes, and root
+    if (
+      !pathname.startsWith('/api/') &&
+      !pathname.startsWith('/_next/') &&
+      !pathname.includes('.') &&
+      pathname !== '/'
+    ) {
+      const tenantId = pathname.split('/')[1];
+
+      // Inject the tenantId into the request headers for downstream API/Page usage
+      if (tenantId) {
+        request.headers.set('x-tenant-id', tenantId);
+      }
+    }
+
+    if (!auth.authorized) return auth.response;
+
+    return NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
   } catch {
     return NextResponse.json(
       { success: false, error: 'Erro de autenticação' },
       { status: 401 }
-    )
+    );
   }
 }
 

@@ -8,6 +8,8 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 interface WeddingData {
   partner1Name: string
@@ -36,8 +38,8 @@ export default function WeddingInfoPage() {
     const fetchData = async () => {
       try {
         const [weddingRes, eventsRes] = await Promise.all([
-          fetch('/api/wedding'),
-          fetch('/api/events')
+          publicFetch('/api/wedding'),
+          publicFetch('/api/events')
         ])
         
         const weddingData = await weddingRes.json()

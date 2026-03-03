@@ -9,6 +9,8 @@ import Link from 'next/link'
 import { PublicNav } from '@/components/public/PublicNav'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { CountdownTimer } from '@/components/public/CountdownTimer'
+import { publicFetch } from '@/lib/public-fetch'
+
 
 interface WeddingData {
   partner1Name: string
@@ -26,7 +28,7 @@ export default function PublicWeddingPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/wedding')
+        const response = await publicFetch('/api/wedding')
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)
