@@ -1,0 +1,8 @@
+Contact: mailto:resper@gmail.com
+Contact: mailto:resper@ness.com.br
+Contact: mailto:resper@bekaa.eu
+Expires: 2027-12-31T23:59:59.000Z
+Acknowledgments: https://wedding.louise.com.br/hall-of-fame
+Preferred-Languages: pt-BR, en
+Canonical: https://wedding.louise.com.br/.well-known/security.txt
+Policy: https://wedding.louise.com.br/SECURITY.md

@@ -23,9 +23,23 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Meu Casamento — Gestão",
-  description: "Plataforma completa de gestão de casamento: convidados, RSVP, presentes, save the date e muito mais.",
-  keywords: ["casamento", "wedding", "convidados", "RSVP", "presentes", "save the date"],
+  title: "WeddingApp — O Seu Casamento Perfeito",
+  description: "A plataforma definitiva que une cerimonialistas e noivos. Inteligência Artificial para responder dúvidas de convidados, RSVP automatizado e gestão multi-eventos sem estresse.",
+  keywords: ["organização de casamento", "wedding planner", "cerimonialista", "RSVP digital", "site dos noivos", "inteligência artificial para casamento"],
+  authors: [{ name: "Ness.br" }],
+  creator: "WeddingApp",
+  metadataBase: new URL('https://wedding.louise.com.br'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://wedding.louise.com.br/",
+    title: "WeddingApp — O Seu Casamento Perfeito",
+    description: "A plataforma definitiva que une cerimonialistas e noivos com IA e agendamentos.",
+    siteName: "WeddingApp",
+  },
   icons: {
     icon: "/logo.svg",
     apple: "/icon-192.png",
@@ -34,7 +48,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Meu Casamento",
+    title: "WeddingApp",
   },
   formatDetection: {
     telephone: false,
