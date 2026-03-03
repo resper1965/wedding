@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Heart, Search, Send, Check, Calendar, Users, 
+import {
+  Heart, Search, Send, Check, Calendar, Users,
   AlertCircle, Loader2, CheckCircle2, XCircle
 } from 'lucide-react'
 import { PublicNav } from '@/components/public/PublicNav'
@@ -75,7 +75,7 @@ export default function RSVPPage() {
   const [isSearching, setIsSearching] = useState(false)
   const [selectedGuest, setSelectedGuest] = useState<GuestData | null>(null)
   const [submitted, setSubmitted] = useState(false)
-  
+
   // Form state
   const [selectedEvents, setSelectedEvents] = useState<string[]>([])
   const [dietaryRestrictions, setDietaryRestrictions] = useState('')
@@ -89,7 +89,7 @@ export default function RSVPPage() {
           publicFetch('/api/wedding'),
           publicFetch('/api/events')
         ])
-        
+
         const weddingData = await weddingRes.json()
         const eventsData = await eventsRes.json()
 
@@ -112,7 +112,7 @@ export default function RSVPPage() {
     setSelectedGuest(guest)
     setSearchResults([])
     setSearchQuery('')
-    
+
     // Pre-fill form with existing data
     if (guest.rsvps) {
       const confirmedEvents = guest.rsvps
@@ -128,33 +128,33 @@ export default function RSVPPage() {
     }
   }, [])
 
-  const searchByToken = useCallback(async (token: string) => {
+  const searchByInvite = useCallback(async (inviteCode: string) => {
     setIsSearching(true)
     try {
-      const response = await fetch(`/api/invite/${token}`)
+      const response = await fetch(`/api/invite/${inviteCode}`)
       const data = await response.json()
       if (data.success && data.guest) {
         handleSelectGuest(data.guest)
       }
     } catch (error) {
-      console.error('Error searching by token:', error)
+      console.error('Error searching by inviteCode:', error)
     }
     setIsSearching(false)
   }, [handleSelectGuest])
 
-  // Check for token in URL on mount
+  // Check for invite code in URL on mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
-    const token = urlParams.get('token')
-    if (token) {
+    const code = urlParams.get('token') || urlParams.get('code')
+    if (code) {
       // Use setTimeout to defer setState outside of effect
-      setTimeout(() => searchByToken(token), 0)
+      setTimeout(() => searchByInvite(code), 0)
     }
-  }, [searchByToken])
+  }, [searchByInvite])
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return
-    
+
     setIsSearching(true)
     try {
       const response = await fetch(`/api/guests?search=${encodeURIComponent(searchQuery)}`)
@@ -169,7 +169,7 @@ export default function RSVPPage() {
   }
 
   const handleEventToggle = (eventId: string) => {
-    setSelectedEvents(prev => 
+    setSelectedEvents(prev =>
       prev.includes(eventId)
         ? prev.filter(id => id !== eventId)
         : [...prev, eventId]
@@ -178,7 +178,7 @@ export default function RSVPPage() {
 
   const handleSubmit = async () => {
     if (!selectedGuest) return
-    
+
     setIsSubmitting(true)
     try {
       const response = await publicFetch('/api/rsvp', {
@@ -193,7 +193,7 @@ export default function RSVPPage() {
           responseSource: 'web'
         })
       })
-      
+
       const data = await response.json()
       if (data.success) {
         setSubmitted(true)
@@ -320,11 +320,10 @@ export default function RSVPPage() {
                         {events.map(event => (
                           <label
                             key={event.id}
-                            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${
-                              selectedEvents.includes(event.id)
+                            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${selectedEvents.includes(event.id)
                                 ? 'border-amber-300 bg-amber-50'
                                 : 'border-amber-100 bg-white/50 hover:border-amber-200'
-                            }`}
+                              }`}
                           >
                             <Checkbox
                               checked={selectedEvents.includes(event.id)}
