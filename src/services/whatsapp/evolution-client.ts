@@ -24,9 +24,13 @@ export class EvolutionClient {
     private config: EvolutionConfig
 
     constructor(config: EvolutionConfig) {
+        let apiUrl = config.apiUrl.trim().replace(/\/$/, '')
+        if (!apiUrl.startsWith('http')) {
+            apiUrl = `https://${apiUrl}`
+        }
         this.config = {
             ...config,
-            apiUrl: config.apiUrl.replace(/\/$/, '')
+            apiUrl
         }
     }
 

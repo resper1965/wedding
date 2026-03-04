@@ -16,9 +16,9 @@ interface RecentActivityProps {
 }
 
 const typeConfig = {
-  rsvp_confirmed: { icon: Check, color: 'text-primary', bg: 'bg-primary/5' },
+  rsvp_confirmed: { icon: Check, color: 'text-success', bg: 'bg-success/10' },
   rsvp_declined: { icon: X, color: 'text-warning', bg: 'bg-warning/10' },
-  rsvp: { icon: Clock, color: 'text-muted-foreground/40', bg: 'bg-primary/[0.02]' }
+  rsvp: { icon: Clock, color: 'text-info', bg: 'bg-info/10' }
 }
 
 export function RecentActivity({ activities }: RecentActivityProps) {

@@ -10,21 +10,23 @@ interface StatCardProps {
   value: string | number
   subtitle?: string
   icon?: LucideIcon
-  variant?: 'primary' | 'success' | 'warning' | 'muted'
+  variant?: 'primary' | 'success' | 'warning' | 'info' | 'muted'
   delay?: number
 }
 
 const iconVariants = {
   primary: "text-primary",
-  success: "text-primary",
+  success: "text-success",
   warning: "text-warning",
+  info: "text-info",
   muted: "text-muted-foreground/40"
 }
 
 const bgVariants = {
   primary: "bg-primary/5 shadow-inner",
-  success: "bg-primary/10 shadow-inner",
+  success: "bg-success/10 shadow-inner",
   warning: "bg-warning/10 shadow-inner",
+  info: "bg-info/10 shadow-inner",
   muted: "bg-primary/[0.02] shadow-inner"
 }
 

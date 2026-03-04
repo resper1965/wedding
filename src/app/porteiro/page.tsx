@@ -297,8 +297,8 @@ export default function PorteiroPage() {
                     <p className="text-[10px] font-accent font-bold text-success/40 uppercase tracking-widest mt-1">Chegaram</p>
                   </div>
                   <div className="text-center group">
-                    <p className="text-3xl font-serif font-light text-primary/60">{stats.pending}</p>
-                    <p className="text-[10px] font-accent font-bold text-primary/30 uppercase tracking-widest mt-1">No Aguardo</p>
+                    <p className="text-3xl font-serif font-light text-info group-hover:scale-110 transition-transform">{stats.pending}</p>
+                    <p className="text-[10px] font-accent font-bold text-info/40 uppercase tracking-widest mt-1">No Aguardo</p>
                   </div>
                 </div>
 

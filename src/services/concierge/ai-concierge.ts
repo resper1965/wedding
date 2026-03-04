@@ -15,6 +15,9 @@
 
 import ZAI from 'z-ai-web-dev-sdk'
 import { db } from '@/lib/db'
+import { generateQRCode } from './qr-service'
+import fs from 'fs'
+import path from 'path'
 
 // Types from database schema
 type Wedding = Record<string, any>
@@ -263,20 +266,119 @@ ${invitation.conversationSummary ? `\n**Resumo da Conversa:** ${invitation.conve
       { role: 'user' as const, content: finalUserMessage }
     ]
 
-    // Get AI completion
+    // Define tools for Function Calling
+    const tools = [
+      {
+        name: 'confirm_guest',
+        description: 'Confirma a presença de um ou mais convidados do convite.',
+        parameters: {
+          type: 'object',
+          properties: {
+            guestIds: { type: 'array', items: { type: 'string' }, description: 'Lista de IDs dos convidados a confirmar' }
+          },
+          required: ['guestIds']
+        }
+      },
+      {
+        name: 'decline_guest',
+        description: 'Registra que um ou mais convidados não poderão comparecer.',
+        parameters: {
+          type: 'object',
+          properties: {
+            guestIds: { type: 'array', items: { type: 'string' }, description: 'Lista de IDs dos convidados que não irão' }
+          },
+          required: ['guestIds']
+        }
+      },
+      {
+        name: 'update_dietary',
+        description: 'Atualiza restrições alimentares de um convidado.',
+        parameters: {
+          type: 'object',
+          properties: {
+            guestId: { type: 'string', description: 'ID do convidado' },
+            restrictions: { type: 'string', description: 'Descrição das restrições (ex: vegano, sem glúten)' }
+          },
+          required: ['guestId', 'restrictions']
+        }
+      },
+      {
+        name: 'request_songs',
+        description: 'Registra sugestões de músicas de um convidado.',
+        parameters: {
+          type: 'object',
+          properties: {
+            guestId: { type: 'string', description: 'ID do convidado' },
+            songs: { type: 'string', description: 'Nomes das músicas/artistas' }
+          },
+          required: ['guestId', 'songs']
+        }
+      },
+      {
+        name: 'send_qr_code',
+        description: 'Gera e envia o QR Code de check-in para o convidado.',
+        parameters: {
+          type: 'object',
+          properties: {
+            invitationId: { type: 'string', description: 'ID do convite' }
+          },
+          required: ['invitationId']
+        }
+      }
+    ]
+
+    // Get AI completion with tool support
     const completion = await this.zai!.chat.completions.create({
       messages,
+      tools,
+      tool_choice: 'auto',
       thinking: { type: 'disabled' }
     })
 
-    const response = completion.choices[0]?.message?.content || 'Desculpe, não consegui processar sua mensagem. Pode tentar novamente?'
+    const choice = completion.choices[0]?.message
+    const response = choice?.content || ''
+    const toolCalls = choice?.tool_calls || []
 
-    // Detect intent (simplified - in production, use function calling)
+    // Process function calls if any
+    const functionCalls: Array<{ name: string; result: FunctionCallResult }> = []
+
+    if (invitation) {
+      for (const call of toolCalls) {
+        if (call.type === 'function') {
+          const name = call.function.name
+          const args = JSON.parse(call.function.arguments)
+          let result: FunctionCallResult
+
+          switch (name) {
+            case 'confirm_guest':
+              result = await confirmGuest(invitation.id, args.guestIds)
+              break
+            case 'decline_guest':
+              result = await declineGuest(invitation.id, args.guestIds)
+              break
+            case 'update_dietary':
+              result = await updateDietary(args.guestId, args.restrictions)
+              break
+            case 'request_songs':
+              result = await requestSongs(args.guestId, args.songs)
+              break
+            case 'send_qr_code':
+              result = await sendQrCode(invitation.id)
+              break
+            default:
+              result = { success: false, action: name, message: 'Função não implementada' }
+          }
+          functionCalls.push({ name, result })
+        }
+      }
+    }
+
+    // Detect intent
     const intent = this.detectIntent(userMessage, response)
 
     return {
-      response,
-      functionCalls: [], // Will be populated by function calling integration
+      response: response || 'Processado com sucesso.',
+      functionCalls,
       intent
     }
   }
@@ -480,6 +582,68 @@ export async function requestSongs(
       success: false,
       action: 'request_songs',
       message: `Erro ao registrar músicas: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+    }
+  }
+}
+
+/**
+ * Generate and send QR code for check-in
+ */
+export async function sendQrCode(
+  invitationId: string
+): Promise<FunctionCallResult> {
+  try {
+    const { data: invitation } = await db.from('Invitation')
+      .select('*, guests:Guest(*)')
+      .eq('id', invitationId)
+      .maybeSingle()
+
+    if (!invitation || !invitation.guests || invitation.guests.length === 0) {
+      return { success: false, action: 'send_qr_code', message: 'Convite ou convidados não encontrados.' }
+    }
+
+    const confirmedGuests = invitation.guests.filter((g: any) => g.inviteStatus === 'responded')
+    const guestIds = confirmedGuests.length > 0
+      ? confirmedGuests.map((g: any) => g.id)
+      : invitation.guests.map((g: any) => g.id)
+
+    const familyName = invitation.familyName || confirmedGuests[0]?.lastName || 'Convidado'
+
+    const qrResult = await generateQRCode(
+      invitationId,
+      guestIds,
+      familyName
+    )
+
+    if (!qrResult.success || !qrResult.qrDataUrl) {
+      throw new Error(qrResult.error || 'Erro ao gerar QR Code')
+    }
+
+    // Save QR to public folder for Evolution API to fetch
+    const qrBuffer = Buffer.from(qrResult.qrDataUrl.split(',')[1], 'base64')
+    const filename = `qr-${invitationId}-${Date.now()}.png`
+    const publicPath = path.join(process.cwd(), 'public', 'qrcodes')
+
+    if (!fs.existsSync(publicPath)) {
+      fs.mkdirSync(publicPath, { recursive: true })
+    }
+
+    const filePath = path.join(publicPath, filename)
+    fs.writeFileSync(filePath, qrBuffer)
+
+    const publicUrl = `${process.env.NEXT_PUBLIC_APP_URL || ''}/qrcodes/${filename}`
+
+    return {
+      success: true,
+      action: 'send_qr_code',
+      data: { publicUrl },
+      message: 'QR Code gerado com sucesso! Já estou enviando para você.'
+    }
+  } catch (error) {
+    return {
+      success: false,
+      action: 'send_qr_code',
+      message: `Erro ao gerar QR Code: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
     }
   }
 }

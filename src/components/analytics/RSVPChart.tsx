@@ -16,7 +16,7 @@ interface RSVPChartProps {
 }
 
 const COLORS = {
-  confirmed: 'oklch(var(--primary))',
+  confirmed: 'oklch(var(--success))',
   declined: 'oklch(var(--error))',
   pending: 'oklch(var(--warning))'
 }
@@ -89,10 +89,10 @@ export function RSVPChart({ data }: RSVPChartProps) {
 
       {/* Summary Stats - Executive Cards */}
       <div className="mt-8 grid grid-cols-3 gap-3">
-        <div className="rounded-2xl border border-primary/5 bg-primary/[0.02] p-4 text-center group hover:bg-primary/[0.05] transition-all">
+        <div className="rounded-2xl border border-success/5 bg-success/[0.02] p-4 text-center group hover:bg-success/[0.05] transition-all">
           <div className="flex flex-col items-center gap-1">
-            <span className="text-2xl font-serif font-bold text-primary group-hover:scale-110 transition-transform">{data.confirmed}</span>
-            <p className="text-[9px] font-accent font-bold uppercase tracking-widest text-primary/40">Confirmados</p>
+            <span className="text-2xl font-serif font-bold text-success group-hover:scale-110 transition-transform">{data.confirmed}</span>
+            <p className="text-[9px] font-accent font-bold uppercase tracking-widest text-success/40">Confirmados</p>
           </div>
         </div>
         <div className="rounded-2xl border border-error/5 bg-error/[0.02] p-4 text-center group hover:bg-error/[0.05] transition-all">

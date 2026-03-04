@@ -20,9 +20,9 @@ interface TimelineChartProps {
 }
 
 const COLORS = {
-  confirmed: 'oklch(var(--primary))',
+  confirmed: 'oklch(var(--success))',
   declined: 'oklch(var(--error))',
-  cumulative: 'oklch(var(--warning))'
+  cumulative: 'oklch(var(--info))'
 }
 
 export function TimelineChart({ data }: TimelineChartProps) {
@@ -136,7 +136,7 @@ export function TimelineChart({ data }: TimelineChartProps) {
       <div className="mt-8 flex items-center justify-between border-t border-primary/5 pt-6">
         <div className="flex items-center gap-6 text-[9px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">
           <span className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-primary" />
+            <span className="h-2 w-2 rounded-full bg-success" />
             Presença
           </span>
           <span className="flex items-center gap-2">

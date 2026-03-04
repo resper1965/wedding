@@ -21,12 +21,12 @@ interface CategoryChartProps {
 const CATEGORY_COLORS = [
   'oklch(var(--primary))',
   'oklch(var(--accent))',
-  'oklch(0.6 0.1 160)', // Mid Green
-  'oklch(0.4 0.05 160)', // Darker Green
-  'oklch(0.8 0.05 200)', // Soft Blue
-  'oklch(0.7 0.1 300)', // Soft Purple
-  'oklch(0.9 0.02 160)', // Very Light Green
-  'oklch(0.5 0.02 160)', // Muted Greyish Green
+  'oklch(var(--info))',
+  'oklch(var(--success))',
+  'oklch(var(--primary) / 0.7)',
+  'oklch(var(--accent) / 0.7)',
+  'oklch(var(--info) / 0.7)',
+  'oklch(var(--success) / 0.7)',
 ]
 
 export function CategoryChart({ data }: CategoryChartProps) {

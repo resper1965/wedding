@@ -105,7 +105,20 @@ async function processMessageAsync(payload: any) {
 
     const waClient = getEvolutionClient()
     if (waClient) {
+      // 1. Send the text response
       await waClient.sendText(from, result.response)
+
+      // 2. Check for media actions (e.g., QR Code)
+      for (const call of result.functionCalls) {
+        if (call.name === 'send_qr_code' && call.result.success && (call.result.data as any)?.publicUrl) {
+          await waClient.sendMedia(
+            from,
+            (call.result.data as any).publicUrl,
+            'image',
+            'Aqui está o seu QR Code para o check-in no dia do casamento! ✨'
+          )
+        }
+      }
     }
   } catch (err) {
     console.error('[WhatsApp] AI processing error:', err)

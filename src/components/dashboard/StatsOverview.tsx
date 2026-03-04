@@ -52,7 +52,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
           value={totalPending}
           subtitle="aguardando resposta"
           icon={Clock}
-          variant="muted"
+          variant="info"
           delay={0.3}
         />
       </div>
@@ -92,7 +92,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
             <span className="text-[9px] font-accent font-bold uppercase tracking-widest text-muted-foreground/30">Recusados</span>
             <p className="text-lg font-serif font-bold text-foreground">{totalDeclined}</p>
           </div>
-          <div className="flex flex-col gap-1.5 border-l-2 border-primary/5 pl-4 py-1">
+          <div className="flex flex-col gap-1.5 border-l-2 border-info/20 pl-4 py-1">
             <span className="text-[9px] font-accent font-bold uppercase tracking-widest text-muted-foreground/30">Pendentes</span>
             <p className="text-lg font-serif font-bold text-foreground">{totalPending}</p>
           </div>

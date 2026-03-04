@@ -71,7 +71,7 @@ export function InteractivityDashboard() {
                 <div>
                     <h2 className="text-3xl font-serif font-bold text-foreground">Reception War Room</h2>
                     <div className="flex items-center gap-2 mt-1">
-                        <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="flex h-2 w-2 rounded-full bg-success animate-pulse" />
                         <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">
                             Live Interactivity Monitor • ISO 27001 Secured
                         </p>
@@ -96,9 +96,9 @@ export function InteractivityDashboard() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: 'Conversas Gabi', value: stats?.totalConversations || 0, icon: MessageSquare, color: 'text-blue-500' },
-                    { label: 'Check-ins Hoje', value: stats?.checkInsToday || 0, icon: CheckCircle2, color: 'text-emerald-500' },
-                    { label: 'RSVPs Hoje', value: stats?.confirmedToday || 0, icon: Activity, color: 'text-amber-500' },
+                    { label: 'Conversas Gabi', value: stats?.totalConversations || 0, icon: MessageSquare, color: 'text-info' },
+                    { label: 'Check-ins Hoje', value: stats?.checkInsToday || 0, icon: CheckCircle2, color: 'text-success' },
+                    { label: 'RSVPs Hoje', value: stats?.confirmedToday || 0, icon: Activity, color: 'text-warning' },
                     { label: 'Fluxos Ativos', value: stats?.activeFlows || 0, icon: Bot, color: 'text-primary' },
                 ].map((item, i) => (
                     <Card key={i} className="glass-card border-primary/5 overflow-hidden group hover:border-primary/20 transition-all">
@@ -173,9 +173,9 @@ export function InteractivityDashboard() {
                                 <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-primary/40 mb-1">Tokens Ativos</p>
                                 <p className="text-2xl font-serif font-bold text-primary">{stats?.qrCodesGenerated || 0}</p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
-                                <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-emerald-600/60 mb-1">Entradas</p>
-                                <p className="text-2xl font-serif font-bold text-emerald-600">{stats?.checkInsToday || 0}</p>
+                            <div className="p-4 rounded-2xl bg-success/5 border border-success/10">
+                                <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-success/60 mb-1">Entradas</p>
+                                <p className="text-2xl font-serif font-bold text-success">{stats?.checkInsToday || 0}</p>
                             </div>
                         </div>
 
@@ -187,8 +187,8 @@ export function InteractivityDashboard() {
                                 Monitoramento de latência OK
                             </div>
                             <div className="flex items-center gap-3 text-xs text-muted-foreground/60 font-medium">
-                                <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
-                                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                <div className="h-8 w-8 rounded-full bg-success/5 flex items-center justify-center">
+                                    <CheckCircle2 className="h-4 w-4 text-success" />
                                 </div>
                                 Sincronização em tempo real ativa
                             </div>
