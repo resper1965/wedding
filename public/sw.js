@@ -46,8 +46,8 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET requests
-  if (request.method !== 'GET') {
+  // Skip non-GET requests or unsupported schemes like chrome-extension
+  if (request.method !== 'GET' || !url.protocol.startsWith('http')) {
     return;
   }
 
@@ -58,14 +58,14 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           // Clone the response
           const responseClone = response.clone();
-          
+
           // Cache successful responses
           if (response.ok) {
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(request, responseClone);
             });
           }
-          
+
           return response;
         })
         .catch(() => {
@@ -124,7 +124,7 @@ self.addEventListener('push', (event) => {
   if (!event.data) return;
 
   const data = event.data.json();
-  
+
   const options = {
     body: data.body || 'Nova atualização',
     icon: '/icon-192.png',
@@ -143,7 +143,7 @@ self.addEventListener('push', (event) => {
 // Notification click handling
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  
+
   event.waitUntil(
     clients.matchAll({ type: 'window' }).then((clientList) => {
       // Focus existing window if available
