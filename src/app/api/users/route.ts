@@ -7,14 +7,14 @@ export async function GET(request: NextRequest) {
   try {
     const auth = await verifySupabaseToken(request)
     if (!auth.authorized) return auth.response
-    
+
     // Only admins can list users
     if (auth.role !== 'admin') {
       return NextResponse.json({ success: false, error: 'Acesso negado' }, { status: 403 })
     }
 
     const { data: users, error } = await db
-      .from('profiles')
+      .from('Profile')
       .select('*')
       .order('created_at', { ascending: false })
 
@@ -31,7 +31,7 @@ export async function PATCH(request: NextRequest) {
   try {
     const auth = await verifySupabaseToken(request)
     if (!auth.authorized) return auth.response
-    
+
     // Only admins can update user profiles
     if (auth.role !== 'admin') {
       return NextResponse.json({ success: false, error: 'Acesso negado' }, { status: 403 })
@@ -45,9 +45,9 @@ export async function PATCH(request: NextRequest) {
     }
 
     const { data: user, error } = await db
-      .from('profiles')
-      .update({ 
-        role, 
+      .from('Profile')
+      .update({
+        role,
         is_approved,
         updated_at: new Date().toISOString()
       })

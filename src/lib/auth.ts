@@ -61,7 +61,7 @@ export async function verifySupabaseToken(
       {
         cookies: {
           getAll: () => [],
-          setAll: () => {},
+          setAll: () => { },
         },
       }
     )
@@ -84,7 +84,7 @@ export async function verifySupabaseToken(
     }
 
     // Check profile for approval and role
-    const { data: profile } = await db.from('profiles').select('role, is_approved').eq('id', user.id).maybeSingle()
+    const { data: profile } = await db.from('Profile').select('role, is_approved').eq('id', user.id).maybeSingle()
 
     if (!profile || !profile.is_approved) {
       return {

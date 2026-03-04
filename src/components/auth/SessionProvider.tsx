@@ -36,10 +36,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         // Fetch profile
         try {
           const { data: profile } = await supabase
-            .from('profiles')
+            .from('Profile')
             .select('role, is_approved')
             .eq('id', supabaseUser.uid)
-            .single()
+            .maybeSingle()
 
           setUser({
             ...supabaseUser,

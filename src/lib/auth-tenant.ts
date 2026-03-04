@@ -22,21 +22,46 @@ export async function verifyTenantAccess(
     uid: string | null,
     email: string | null
 ): Promise<TenantAuthResult> {
-    if (!tenantId || !uid) {
+    if (!uid) {
         return {
             hasAccess: false,
             role: 'none',
             response: NextResponse.json(
-                { success: false, error: 'Parâmetros de identificação (tenantId/uid) inválidos' },
-                { status: 400 }
+                { success: false, error: 'Usuário não autenticado' },
+                { status: 401 }
             )
+        }
+    }
+
+    let effectiveTenantId = tenantId;
+
+    // Fallback: If tenantId is missing, invalid, or the default 'wedding-1'
+    // we try to find the first wedding this user owns or is a couple of.
+    if (!effectiveTenantId || effectiveTenantId === 'wedding-1' || effectiveTenantId.length < 10) {
+        const { data: firstWedding } = await db.from('Wedding')
+            .select('id')
+            .or(`owner_id.eq.${uid}${email ? `,couple_email.ilike.${email}` : ''}`)
+            .limit(1)
+            .maybeSingle()
+
+        if (firstWedding) {
+            effectiveTenantId = firstWedding.id;
+        } else {
+            return {
+                hasAccess: false,
+                role: 'none',
+                response: NextResponse.json(
+                    { success: false, error: 'Nenhum casamento vinculado a esta conta.' },
+                    { status: 404 }
+                )
+            }
         }
     }
 
     try {
         const { data: wedding, error } = await db.from('Wedding')
             .select('id, owner_id, couple_email')
-            .eq('id', tenantId)
+            .eq('id', effectiveTenantId)
             .maybeSingle()
 
         if (error || !wedding) {
