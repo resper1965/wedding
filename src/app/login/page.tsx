@@ -98,7 +98,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="rounded-[2.5rem] border border-border/50 bg-white/60 p-10 shadow-2xl backdrop-blur-xl"
+          className="rounded-[2.5rem] border border-border/50 bg-card/60 p-10 shadow-2xl backdrop-blur-xl soft-shadow"
         >
           <div className="mb-8 text-center">
             <h1 className="text-2xl font-bold text-foreground">Bem-vindo de volta</h1>
@@ -108,7 +108,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
+            <div className="mb-4 rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-sm text-destructive">{error}</div>
           )}
 
           {/* Google OAuth */}
@@ -117,7 +117,7 @@ export default function LoginPage() {
             variant="outline"
             onClick={handleGoogleLogin}
             disabled={isGoogleLoading || isLoading}
-            className="mb-6 w-full h-12 gap-3 border-border bg-white/50 text-foreground font-bold rounded-xl hover:bg-white hover:soft-shadow"
+            className="mb-6 w-full h-12 gap-3 border-border bg-background/50 text-foreground font-bold rounded-xl hover:bg-background hover:soft-shadow"
           >
             {isGoogleLoading ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
@@ -134,10 +134,10 @@ export default function LoginPage() {
 
           <div className="relative mb-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-stone-200" />
+              <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-2 text-stone-400">ou entre com email</span>
+              <span className="bg-card px-2 text-muted-foreground">ou entre com email</span>
             </div>
           </div>
 
@@ -152,7 +152,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
-                className="w-full h-12 rounded-xl border border-border bg-white px-4 text-foreground placeholder-foreground/20 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-medium"
+                className="w-full h-12 rounded-xl border border-border bg-background px-4 text-foreground placeholder-foreground/20 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-medium"
               />
             </div>
             <div>
@@ -165,7 +165,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full h-12 rounded-xl border border-border bg-white px-4 text-foreground placeholder-foreground/20 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-medium"
+                className="w-full h-12 rounded-xl border border-border bg-background px-4 text-foreground placeholder-foreground/20 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-medium"
               />
             </div>
             <Button
@@ -181,14 +181,14 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-stone-400">Apenas administradores autorizados</p>
+          <p className="mt-6 text-center text-xs text-muted-foreground/40">Apenas administradores autorizados</p>
         </motion.div>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-8 text-center text-xs text-stone-400"
+          className="mt-8 text-center text-xs text-muted-foreground/40"
         >
           &copy; {new Date().getFullYear()} MarryFlow • São Paulo
         </motion.p>
