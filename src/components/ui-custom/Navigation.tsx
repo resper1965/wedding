@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, MessageSquare, Settings,
   BarChart3, Grid3X3, HelpCircle, ChevronLeft, ChevronRight,
   Heart, DollarSign, Briefcase, ClipboardList, Shield, Gift,
-  MoreHorizontal, CalendarHeart, Bot, X, Zap
+  MoreHorizontal, CalendarHeart, Bot, X, Zap, ChevronUp
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -82,6 +82,20 @@ export function SidebarNav({
         collapsed && 'justify-center px-0'
       )}>
         <BrandLogo size="md" withDot={!collapsed} />
+      </div>
+
+      {/* Global Navigation - Back to Projects */}
+      <div className="px-4 pt-4">
+        <Link
+          href="/projects"
+          className={cn(
+            "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-[#1A302B] dark:text-[#C6D8D3] transition-all hover:bg-primary/5 group",
+            collapsed && "justify-center px-0"
+          )}
+        >
+          <Grid3X3 className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
+          {!collapsed && <span>Meus Eventos</span>}
+        </Link>
       </div>
 
       {/* Nav items */}
@@ -197,7 +211,18 @@ export function BottomNav({ activeTab, onTabChange }: Pick<NavigationProps, 'act
               </button>
             </div>
 
-            <div className="grid grid-cols-4 gap-1 px-3 pb-4">
+            <div className="px-3 pb-2 border-b border-border/50">
+              <Link
+                href="/projects"
+                onClick={() => setMoreOpen(false)}
+                className="flex items-center gap-3 rounded-xl px-4 py-3 bg-primary/5 text-primary text-[11px] font-accent font-bold uppercase tracking-widest shadow-sm"
+              >
+                <Grid3X3 className="h-4 w-4" />
+                <span>Meus Eventos</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-4 gap-1 px-3 pb-4 pt-4">
               {moreMobileTabs.map((tab) => {
                 const Icon = tab.icon
                 const isActive = activeTab === tab.id
