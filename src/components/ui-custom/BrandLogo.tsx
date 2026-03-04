@@ -47,7 +47,7 @@ export function BrandLogo({
     const content = (
         <div className={cn("flex items-center gap-1.5 select-none transition-all hover:scale-105 active:scale-95 group", className)}>
             <span className={cn(
-                "font-script text-[oklch(0.25_0.03_160)] drop-shadow-sm transition-colors group-hover:text-primary",
+                "font-script text-primary drop-shadow-sm transition-colors group-hover:brightness-110",
                 sizeClasses[size].marry
             )}>
                 Marry
