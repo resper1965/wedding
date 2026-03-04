@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { getWeatherForecast } from '@/services/weather/weather-service'
@@ -8,7 +9,13 @@ export async function GET(request: NextRequest) {
     const lat = searchParams.get('lat')
     const lon = searchParams.get('lon')
 
-    const { data: wedding } = await db.from('Wedding').select('venue, venueAddress, weddingDate').limit(1).maybeSingle()
+    const tenantId = request.headers.get('x-tenant-id')
+    let wedding: any = null
+
+    if (tenantId) {
+      const { data } = await db.from('Wedding').select('venue, venueAddress, weddingDate').eq('id', tenantId).maybeSingle()
+      wedding = data
+    }
 
     let targetDate = new Date()
     if (wedding?.weddingDate) {

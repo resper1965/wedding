@@ -1,30 +1,24 @@
-export const dynamic = 'force-dynamic'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    let { data: wedding } = await db.from('Wedding').select('*').limit(1).maybeSingle()
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
+
+    let { data: wedding } = await db.from('Wedding').select('*').eq('id', access.weddingId).maybeSingle()
 
     if (!wedding) {
-      const { data: created, error } = await db.from('Wedding').insert({
-        id: crypto.randomUUID(),
-        partner1Name: 'Ana',
-        partner2Name: 'Carlos',
-        weddingDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
-        venue: 'Espaço Villa Bella',
-        venueAddress: 'Rua das Flores, 123',
-        totalInvited: 0, totalConfirmed: 0, totalDeclined: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }).select().single()
-      if (error) throw error
-      wedding = created
+      return NextResponse.json({ success: false, error: 'Casamento não encontrado' }, { status: 404 })
     }
 
     const [{ data: events }, { data: guests }] = await Promise.all([
-      db.from('Event').select('*, rsvps:Rsvp(*)').eq('weddingId', wedding.id).order('order'),
-      db.from('Guest').select('*, rsvps:Rsvp(*)').eq('weddingId', wedding.id),
+      db.from('Event').select('*, rsvps:Rsvp(*)').eq('weddingId', access.weddingId).order('order'),
+      db.from('Guest').select('*, rsvps:Rsvp(*)').eq('weddingId', access.weddingId),
     ])
 
     const totalInvited = (guests || []).length
@@ -47,7 +41,7 @@ export async function GET() {
       .order('respondedAt', { ascending: false })
       .limit(10)
 
-    const weddingGuests = (recentRsvps || []).filter((r: any) => r.guest?.weddingId === wedding.id)
+    const weddingGuests = (recentRsvps || []).filter((r: any) => r.guest?.weddingId === access.weddingId)
     const recentActivity = weddingGuests.map((rsvp: any) => ({
       id: rsvp.id,
       type: 'rsvp' as const,

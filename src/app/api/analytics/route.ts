@@ -1,16 +1,19 @@
-export const dynamic = 'force-dynamic'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const [{ data: events }, { data: guests }, { data: invitations }] = await Promise.all([
-      db.from('Event').select('*, rsvps:Rsvp(*, guest:Guest(*))').eq('weddingId', wedding.id).order('order'),
-      db.from('Guest').select('*, rsvps:Rsvp(*, event:Event(*))').eq('weddingId', wedding.id),
-      db.from('Invitation').select('checkedIn, checkedInAt').eq('weddingId', wedding.id),
+      db.from('Event').select('*, rsvps:Rsvp(*, guest:Guest(*))').eq('weddingId', access.weddingId).order('order'),
+      db.from('Guest').select('*, rsvps:Rsvp(*, event:Event(*))').eq('weddingId', access.weddingId),
+      db.from('Invitation').select('checkedIn, checkedInAt').eq('weddingId', access.weddingId),
     ])
 
     const rsvpByEvent = (events || []).map((ev: any) => {
@@ -39,13 +42,13 @@ export async function GET() {
       .order('respondedAt')
 
     const responsesByDate: Record<string, { date: string; confirmed: number; declined: number; total: number }> = {}
-    ;(recentResponses || []).filter((r: any) => r.guest?.weddingId === wedding.id).forEach((rsvp: any) => {
-      const dateKey = rsvp.respondedAt.split('T')[0]
-      if (!responsesByDate[dateKey]) responsesByDate[dateKey] = { date: dateKey, confirmed: 0, declined: 0, total: 0 }
-      responsesByDate[dateKey].total++
-      if (rsvp.status === 'confirmed') responsesByDate[dateKey].confirmed++
-      else if (rsvp.status === 'declined') responsesByDate[dateKey].declined++
-    })
+      ; (recentResponses || []).filter((r: any) => r.guest?.weddingId === access.weddingId).forEach((rsvp: any) => {
+        const dateKey = rsvp.respondedAt.split('T')[0]
+        if (!responsesByDate[dateKey]) responsesByDate[dateKey] = { date: dateKey, confirmed: 0, declined: 0, total: 0 }
+        responsesByDate[dateKey].total++
+        if (rsvp.status === 'confirmed') responsesByDate[dateKey].confirmed++
+        else if (rsvp.status === 'declined') responsesByDate[dateKey].declined++
+      })
 
     let cumulative = 0
     const timelineData = Array.from({ length: 30 }, (_, i) => {
@@ -90,11 +93,11 @@ export async function GET() {
       .in('status', ['confirmed', 'declined'])
 
     const responseSources = { whatsapp: 0, web: 0, manual: 0, unknown: 0 }
-    ;(allRsvps || []).filter((r: any) => r.guest?.weddingId === wedding.id).forEach((rsvp: any) => {
-      const src = rsvp.responseSource as keyof typeof responseSources
-      if (src in responseSources) responseSources[src]++
-      else responseSources.unknown++
-    })
+      ; (allRsvps || []).filter((r: any) => r.guest?.weddingId === access.weddingId).forEach((rsvp: any) => {
+        const src = rsvp.responseSource as keyof typeof responseSources
+        if (src in responseSources) responseSources[src]++
+        else responseSources.unknown++
+      })
 
     const allInvitations = invitations || []
     const checkInStats = {

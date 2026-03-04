@@ -1,9 +1,13 @@
+export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    const tenantId = request.headers.get('x-tenant-id')
+    if (!tenantId) return NextResponse.json({ totalGuests: 0, checkedIn: 0, pending: 0 })
+
+    const { data: wedding } = await db.from('Wedding').select('id').eq('id', tenantId).maybeSingle()
     if (!wedding) return NextResponse.json({ totalGuests: 0, checkedIn: 0, pending: 0 })
 
     const [totalRes, checkedInRes] = await Promise.all([

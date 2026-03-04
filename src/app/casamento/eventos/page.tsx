@@ -1,14 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { 
-  Heart, MapPin, Clock, Shirt, CalendarPlus, 
+import {
+  Heart, MapPin, Clock, Shirt, CalendarPlus,
   PartyPopper, Church, UtensilsCrossed, Sparkles
 } from 'lucide-react'
-import { PublicNav } from '@/components/public/PublicNav'
+import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { Button } from '@/components/ui/button'
 import { publicFetch } from '@/lib/public-fetch'
@@ -51,7 +52,7 @@ export default function EventsPage() {
           publicFetch('/api/events'),
           publicFetch('/api/wedding')
         ])
-        
+
         const eventsData = await eventsRes.json()
         const weddingData = await weddingRes.json()
 
@@ -73,7 +74,7 @@ export default function EventsPage() {
   const handleAddToCalendar = (event: EventData) => {
     const startDate = new Date(event.startTime)
     const endDate = event.endTime ? new Date(event.endTime) : new Date(startDate.getTime() + 2 * 60 * 60 * 1000)
-    
+
     const googleCalendarUrl = new URL('https://calendar.google.com/calendar/render')
     googleCalendarUrl.searchParams.set('action', 'TEMPLATE')
     googleCalendarUrl.searchParams.set('text', `${event.name} - ${wedding?.partner1Name} & ${wedding?.partner2Name}`)
@@ -84,7 +85,7 @@ export default function EventsPage() {
     if (event.description) {
       googleCalendarUrl.searchParams.set('details', event.description)
     }
-    
+
     window.open(googleCalendarUrl.toString(), '_blank')
   }
 
@@ -101,10 +102,27 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
-      <PublicNav
+      <MasterHeader type="wedding"
         partner1Name={wedding?.partner1Name}
         partner2Name={wedding?.partner2Name}
       />
+
+      {/* Back Button */}
+      <div className="mx-auto max-w-4xl px-4 pt-6">
+        <Button
+          variant="ghost"
+          size="sm"
+          asChild
+          className="text-stone-500 hover:text-amber-600 hover:bg-amber-50"
+        >
+          <Link href="/casamento" className="flex items-center gap-2">
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Voltar para o Início
+          </Link>
+        </Button>
+      </div>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-12 sm:py-16">
@@ -159,7 +177,7 @@ export default function EventsPage() {
                   const isLeft = index % 2 === 0
                   const Icon = eventIcons[event.name] || <Heart className="h-5 w-5" />
                   const startDate = new Date(event.startTime)
-                  
+
                   return (
                     <motion.div
                       key={event.id}
@@ -167,9 +185,8 @@ export default function EventsPage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className={`relative flex items-center ${
-                        isLeft ? 'sm:justify-start' : 'sm:justify-end'
-                      }`}
+                      className={`relative flex items-center ${isLeft ? 'sm:justify-start' : 'sm:justify-end'
+                        }`}
                     >
                       {/* Timeline Dot */}
                       <div className="absolute left-4 hidden h-4 w-4 -translate-x-1/2 rounded-full border-4 border-amber-300 bg-white sm:left-1/2 sm:block" />

@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Heart, MapPin, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import { PublicNav } from '@/components/public/PublicNav'
+import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { CountdownTimer } from '@/components/public/CountdownTimer'
 import { publicFetch } from '@/lib/public-fetch'
@@ -44,10 +44,10 @@ export default function PublicWeddingPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-amber-300 border-t-amber-500" />
-          <p className="mt-4 text-sm text-stone-500">Carregando...</p>
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary" />
+          <p className="mt-4 text-sm text-foreground/50">Carregando...</p>
         </div>
       </div>
     )
@@ -57,8 +57,8 @@ export default function PublicWeddingPage() {
   const formattedDate = weddingDate ? format(weddingDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
-      <PublicNav
+    <div className="min-h-screen bg-background">
+      <MasterHeader type="wedding"
         partner1Name={wedding?.partner1Name}
         partner2Name={wedding?.partner2Name}
       />
@@ -67,9 +67,9 @@ export default function PublicWeddingPage() {
       <section className="relative overflow-hidden py-16 sm:py-24 lg:py-32">
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -right-48 -top-48 h-96 w-96 rounded-full bg-gradient-to-br from-amber-100/60 to-orange-100/40 blur-3xl" />
-          <div className="absolute -bottom-48 -left-48 h-96 w-96 rounded-full bg-gradient-to-br from-rose-100/50 to-amber-100/30 blur-3xl" />
-          <div className="absolute right-1/4 top-1/4 h-64 w-64 rounded-full bg-gradient-to-br from-orange-50/40 to-amber-50/30 blur-2xl" />
+          <div className="absolute -right-48 -top-48 h-96 w-96 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 blur-3xl" />
+          <div className="absolute -bottom-48 -left-48 h-96 w-96 rounded-full bg-gradient-to-br from-accent/10 to-primary/5 blur-3xl" />
+          <div className="absolute right-1/4 top-1/4 h-64 w-64 rounded-full bg-gradient-to-br from-accent/5 to-primary/5 blur-2xl" />
         </div>
 
         {/* Decorative pattern */}
@@ -85,18 +85,18 @@ export default function PublicWeddingPage() {
           >
             {/* Decorative line */}
             <div className="mb-8 flex items-center justify-center gap-4">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-amber-300 sm:w-20" />
-              <Heart className="h-5 w-5 text-rose-400" fill="currentColor" />
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-amber-300 sm:w-20" />
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/20 sm:w-20" />
+              <Heart className="h-5 w-5 text-accent" fill="currentColor" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/20 sm:w-20" />
             </div>
 
             {/* Names */}
             <div className="mb-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-              <span className="bg-gradient-to-r from-amber-700 via-orange-600 to-amber-600 bg-clip-text text-4xl font-light tracking-wide text-transparent sm:text-5xl lg:text-6xl">
+              <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-4xl font-light tracking-wide text-transparent sm:text-5xl lg:text-6xl font-serif">
                 {wedding?.partner1Name || 'Louise'}
               </span>
-              <span className="text-3xl text-rose-300 sm:text-4xl">&</span>
-              <span className="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 bg-clip-text text-4xl font-light tracking-wide text-transparent sm:text-5xl lg:text-6xl">
+              <span className="text-3xl text-accent sm:text-4xl">&</span>
+              <span className="bg-gradient-to-r from-primary/80 to-primary bg-clip-text text-4xl font-light tracking-wide text-transparent sm:text-5xl lg:text-6xl font-serif">
                 {wedding?.partner2Name || 'Nicolas'}
               </span>
             </div>
@@ -106,7 +106,7 @@ export default function PublicWeddingPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="mb-8 text-lg text-stone-500 sm:text-xl"
+              className="mb-8 text-lg text-foreground/60 sm:text-xl font-serif italic"
             >
               Vamos nos casar!
             </motion.p>
@@ -119,9 +119,9 @@ export default function PublicWeddingPage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="mb-8"
               >
-                <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/50 bg-white/60 px-6 py-3 shadow-sm backdrop-blur-sm">
-                  <Calendar className="h-5 w-5 text-amber-500" />
-                  <span className="text-lg font-medium text-amber-800">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white/60 px-6 py-3 shadow-sm backdrop-blur-sm">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  <span className="text-lg font-medium text-primary">
                     {formattedDate}
                   </span>
                 </div>
@@ -136,12 +136,12 @@ export default function PublicWeddingPage() {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="mb-10"
               >
-                <div className="inline-flex items-center gap-2 text-amber-700">
+                <div className="inline-flex items-center gap-2 text-primary/80">
                   <MapPin className="h-4 w-4" />
                   <span>{wedding.venue}</span>
                 </div>
                 {wedding.venueAddress && (
-                  <p className="mt-1 text-sm text-stone-500">{wedding.venueAddress}</p>
+                  <p className="mt-1 text-sm text-foreground/50">{wedding.venueAddress}</p>
                 )}
               </motion.div>
             )}
@@ -155,7 +155,7 @@ export default function PublicWeddingPage() {
                 className="mb-12"
               >
                 <div className="inline-flex flex-col items-center rounded-2xl border border-amber-200/50 bg-white/70 px-8 py-6 shadow-lg backdrop-blur-sm">
-                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-amber-600">
+                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-primary">
                     Contagem Regressiva
                   </p>
                   <CountdownTimer targetDate={weddingDate} />
@@ -171,7 +171,7 @@ export default function PublicWeddingPage() {
             >
               <Link
                 href="/casamento/rsvp"
-                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-lg font-medium text-white shadow-lg shadow-amber-200/50 transition-all hover:shadow-xl hover:shadow-amber-300/50"
+                className="group inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-medium text-white shadow-lg shadow-accent/20 transition-all hover:opacity-90 hover:shadow-xl"
               >
                 <span>Confirmar Presença</span>
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -189,10 +189,10 @@ export default function PublicWeddingPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="rounded-2xl border border-rose-200/50 bg-gradient-to-br from-rose-50/50 to-amber-50/30 p-8 text-center"
+              className="rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-accent/5 p-8 text-center"
             >
-              <Heart className="mx-auto mb-4 h-6 w-6 text-rose-400" fill="currentColor" />
-              <p className="text-stone-600 italic">{wedding.messageFooter}</p>
+              <Heart className="mx-auto mb-4 h-6 w-6 text-accent" fill="currentColor" />
+              <p className="text-foreground/70 italic">{wedding.messageFooter}</p>
             </motion.div>
           </div>
         </section>
@@ -209,9 +209,9 @@ export default function PublicWeddingPage() {
               transition={{ delay: 0 }}
             >
               <Link href="/casamento/historia" className="group block">
-                <div className="rounded-2xl border border-amber-200/50 bg-white/60 p-6 shadow-sm transition-all hover:border-amber-300 hover:shadow-md">
-                  <h3 className="mb-2 text-lg font-medium text-amber-800">Nossa História</h3>
-                  <p className="text-sm text-stone-500">
+                <div className="rounded-2xl border border-border bg-white/60 p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
+                  <h3 className="mb-2 text-lg font-medium text-primary font-serif">Nossa História</h3>
+                  <p className="text-sm text-foreground/50">
                     Conheça nossa jornada de amor e como chegamos até aqui.
                   </p>
                 </div>
@@ -225,9 +225,9 @@ export default function PublicWeddingPage() {
               transition={{ delay: 0.1 }}
             >
               <Link href="/casamento/eventos" className="group block">
-                <div className="rounded-2xl border border-amber-200/50 bg-white/60 p-6 shadow-sm transition-all hover:border-amber-300 hover:shadow-md">
-                  <h3 className="mb-2 text-lg font-medium text-amber-800">Eventos</h3>
-                  <p className="text-sm text-stone-500">
+                <div className="rounded-2xl border border-border bg-white/60 p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
+                  <h3 className="mb-2 text-lg font-medium text-primary font-serif">Eventos</h3>
+                  <p className="text-sm text-foreground/50">
                     Confira a programação completa do nosso grande dia.
                   </p>
                 </div>
@@ -242,9 +242,9 @@ export default function PublicWeddingPage() {
               className="sm:col-span-2 lg:col-span-1"
             >
               <Link href="/casamento/padrinhos" className="group block">
-                <div className="rounded-2xl border border-amber-200/50 bg-white/60 p-6 shadow-sm transition-all hover:border-amber-300 hover:shadow-md">
-                  <h3 className="mb-2 text-lg font-medium text-amber-800">Padrinhos</h3>
-                  <p className="text-sm text-stone-500">
+                <div className="rounded-2xl border border-border bg-white/60 p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
+                  <h3 className="mb-2 text-lg font-medium text-primary font-serif">Padrinhos</h3>
+                  <p className="text-sm text-foreground/50">
                     Conheça as pessoas especiais que farão parte deste momento.
                   </p>
                 </div>

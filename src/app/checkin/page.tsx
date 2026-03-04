@@ -16,7 +16,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
+import {
   QrCode, Search, Users, Check, Clock, Wifi, WifiOff,
   RefreshCw, Home, Menu, X
 } from 'lucide-react'
@@ -196,13 +196,13 @@ export default function CheckInPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+    <div className="min-h-screen bg-background">
       {/* PWA Header */}
-      <header className="sticky top-0 z-40 border-b border-amber-100/50 bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-border bg-white/90 backdrop-blur-md">
         <div className="mx-auto max-w-lg px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
                 <Users className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -214,12 +214,12 @@ export default function CheckInPage() {
             {/* Online Status */}
             <div className="flex items-center gap-2">
               {isOnline ? (
-                <Badge variant="outline" className="gap-1 border-emerald-200 text-emerald-600">
+                <Badge variant="outline" className="gap-1 border-primary/20 text-primary">
                   <Wifi className="h-3 w-3" />
                   Online
                 </Badge>
               ) : (
-                <Badge variant="outline" className="gap-1 border-amber-200 text-amber-600">
+                <Badge variant="outline" className="gap-1 border-accent/20 text-accent">
                   <WifiOff className="h-3 w-3" />
                   Offline
                 </Badge>
@@ -230,37 +230,37 @@ export default function CheckInPage() {
       </header>
 
       {/* Stats Bar */}
-      <div className="border-b border-amber-100/50 bg-white/50 px-4 py-3">
+      <div className="border-b border-border bg-muted/30 px-4 py-3">
         <div className="mx-auto max-w-lg">
           {isLoadingStats ? (
             <div className="flex items-center justify-center gap-2 py-2">
-              <RefreshCw className="h-4 w-4 animate-spin text-amber-500" />
-              <span className="text-sm text-stone-500">Carregando...</span>
+              <RefreshCw className="h-4 w-4 animate-spin text-primary" />
+              <span className="text-sm text-foreground/50">Carregando...</span>
             </div>
           ) : (
             <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-1 text-stone-600">
-                <Users className="h-4 w-4 text-amber-500" />
+              <div className="flex items-center gap-1 text-foreground/60">
+                <Users className="h-4 w-4 text-primary" />
                 <span>{stats.totalGuests} convidados</span>
               </div>
               <div className="flex items-center gap-4">
-                <span className="flex items-center text-emerald-600">
+                <span className="flex items-center text-primary font-medium">
                   <Check className="mr-1 h-4 w-4" />
                   {stats.checkedIn} check-in
                 </span>
-                <span className="flex items-center text-amber-600">
+                <span className="flex items-center text-accent font-medium">
                   <Clock className="mr-1 h-4 w-4" />
                   {stats.pending} pendentes
                 </span>
               </div>
             </div>
           )}
-          
+
           {/* Progress Bar */}
           {stats.totalGuests > 0 && (
-            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-stone-100">
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
               <motion.div
-                className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500"
+                className="h-full bg-primary"
                 initial={{ width: 0 }}
                 animate={{ width: `${(stats.checkedIn / stats.totalGuests) * 100}%` }}
                 transition={{ duration: 0.5 }}
@@ -273,19 +273,29 @@ export default function CheckInPage() {
       {/* Main Content */}
       <main className="mx-auto max-w-lg px-4 py-4">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'search' | 'qr')} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-amber-100/50">
+          <TabsList className="grid w-full grid-cols-2 bg-muted">
             <TabsTrigger value="search" className="gap-2">
               <Search className="h-4 w-4" />
               Buscar
             </TabsTrigger>
-            <TabsTrigger value="qr" className="gap-2" onClick={() => setIsScannerActive(true)}>
+            <TabsTrigger
+              value="qr"
+              className="gap-2"
+              onClick={() => setIsScannerActive(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setIsScannerActive(true);
+                  setActiveTab('qr');
+                }
+              }}
+            >
               <QrCode className="h-4 w-4" />
               QR Code
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="search" className="mt-4">
-            <GuestSearch 
+            <GuestSearch
               onGuestSelect={handleGuestSelect}
               autoFocus
             />
@@ -293,15 +303,21 @@ export default function CheckInPage() {
 
           <TabsContent value="qr" className="mt-4">
             <div className="flex flex-col items-center py-8">
-              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100">
-                <QrCode className="h-10 w-10 text-amber-600" />
+              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
+                <QrCode className="h-10 w-10 text-primary" />
               </div>
-              <p className="mb-4 text-center text-stone-600">
+              <p className="mb-4 text-center text-foreground/60">
                 Aponte a câmera para o QR Code do convite
               </p>
               <Button
                 onClick={() => setIsScannerActive(true)}
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setIsScannerActive(true);
+                  }
+                }}
+                className="bg-accent hover:opacity-90"
+                aria-label="Abrir câmera para escanear QR Code"
               >
                 <QrCode className="mr-2 h-4 w-4" />
                 Abrir Câmera
@@ -323,16 +339,13 @@ export default function CheckInPage() {
         )}
       </AnimatePresence>
 
-      {/* Check-in Card Modal */}
-      <AnimatePresence>
-        {selectedGuest && (
-          <CheckInCard
-            data={selectedGuest}
-            onCheckIn={handleCheckIn}
-            onClose={handleCloseCard}
-          />
-        )}
-      </AnimatePresence>
+      {selectedGuest && (
+        <CheckInCard
+          data={selectedGuest}
+          onCheckIn={handleCheckIn}
+          onClose={handleCloseCard}
+        />
+      )}
 
       {/* Offline Warning */}
       <AnimatePresence>
@@ -343,11 +356,11 @@ export default function CheckInPage() {
             exit={{ y: 100 }}
             className="fixed bottom-4 left-4 right-4 z-30 mx-auto max-w-lg"
           >
-            <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 shadow-lg">
-              <WifiOff className="h-5 w-5 shrink-0 text-amber-500" />
+            <div className="flex items-center gap-3 rounded-xl border border-accent/20 bg-accent/5 p-4 shadow-lg backdrop-blur-md">
+              <WifiOff className="h-5 w-5 shrink-0 text-accent" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-amber-800">Modo Offline</p>
-                <p className="text-xs text-amber-600">
+                <p className="text-sm font-medium text-accent">Modo Offline</p>
+                <p className="text-xs text-accent/70">
                   Os check-ins serão sincronizados quando a internet retornar
                 </p>
               </div>
@@ -361,11 +374,11 @@ export default function CheckInPage() {
         <Button
           variant="outline"
           size="icon"
-          className="h-12 w-12 rounded-full border-amber-200 bg-white shadow-lg hover:bg-amber-50"
+          className="h-12 w-12 rounded-full border-border bg-white shadow-lg hover:bg-muted"
           asChild
         >
-          <a href="/">
-            <Home className="h-5 w-5 text-amber-600" />
+          <a href="/" aria-label="Voltar para a página inicial">
+            <Home className="h-5 w-5 text-primary" />
           </a>
         </Button>
       </div>

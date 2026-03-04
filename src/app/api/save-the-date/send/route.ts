@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { verifySupabaseToken } from '@/lib/auth'
@@ -11,13 +12,16 @@ export async function POST(request: NextRequest) {
   try {
     const { channel, target, customMessage } = await request.json()
 
+    const tenantId = request.headers.get('x-tenant-id')
+    if (!tenantId) return NextResponse.json({ success: false, error: 'ID do casamento não fornecido' }, { status: 400 })
+
     const { data: wedding } = await db.from('Wedding')
       .select('id, partner1Name, partner2Name, weddingDate, venue, venueAddress')
-      .limit(1)
+      .eq('id', tenantId)
       .maybeSingle()
 
     if (!wedding) {
-      return NextResponse.json({ success: false, error: 'Casamento não encontrado' }, { status: 404 })
+      return NextResponse.json({ success: false, error: 'Casamento não encontrado ou acesso negado' }, { status: 404 })
     }
 
     // Fetch target guests

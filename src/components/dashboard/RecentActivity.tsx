@@ -16,17 +16,19 @@ interface RecentActivityProps {
 }
 
 const typeConfig = {
-  rsvp_confirmed: { icon: Check, color: 'text-emerald-500', bg: 'bg-gradient-to-br from-emerald-100 to-teal-100' },
-  rsvp_declined: { icon: X, color: 'text-rose-500', bg: 'bg-gradient-to-br from-rose-100 to-orange-100' },
-  rsvp: { icon: Clock, color: 'text-amber-500', bg: 'bg-gradient-to-br from-amber-100 to-orange-100' }
+  rsvp_confirmed: { icon: Check, color: 'text-primary', bg: 'bg-primary/5' },
+  rsvp_declined: { icon: X, color: 'text-warning', bg: 'bg-warning/10' },
+  rsvp: { icon: Clock, color: 'text-muted-foreground/40', bg: 'bg-primary/[0.02]' }
 }
 
 export function RecentActivity({ activities }: RecentActivityProps) {
   if (activities.length === 0) {
     return (
-      <div className="rounded-2xl border border-amber-200/40 bg-gradient-to-br from-amber-50/50 to-orange-50/30 p-8 text-center shadow-sm">
-        <Clock className="mx-auto h-8 w-8 text-amber-300" />
-        <p className="mt-2 text-sm text-stone-500">Nenhuma atividade recente</p>
+      <div className="glass-card p-10 text-center flex flex-col items-center justify-center gap-4">
+        <div className="p-4 rounded-full bg-primary/5">
+          <Clock className="h-8 w-8 text-primary/20" />
+        </div>
+        <p className="text-sm font-serif font-medium text-muted-foreground/60 uppercase tracking-widest">Nenhuma atividade recente</p>
       </div>
     )
   }
@@ -36,12 +38,14 @@ export function RecentActivity({ activities }: RecentActivityProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.5 }}
-      className="rounded-2xl border border-amber-200/40 bg-gradient-to-br from-white to-amber-50/30 p-5 shadow-sm"
+      className="glass-card p-6 flex flex-col h-full"
     >
-      <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-amber-700">
+      <h3 className="mb-8 text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/30 flex items-center gap-3">
+        <div className="h-px flex-1 bg-primary/5" />
         Atividade Recente
+        <div className="h-px flex-1 bg-primary/5" />
       </h3>
-      <div className="max-h-80 space-y-2 overflow-y-auto">
+      <div className="max-h-80 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
         {activities.slice(0, 8).map((activity, index) => {
           const isConfirmed = activity.message.includes('confirmou')
           const isDeclined = activity.message.includes('recusou')
@@ -52,20 +56,21 @@ export function RecentActivity({ activities }: RecentActivityProps) {
           return (
             <motion.div
               key={activity.id}
-              initial={{ opacity: 0, x: -10 }}
+              initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.6 + index * 0.05 }}
-              className="flex items-start gap-3 rounded-xl p-3 transition-colors hover:bg-amber-50/50"
+              transition={{ duration: 0.5, delay: 0.6 + index * 0.08 }}
+              className="flex items-start gap-4 rounded-[1.5rem] p-4 transition-all hover:bg-primary/[0.03] group relative overflow-hidden active:scale-98"
             >
-              <div className={`mt-0.5 rounded-lg p-1.5 ${config.bg}`}>
-                <Icon className={`h-3.5 w-3.5 ${config.color}`} />
+              <div className={`mt-0.5 rounded-2xl p-3 transition-all duration-300 ${config.bg} group-hover:scale-110 shadow-inner border border-primary/5`}>
+                <Icon className={`h-4 w-4 ${config.color}`} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm text-stone-700">{activity.message}</p>
-                <p className="text-xs text-stone-400">
-                  {formatDistanceToNow(new Date(activity.timestamp), { 
-                    addSuffix: true, 
-                    locale: ptBR 
+                <p className="text-[13px] font-sans font-semibold text-foreground leading-snug tracking-tight group-hover:text-primary transition-colors">{activity.message}</p>
+                <p className="text-[9px] font-accent font-bold text-muted-foreground/20 mt-1.5 uppercase tracking-widest flex items-center gap-1.5">
+                  <Clock className="h-3 w-3 opacity-30" />
+                  {formatDistanceToNow(new Date(activity.timestamp), {
+                    addSuffix: true,
+                    locale: ptBR
                   })}
                 </p>
               </div>

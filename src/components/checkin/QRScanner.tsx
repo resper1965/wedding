@@ -55,7 +55,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
   const [cameraError, setCameraError] = useState<string | null>(null)
   const [lastScanned, setLastScanned] = useState<string | null>(null)
   const [isValidating, setIsValidating] = useState(false)
-  
+
   const scannerRef = useRef<HTMLDivElement>(null)
   const html5QrCodeRef = useRef<unknown>(null)
   const isMountedRef = useRef(true)
@@ -67,7 +67,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
     try {
       // Dynamic import to avoid SSR issues
       const { Html5Qrcode } = await import('html5-qrcode')
-      
+
       setCameraError(null)
       setIsScanning(true)
 
@@ -86,7 +86,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
         async (decodedText: string) => {
           // Prevent duplicate scans
           if (lastScanned === decodedText || isValidating) return
-          
+
           setLastScanned(decodedText)
           setIsValidating(true)
 
@@ -94,7 +94,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
           try {
             const response = await fetch(`/api/checkin/${encodeURIComponent(decodedText)}`)
             const result: QRScanResult = await response.json()
-            
+
             if (isMountedRef.current) {
               onScanSuccess(result)
             }
@@ -113,7 +113,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
       )
 
       setHasPermission(true)
-      
+
     } catch (error) {
       console.error('Scanner init error:', error)
       setHasPermission(false)
@@ -207,14 +207,14 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
           {isScanning && !cameraError && (
             <div className="pointer-events-none absolute inset-0">
               {/* Corner Markers */}
-              <div className="absolute left-4 top-4 h-8 w-8 border-l-2 border-t-2 border-amber-400" />
-              <div className="absolute right-4 top-4 h-8 w-8 border-r-2 border-t-2 border-amber-400" />
-              <div className="absolute bottom-4 left-4 h-8 w-8 border-l-2 border-b-2 border-amber-400" />
-              <div className="absolute bottom-4 right-4 h-8 w-8 border-r-2 border-b-2 border-amber-400" />
-              
+              <div className="absolute left-4 top-4 h-8 w-8 border-l-2 border-t-2 border-orange-400" />
+              <div className="absolute right-4 top-4 h-8 w-8 border-r-2 border-t-2 border-orange-400" />
+              <div className="absolute bottom-4 left-4 h-8 w-8 border-l-2 border-b-2 border-orange-400" />
+              <div className="absolute bottom-4 right-4 h-8 w-8 border-r-2 border-b-2 border-orange-400" />
+
               {/* Scanning Line Animation */}
               <motion.div
-                className="absolute left-4 right-4 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent"
+                className="absolute left-4 right-4 h-0.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent"
                 animate={{ top: ['20%', '80%', '20%'] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
               />
@@ -223,10 +223,10 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
 
           {/* Loading State */}
           {isValidating && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm rounded-2xl">
               <div className="flex flex-col items-center gap-2">
-                <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
-                <span className="text-sm text-white">Validando...</span>
+                <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
+                <span className="text-sm font-semibold tracking-wide uppercase text-white">Validando...</span>
               </div>
             </div>
           )}
@@ -242,11 +242,11 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
             exit={{ opacity: 0, y: 20 }}
             className="absolute bottom-24 left-4 right-4"
           >
-            <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
-              <AlertCircle className="h-5 w-5 shrink-0 text-amber-500" />
+            <div className="flex items-center gap-3 rounded-2xl border border-orange-200 bg-orange-50 p-4 soft-shadow">
+              <AlertCircle className="h-5 w-5 shrink-0 text-orange-500" />
               <div>
-                <p className="text-sm font-medium text-amber-800">Erro de Câmera</p>
-                <p className="text-xs text-amber-600">{cameraError}</p>
+                <p className="text-sm font-bold text-orange-800">Erro de Câmera</p>
+                <p className="text-xs font-medium text-orange-700/80">{cameraError}</p>
               </div>
             </div>
           </motion.div>
@@ -258,23 +258,23 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
         <div className="mx-auto flex max-w-sm items-center justify-between">
           <div className="flex items-center gap-2">
             {isScanning ? (
-              <Badge className="gap-1 border-emerald-200 bg-emerald-100 text-emerald-700">
+              <Badge className="gap-1 border-emerald-200 bg-emerald-100/90 text-emerald-700 tracking-wide uppercase font-bold text-[10px]">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-                Escaneando...
+                Escaneando
               </Badge>
             ) : hasPermission === false ? (
-              <Badge className="gap-1 border-red-200 bg-red-100 text-red-700">
+              <Badge className="gap-1 border-orange-200 bg-orange-100 text-orange-700 tracking-wide uppercase font-bold text-[10px]">
                 <AlertCircle className="h-3 w-3" />
                 Sem acesso
               </Badge>
             ) : (
-              <Badge className="gap-1 border-amber-200 bg-amber-100 text-amber-700">
+              <Badge className="gap-1 border-emerald-200 bg-emerald-100 text-emerald-700 tracking-wide uppercase font-bold text-[10px]">
                 <Camera className="h-3 w-3" />
-                Iniciando...
+                Iniciando
               </Badge>
             )}
           </div>
-          
+
           {isScanning && (
             <Button
               variant="ghost"

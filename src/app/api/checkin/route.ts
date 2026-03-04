@@ -1,8 +1,16 @@
+export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 
 export async function GET(request: NextRequest) {
   try {
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
+
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('q')
     const token = searchParams.get('token')
@@ -10,7 +18,9 @@ export async function GET(request: NextRequest) {
     if (token) {
       const { data: invitation } = await db.from('Invitation')
         .select('*, guests:Guest(id, firstName, lastName, dietaryRestrictions, specialNeeds)')
-        .eq('qrToken', token).maybeSingle()
+        .eq('qrToken', token)
+        .eq('weddingId', access.weddingId)
+        .maybeSingle()
 
       if (!invitation) return NextResponse.json({ error: 'Token inválido ou expirado' }, { status: 404 })
 
@@ -33,10 +43,12 @@ export async function GET(request: NextRequest) {
     const [{ data: guests }, { data: invitations }] = await Promise.all([
       db.from('Guest')
         .select('*, invitation:Invitation(id, familyName, checkedIn, checkedInAt, qrToken)')
+        .eq('weddingId', access.weddingId)
         .or(`firstName.ilike.%${query}%,lastName.ilike.%${query}%`)
         .limit(20),
       db.from('Invitation')
         .select('*, guests:Guest(id, firstName, lastName, dietaryRestrictions, specialNeeds)')
+        .eq('weddingId', access.weddingId)
         .ilike('familyName', `%${query}%`)
         .limit(10),
     ])
@@ -62,13 +74,20 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
+
     const body = await request.json()
     const { invitationId, staffId } = body
     if (!invitationId) return NextResponse.json({ error: 'ID do convite é obrigatório' }, { status: 400 })
 
     const { data: invitation } = await db.from('Invitation')
       .select('*, guests:Guest(id, firstName, lastName)')
-      .eq('id', invitationId).maybeSingle()
+      .eq('id', invitationId)
+      .eq('weddingId', access.weddingId)
+      .maybeSingle()
 
     if (!invitation) return NextResponse.json({ error: 'Convite não encontrado' }, { status: 404 })
 
@@ -77,7 +96,10 @@ export async function POST(request: NextRequest) {
     }
 
     const now = new Date().toISOString()
-    await db.from('Invitation').update({ checkedIn: true, checkedInAt: now, updatedAt: now }).eq('id', invitationId)
+    await db.from('Invitation')
+      .update({ checkedIn: true, checkedInAt: now, updatedAt: now })
+      .eq('id', invitationId)
+      .eq('weddingId', access.weddingId)
 
     return NextResponse.json({
       success: true, alreadyCheckedIn: false, message: 'Check-in realizado com sucesso!',

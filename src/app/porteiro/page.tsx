@@ -26,6 +26,8 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
+import { BrandLogo } from '@/components/ui-custom/BrandLogo'
+import { ThemeToggle } from '@/components/ui-custom/ThemeToggle'
 import { QRScanner, QRScanResult } from '@/components/checkin/QRScanner'
 import { GuestSearch, GuestSearchResult } from '@/components/checkin/GuestSearch'
 import { CheckInCard, CheckInCardProps } from '@/components/checkin/CheckInCard'
@@ -92,7 +94,7 @@ export default function PorteiroPage() {
           setWeddingName(`${data.data.partner1Name} & ${data.data.partner2Name}`)
         }
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
   const fetchStats = useCallback(async () => {
@@ -106,7 +108,7 @@ export default function PorteiroPage() {
           pending: data.pending || 0,
         })
       }
-    } catch {}
+    } catch { }
   }, [])
 
   useEffect(() => {
@@ -229,33 +231,37 @@ export default function PorteiroPage() {
     : 0
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
-      {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-amber-100/50 bg-white/95 backdrop-blur-md">
-        <div className="flex h-14 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
+    <div className="flex min-h-screen flex-col bg-background selection:bg-primary/20">
+      {/* Header - Executive Glass */}
+      <header className="sticky top-0 z-30 border-b border-white/10 glass-card rounded-none">
+        <div className="flex h-16 items-center justify-between px-6">
+          <div className="flex items-center gap-4">
+            <BrandLogo size="sm" link={true} withDot={true} />
+            <div className="h-8 w-px bg-border/40 hidden sm:block" />
             <div>
-              <p className="text-xs font-medium text-stone-700 leading-none">
+              <p className="text-sm font-serif font-bold text-foreground leading-none tracking-tight">
                 {weddingName || 'Casamento'}
               </p>
-              <p className="text-[10px] text-stone-400">Módulo Porteiro</p>
+              <p className="text-[10px] text-primary font-accent font-bold uppercase tracking-[0.2em] mt-1">Módulo Porteiro</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {isOnline ? (
-              <div className="flex items-center gap-1 text-emerald-600">
-                <Wifi className="h-3.5 w-3.5" />
-                <span className="text-[10px] font-medium">Online</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1 text-stone-400">
-                <WifiOff className="h-3.5 w-3.5" />
-                <span className="text-[10px] font-medium">Offline</span>
-              </div>
-            )}
-            <Button variant="ghost" size="sm" onClick={fetchStats} className="h-8 w-8 p-0">
-              <RefreshCw className="h-3.5 w-3.5 text-stone-400" />
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background/50 border border-white/5">
+              {isOnline ? (
+                <div className="flex items-center gap-1.5 text-success">
+                  <Wifi className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Online</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-error">
+                  <WifiOff className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Offline</span>
+                </div>
+              )}
+            </div>
+            <Button variant="ghost" size="sm" onClick={fetchStats} className="h-8 w-8 p-0 hover:bg-primary/5">
+              <RefreshCw className="h-3.5 w-3.5 text-primary/40" />
             </Button>
           </div>
         </div>
@@ -270,92 +276,91 @@ export default function PorteiroPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="p-4 space-y-4"
+              className="p-6 space-y-6"
             >
-              {/* Stats card */}
-              <div className="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-stone-800">Status do Check-in</h2>
-                  <Badge
-                    className={cn(
-                      'text-xs',
-                      progressPct === 100
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : 'bg-amber-100 text-amber-700'
-                    )}
-                  >
-                    {progressPct}%
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="rounded-xl bg-stone-50 p-3 text-center">
-                    <p className="text-2xl font-bold text-stone-800">{stats.totalGuests}</p>
-                    <p className="text-[10px] text-stone-500">Total</p>
-                  </div>
-                  <div className="rounded-xl bg-emerald-50 p-3 text-center">
-                    <p className="text-2xl font-bold text-emerald-700">{stats.checkedIn}</p>
-                    <p className="text-[10px] text-emerald-600">Chegaram</p>
-                  </div>
-                  <div className="rounded-xl bg-amber-50 p-3 text-center">
-                    <p className="text-2xl font-bold text-amber-700">{stats.pending}</p>
-                    <p className="text-[10px] text-amber-600">Aguardando</p>
+              {/* Stats card - Executive Minimalist */}
+              <div className="glass-card p-6">
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="text-xs font-serif font-bold uppercase tracking-[0.3em] text-muted-foreground/50">Status de Ocupação</h2>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl font-sans font-bold text-primary">{progressPct}%</span>
                   </div>
                 </div>
 
-                {/* Progress bar */}
-                <div className="h-2 w-full overflow-hidden rounded-full bg-stone-100">
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                  <div className="text-center group">
+                    <p className="text-3xl font-serif font-light text-foreground group-hover:text-primary transition-colors">{stats.totalGuests}</p>
+                    <p className="text-[10px] font-accent font-bold text-muted-foreground/40 uppercase tracking-widest mt-1">Total</p>
+                  </div>
+                  <div className="text-center group">
+                    <p className="text-3xl font-serif font-light text-success group-hover:scale-110 transition-transform">{stats.checkedIn}</p>
+                    <p className="text-[10px] font-accent font-bold text-success/40 uppercase tracking-widest mt-1">Chegaram</p>
+                  </div>
+                  <div className="text-center group">
+                    <p className="text-3xl font-serif font-light text-primary/60">{stats.pending}</p>
+                    <p className="text-[10px] font-accent font-bold text-primary/30 uppercase tracking-widest mt-1">No Aguardo</p>
+                  </div>
+                </div>
+
+                {/* Progress bar - Refined */}
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary/10">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPct}%` }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="h-full rounded-full bg-gradient-to-r from-amber-400 to-emerald-400"
-                  />
+                    transition={{ duration: 1.2, ease: 'circOut' }}
+                    className="h-full rounded-full bg-primary relative"
+                  >
+                    <div className="absolute inset-0 bg-white/20 shimmer" />
+                  </motion.div>
                 </div>
               </div>
 
-              {/* Action buttons */}
-              <div className="grid grid-cols-1 gap-3">
+              {/* Action buttons - Executive Floating Style */}
+              <div className="grid grid-cols-1 gap-4">
                 <button
                   onClick={() => { setActiveView('qr'); setIsScannerActive(true) }}
-                  className="flex items-center gap-4 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-5 text-left transition-all active:scale-[0.98]"
+                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500 shadow-sm">
-                    <ScanLine className="h-6 w-6 text-white" />
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                    <ScanLine className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="font-semibold text-stone-800">Escanear QR Code</p>
-                    <p className="text-xs text-stone-500">Use a câmera para ler o QR do convidado</p>
+                    <p className="text-lg font-serif font-semibold text-foreground group-hover:text-primary transition-colors">Escanear QR Code</p>
+                    <p className="text-xs font-sans text-muted-foreground/60">Acesso rápido via câmera</p>
                   </div>
-                  <ChevronRight className="ml-auto h-5 w-5 text-stone-300" />
+                  <div className="ml-auto p-2 rounded-full border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all">
+                    <ChevronRight className="h-5 w-5" />
+                  </div>
                 </button>
 
                 <button
                   onClick={() => setActiveView('search')}
-                  className="flex items-center gap-4 rounded-2xl border border-stone-200 bg-white p-5 text-left transition-all active:scale-[0.98]"
+                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-stone-800 shadow-sm">
-                    <Search className="h-6 w-6 text-white" />
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-lg shadow-secondary/20 group-hover:scale-110 transition-transform">
+                    <Search className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="font-semibold text-stone-800">Buscar por Nome</p>
-                    <p className="text-xs text-stone-500">Convidado não tem QR? Busque manualmente</p>
+                    <p className="text-lg font-serif font-semibold text-foreground group-hover:text-secondary transition-colors">Busca Manual</p>
+                    <p className="text-xs font-sans text-muted-foreground/60">Localizar convidado por nome</p>
                   </div>
-                  <ChevronRight className="ml-auto h-5 w-5 text-stone-300" />
+                  <div className="ml-auto p-2 rounded-full border border-secondary/10 group-hover:bg-secondary group-hover:text-white transition-all">
+                    <ChevronRight className="h-5 w-5" />
+                  </div>
                 </button>
 
                 <button
                   onClick={() => setActiveView('list')}
-                  className="flex items-center gap-4 rounded-2xl border border-stone-200 bg-white p-5 text-left transition-all active:scale-[0.98]"
+                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500 shadow-sm">
-                    <List className="h-6 w-6 text-white" />
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-background border border-border group-hover:bg-primary group-hover:text-white transition-all">
+                    <List className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="font-semibold text-stone-800">Lista Completa</p>
-                    <p className="text-xs text-stone-500">Ver todos os convidados e status</p>
+                    <p className="text-lg font-serif font-semibold text-foreground transition-colors group-hover:text-primary">Lista de Convidados</p>
+                    <p className="text-xs font-sans text-muted-foreground/60">Visão geral do evento</p>
                   </div>
-                  <ChevronRight className="ml-auto h-5 w-5 text-stone-300" />
+                  <ChevronRight className="ml-auto h-5 w-5 text-muted-foreground/20 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </motion.div>
@@ -365,20 +370,20 @@ export default function PorteiroPage() {
           {activeView === 'qr' && (
             <motion.div
               key="qr"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="p-4 space-y-4"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="p-6 space-y-6"
             >
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => { setActiveView('home'); setIsScannerActive(false) }}>
-                  <X className="h-4 w-4" />
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" size="sm" onClick={() => { setActiveView('home'); setIsScannerActive(false) }} className="rounded-full h-10 w-10 hover:bg-primary/5">
+                  <X className="h-5 w-5 text-primary/40" />
                 </Button>
-                <h2 className="font-semibold text-stone-800">Escanear QR Code</h2>
+                <h2 className="text-xl font-serif font-bold text-foreground">Validar Entrada</h2>
               </div>
 
               {selectedGuest ? (
-                <div className="space-y-3">
+                <div className="animate-fade-in">
                   <CheckInCard
                     data={selectedGuest}
                     onCheckIn={handleCheckIn}
@@ -386,11 +391,13 @@ export default function PorteiroPage() {
                   />
                 </div>
               ) : (
-                <QRScanner
-                  isActive={isScannerActive}
-                  onScanSuccess={handleQRScan}
-                  onClose={() => { setActiveView('home'); setIsScannerActive(false) }}
-                />
+                <div className="glass-card p-2 rounded-[2rem] overflow-hidden">
+                  <QRScanner
+                    isActive={isScannerActive}
+                    onScanSuccess={handleQRScan}
+                    onClose={() => { setActiveView('home'); setIsScannerActive(false) }}
+                  />
+                </div>
               )}
             </motion.div>
           )}
@@ -399,20 +406,20 @@ export default function PorteiroPage() {
           {activeView === 'search' && (
             <motion.div
               key="search"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="p-4 space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="p-6 space-y-6"
             >
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => setActiveView('home')}>
-                  <X className="h-4 w-4" />
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" size="sm" onClick={() => setActiveView('home')} className="rounded-full h-10 w-10 hover:bg-primary/5">
+                  <X className="h-5 w-5 text-primary/40" />
                 </Button>
-                <h2 className="font-semibold text-stone-800">Buscar Convidado</h2>
+                <h2 className="text-xl font-serif font-bold text-foreground">Busca Manual</h2>
               </div>
 
               {selectedGuest ? (
-                <div className="space-y-3">
+                <div className="animate-fade-in">
                   <CheckInCard
                     data={selectedGuest}
                     onCheckIn={handleCheckIn}
@@ -420,7 +427,9 @@ export default function PorteiroPage() {
                   />
                 </div>
               ) : (
-                <GuestSearch onGuestSelect={handleGuestSelect} autoFocus />
+                <div className="glass-card p-6">
+                  <GuestSearch onGuestSelect={handleGuestSelect} autoFocus />
+                </div>
               )}
             </motion.div>
           )}
@@ -429,43 +438,45 @@ export default function PorteiroPage() {
           {activeView === 'list' && (
             <motion.div
               key="list"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="p-4 space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="p-6 space-y-6"
             >
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => setActiveView('home')}>
-                  <X className="h-4 w-4" />
-                </Button>
-                <h2 className="flex-1 font-semibold text-stone-800">Lista de Convidados</h2>
-                <Button variant="ghost" size="sm" onClick={fetchGuestList}>
-                  <RefreshCw className="h-4 w-4" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Button variant="ghost" size="sm" onClick={() => setActiveView('home')} className="rounded-full h-10 w-10 hover:bg-primary/5">
+                    <X className="h-5 w-5 text-primary/40" />
+                  </Button>
+                  <h2 className="text-xl font-serif font-bold text-foreground">Lista de Convidados</h2>
+                </div>
+                <Button variant="ghost" size="sm" onClick={fetchGuestList} className="hover:bg-primary/5">
+                  <RefreshCw className="h-4 w-4 text-primary" />
                 </Button>
               </div>
 
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+              {/* Search - Executive Style */}
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary/30 group-focus-within:text-primary transition-colors" />
                 <Input
-                  placeholder="Buscar na lista..."
+                  placeholder="Localizar convidado ou grupo..."
                   value={listSearch}
                   onChange={e => setListSearch(e.target.value)}
-                  className="pl-9"
+                  className="pl-12 h-12 bg-white/50 border-white/20 focus:bg-white focus:border-primary transition-all rounded-xl font-sans"
                   autoFocus
                 />
               </div>
 
-              {/* Filter tabs */}
-              <div className="flex gap-2">
+              {/* Filter tabs - Minimalist */}
+              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
                 {[
                   { label: 'Todos', value: '' },
-                  { label: `Chegaram (${stats.checkedIn})`, value: 'in' },
-                  { label: `Aguardando (${stats.pending})`, value: 'out' },
+                  { label: `Presentes (${stats.checkedIn})`, value: 'in' },
+                  { label: `Faltantes (${stats.pending})`, value: 'out' },
                 ].map(tab => (
                   <button
                     key={tab.value}
-                    className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors"
+                    className="rounded-full bg-primary/5 border border-primary/10 px-4 py-1.5 text-[10px] font-accent font-bold uppercase tracking-widest text-primary/60 hover:bg-primary hover:text-white transition-all whitespace-nowrap"
                   >
                     {tab.label}
                   </button>
@@ -473,53 +484,55 @@ export default function PorteiroPage() {
               </div>
 
               {isLoadingList ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-200 border-t-amber-500" />
+                <div className="flex flex-col items-center justify-center py-20 gap-4">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/10 border-t-primary" />
+                  <p className="text-[10px] font-accent font-bold text-primary/40 uppercase tracking-widest">Sincronizando Lista...</p>
                 </div>
               ) : filteredGuestList.length === 0 ? (
-                <div className="py-12 text-center">
-                  <Users className="mx-auto h-10 w-10 text-stone-300" />
-                  <p className="mt-2 text-sm text-stone-500">Nenhum convidado encontrado</p>
+                <div className="py-20 text-center glass-card">
+                  <Users className="mx-auto h-12 w-12 text-primary/10" />
+                  <p className="mt-4 text-xs font-serif font-medium text-muted-foreground/50 uppercase tracking-widest">Nenhum registro encontrado</p>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {filteredGuestList.map(guest => (
                     <motion.div
                       key={guest.id}
                       layout
                       className={cn(
-                        'flex items-center gap-3 rounded-xl border p-3 transition-colors',
+                        'flex items-center gap-4 rounded-2xl p-4 transition-all magnetic-hover border',
                         guest.checkedIn
-                          ? 'border-emerald-100 bg-emerald-50/50'
-                          : 'border-stone-100 bg-white'
+                          ? 'border-success/20 bg-success/5'
+                          : 'border-white/10 glass-card'
                       )}
                     >
                       <div className={cn(
-                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold',
+                        'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-sm font-bold shadow-sm',
                         guest.checkedIn
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-stone-100 text-stone-600'
+                          ? 'bg-success text-white'
+                          : 'bg-primary/5 text-primary'
                       )}>
                         {guest.checkedIn
-                          ? <Check className="h-4 w-4" />
+                          ? <Check className="h-5 w-5" />
                           : (guest.firstName[0] + guest.lastName[0]).toUpperCase()
                         }
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="truncate text-sm font-medium text-stone-800">
+                        <p className="truncate text-base font-serif font-bold text-foreground">
                           {guest.firstName} {guest.lastName}
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3 mt-1">
                           {guest.groupName && (
-                            <span className="text-[10px] text-stone-400">{guest.groupName}</span>
+                            <span className="text-[10px] font-accent font-bold text-muted-foreground/40 uppercase tracking-widest">{guest.groupName}</span>
                           )}
                           {guest.checkedIn && guest.checkedInAt && (
-                            <span className="text-[10px] text-emerald-600">
+                            <div className="flex items-center gap-1 text-[10px] font-accent font-bold text-success uppercase tracking-widest">
+                              <Clock className="h-3 w-3" />
                               {new Date(guest.checkedInAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                            </span>
+                            </div>
                           )}
                           {guest.dietaryRestrictions && (
-                            <Badge className="text-[9px] bg-amber-100 text-amber-700 py-0">
+                            <Badge className="text-[8px] bg-error/10 text-error border-none py-0 font-accent font-bold uppercase tracking-tighter">
                               {guest.dietaryRestrictions}
                             </Badge>
                           )}
@@ -529,10 +542,9 @@ export default function PorteiroPage() {
                         <Button
                           size="sm"
                           onClick={() => handleCheckInFromList(guest.id, `${guest.firstName} ${guest.lastName}`)}
-                          className="h-8 shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3"
+                          className="h-10 shrink-0 bg-primary hover:bg-primary/90 text-white font-accent font-bold uppercase tracking-widest text-[10px] px-4 rounded-xl shadow-lg shadow-primary/20"
                         >
-                          <UserCheck className="mr-1 h-3.5 w-3.5" />
-                          Check-in
+                          Entrada
                         </Button>
                       )}
                     </motion.div>
@@ -544,12 +556,12 @@ export default function PorteiroPage() {
         </AnimatePresence>
       </main>
 
-      {/* Bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-20 flex h-16 items-stretch border-t border-stone-100 bg-white/95 backdrop-blur-md">
+      {/* Bottom nav - Executive Glass Floating */}
+      <nav className="fixed bottom-6 left-6 right-6 z-40 flex h-16 items-center border border-white/20 glass-card rounded-[2rem] shadow-2xl shadow-black/20">
         {[
-          { view: 'home' as ActiveView, icon: Heart, label: 'Início' },
-          { view: 'qr' as ActiveView, icon: QrCode, label: 'QR Code' },
-          { view: 'search' as ActiveView, icon: Search, label: 'Buscar' },
+          { view: 'home' as ActiveView, icon: Heart, label: 'Painel' },
+          { view: 'qr' as ActiveView, icon: QrCode, label: 'QR Scan' },
+          { view: 'search' as ActiveView, icon: Search, label: 'Busca' },
           { view: 'list' as ActiveView, icon: List, label: 'Lista' },
         ].map(item => (
           <button
@@ -564,12 +576,17 @@ export default function PorteiroPage() {
               }
             }}
             className={cn(
-              'flex flex-1 flex-col items-center justify-center gap-1 text-[10px] font-medium transition-colors',
-              activeView === item.view ? 'text-amber-700' : 'text-stone-400'
+              'flex flex-1 flex-col items-center justify-center gap-1 transition-all duration-300',
+              activeView === item.view ? 'text-primary scale-110' : 'text-muted-foreground/40 hover:text-primary/60'
             )}
           >
-            <item.icon className={cn('h-5 w-5', activeView === item.view && 'text-amber-600')} />
-            {item.label}
+            <div className={cn(
+              'p-1.5 rounded-lg transition-colors',
+              activeView === item.view ? 'bg-primary/10' : ''
+            )}>
+              <item.icon className="h-5 w-5" />
+            </div>
+            <span className="text-[9px] font-accent font-bold uppercase tracking-widest">{item.label}</span>
           </button>
         ))}
       </nav>

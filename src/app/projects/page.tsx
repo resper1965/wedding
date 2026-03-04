@@ -37,7 +37,7 @@ export default function ProjectsDashboard() {
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.data) {
-                        // Em nossa API atualizada, retorna um array de casamentos
+                        // In our updated API, it returns an array of weddings
                         setProjects(Array.isArray(data.data) ? data.data : [data.data])
                     }
                 })
@@ -55,7 +55,7 @@ export default function ProjectsDashboard() {
                 method: 'POST',
                 body: JSON.stringify({
                     partner1Name: 'Novo',
-                    partner2Name: 'Casamento',
+                    partner2Name: 'Evento',
                     weddingDate: new Date().toISOString()
                 })
             })
@@ -64,13 +64,12 @@ export default function ProjectsDashboard() {
 
             if (!res.ok || !data.success) {
                 if (res.status === 403) {
-                    setErrorMessage(data.error || 'Limite de casamentos atingido.')
+                    setErrorMessage(data.error || 'Limite de eventos atingido.')
                     setShowLimitModal(true)
                 } else {
                     alert('Erro ao criar projeto.')
                 }
             } else {
-                // Sucesso, adiciona na tela
                 setProjects(prev => [...prev, data.data])
             }
         } catch (err) {
@@ -80,43 +79,50 @@ export default function ProjectsDashboard() {
         }
     }
 
-    if (loading || isFetching) return <div className="p-8 text-center text-stone-500">Carregando seus projetos...</div>
+    if (loading || isFetching) return (
+        <div className="flex min-h-screen items-center justify-center bg-background">
+            <div className="flex flex-col items-center">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-primary mb-4" />
+                <div className="text-primary/70 font-medium">Carregando seus projetos...</div>
+            </div>
+        </div>
+    )
 
     return (
-        <div className="min-h-screen bg-stone-50 p-8">
-            <div className="max-w-5xl mx-auto">
+        <div className="min-h-screen bg-background p-8">
+            <div className="max-w-6xl mx-auto">
 
-                <header className="flex justify-between items-center mb-10">
+                <header className="flex justify-between items-center mb-12">
                     <div>
-                        <h1 className="text-3xl font-bold text-stone-800">Meus Casamentos</h1>
-                        <p className="text-stone-500 mt-1">Gerencie seus projetos e clientes.</p>
+                        <h1 className="text-3xl font-bold text-foreground font-sans tracking-tight">Meus Eventos</h1>
+                        <p className="text-foreground/60 mt-2 font-medium">Gerencie suas celebrações e convidados.</p>
                     </div>
                     <button
                         onClick={handleCreateProject}
                         disabled={isCreating}
-                        className="flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-lg shadow-sm font-medium transition-colors"
+                        className="flex items-center gap-2 bg-accent hover:opacity-90 text-white px-6 py-2.5 rounded-xl shadow-md shadow-accent/20 hover:shadow-lg hover:shadow-accent/40 hover:-translate-y-0.5 transform transition-all duration-200 font-medium"
                     >
-                        {isCreating ? <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full" /> : <Plus className="w-5 h-5" />}
+                        {isCreating ? <span className="animate-spin w-5 h-5 border-2 border-white/30 border-t-white rounded-full" /> : <Plus className="w-5 h-5" />}
                         Novo Projeto
                     </button>
                 </header>
 
-                {/* Modal de Limite (Gating) */}
+                {/* Limit Modal (Gating) */}
                 {showLimitModal && (
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-rose-50 border border-rose-200 rounded-xl p-6 mb-8 flex gap-4 items-start shadow-sm"
+                        className="bg-red-50 border border-red-100 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-sm"
                     >
-                        <AlertCircle className="w-6 h-6 text-rose-500 shrink-0 mt-0.5" />
+                        <AlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
                         <div>
-                            <h3 className="text-lg font-semibold text-rose-900">Ação Bloqueada</h3>
-                            <p className="text-rose-700 mt-1">{errorMessage}</p>
-                            <div className="mt-4 flex gap-3">
-                                <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer" className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                            <h3 className="text-lg font-semibold text-red-900">Ação Bloqueada</h3>
+                            <p className="text-red-700 mt-1">{errorMessage}</p>
+                            <div className="mt-5 flex gap-3">
+                                <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer" className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
                                     Falar com Suporte (Upsell)
                                 </a>
-                                <button onClick={() => setShowLimitModal(false)} className="text-rose-700 hover:bg-rose-100 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                <button onClick={() => setShowLimitModal(false)} className="text-red-700 hover:bg-red-100 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
                                     Fechar
                                 </button>
                             </div>
@@ -124,36 +130,54 @@ export default function ProjectsDashboard() {
                     </motion.div>
                 )}
 
-                {/* Lista de Casamentos */}
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {projects.map(project => (
-                        <div key={project.id} className="bg-white border border-stone-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-amber-50 rounded-lg text-amber-600">
-                                    <Heart className="w-6 h-6" />
+                {/* Projects Grid */}
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {projects.map((project, idx) => (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                            key={project.id}
+                            className="bg-card border border-border rounded-2xl p-6 soft-shadow hover:soft-shadow-hover transition-all duration-300 group flex flex-col h-full"
+                        >
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="p-3 bg-muted rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                                    <Heart className="w-6 h-6" strokeWidth={1.5} />
+                                </div>
+                                <div className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full tracking-wide">
+                                    Ativo
                                 </div>
                             </div>
-                            <h3 className="text-xl font-semibold text-stone-800 flex items-center gap-2 mb-1">
-                                {project.partner1Name} <span className="text-amber-500">&amp;</span> {project.partner2Name}
-                            </h3>
-                            <p className="text-sm text-stone-500 mb-6 font-mono text-xs truncate">
-                                ID: {project.id.slice(0, 8)}...
-                            </p>
+
+                            <div className="flex-1">
+                                <h3 className="text-xl font-serif font-medium text-foreground flex items-center gap-2 mb-2 line-clamp-2">
+                                    {project.partner1Name} <span className="text-accent font-sans text-sm">&amp;</span> {project.partner2Name}
+                                </h3>
+                                <p className="text-sm text-foreground/50 mb-6 font-mono text-xs truncate bg-muted/50 inline-block px-2 py-1 rounded-md">
+                                    ID: {project.id.slice(0, 8)}...
+                                </p>
+                            </div>
 
                             <button
                                 onClick={() => router.push(`/dashboard?tenantId=${project.id}`)}
-                                className="w-full text-center bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium py-2 rounded-lg transition-colors text-sm"
+                                className="w-full text-center bg-muted hover:bg-primary text-primary hover:text-white font-medium py-2.5 rounded-xl transition-all duration-300 text-sm shadow-sm"
                             >
                                 Acessar Painel
                             </button>
-                        </div>
+                        </motion.div>
                     ))}
 
                     {projects.length === 0 && (
-                        <div className="sm:col-span-2 lg:col-span-3 text-center py-20 border-2 border-dashed border-stone-300 rounded-2xl bg-stone-50">
-                            <h3 className="text-lg font-medium text-stone-600">Nenhum projeto encontrado</h3>
-                            <p className="text-stone-400 mt-2 mb-6">Comece criando o seu primeiro casamento.</p>
-                            <button onClick={handleCreateProject} className="text-amber-600 font-medium hover:underline">
+                        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col items-center justify-center py-24 border-2 border-dashed border-border rounded-3xl bg-white/50">
+                            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                                <Heart className="w-8 h-8 text-border" strokeWidth={1.5} />
+                            </div>
+                            <h3 className="text-xl font-serif text-foreground mb-2">Nenhum projeto encontrado</h3>
+                            <p className="text-foreground/60 mt-1 mb-8">Comece criando a sua primeira celebração no Marryflow.</p>
+                            <button
+                                onClick={handleCreateProject}
+                                className="bg-muted hover:bg-muted/80 text-primary px-6 py-2.5 rounded-xl font-medium transition-colors"
+                            >
                                 Criar Primeiro Projeto
                             </button>
                         </div>

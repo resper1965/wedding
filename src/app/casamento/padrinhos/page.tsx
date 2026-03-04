@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Heart, Users, User, Image as ImageIcon } from 'lucide-react'
-import { PublicNav } from '@/components/public/PublicNav'
+import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { publicFetch } from '@/lib/public-fetch'
 
@@ -85,7 +85,7 @@ export default function PadrinhosPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
-      <PublicNav
+      <MasterHeader type="wedding"
         partner1Name={wedding?.partner1Name}
         partner2Name={wedding?.partner2Name}
       />

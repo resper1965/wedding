@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 /**
  * Concierge Media API
  * Generates personalized invitation images

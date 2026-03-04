@@ -13,12 +13,12 @@ interface WeddingHeroProps {
   venue?: string | null
 }
 
-export function WeddingHero({ 
-  partner1Name, 
-  partner2Name, 
-  weddingDate, 
+export function WeddingHero({
+  partner1Name,
+  partner2Name,
+  weddingDate,
   daysUntilWedding,
-  venue 
+  venue
 }: WeddingHeroProps) {
   const date = new Date(weddingDate)
   const formattedDate = format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
@@ -28,27 +28,30 @@ export function WeddingHero({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="relative overflow-hidden rounded-3xl border border-amber-200/40 bg-gradient-to-br from-amber-50/80 via-orange-50/50 to-rose-50/40 p-8 shadow-sm"
+      className="relative overflow-hidden rounded-[2.5rem] glass-card p-8 md:p-12"
     >
-      {/* Decorative elements - Indie style */}
-      <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-amber-200/30 to-orange-200/20 blur-3xl" />
-      <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-gradient-to-br from-rose-100/40 to-amber-100/30 blur-3xl" />
-      <div className="absolute right-8 top-8 h-24 w-24 rounded-full bg-amber-100/20 blur-2xl" />
-      
+      {/* Executive Decorative Blobs */}
+      <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-accent/5 blur-3xl" />
+      <div className="absolute right-10 bottom-10 h-32 w-32 rounded-full bg-secondary/5 blur-2xl" />
+
       <div className="relative z-10 text-center">
-        {/* Names - Indie typography */}
+        {/* Names - Marryflow typography */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-6"
+          transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+          className="mb-10"
         >
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <span className="bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-3xl font-light tracking-wide text-transparent md:text-4xl">
+          <div className="flex flex-wrap items-center justify-center gap-8">
+            <span className="text-6xl md:text-8xl font-serif font-bold text-foreground tracking-tight drop-shadow-sm">
               {partner1Name}
             </span>
-            <Heart className="h-6 w-6 text-rose-400 md:h-7 md:w-7" fill="currentColor" />
-            <span className="bg-gradient-to-r from-orange-600 to-amber-700 bg-clip-text text-3xl font-light tracking-wide text-transparent md:text-4xl">
+            <div className="flex flex-col items-center">
+              <Heart className="h-10 w-10 text-primary/30 animate-pulse" fill="currentColor" />
+              <div className="h-12 w-px bg-primary/20 mt-2" />
+            </div>
+            <span className="text-6xl md:text-8xl font-serif font-bold text-foreground tracking-tight drop-shadow-sm">
               {partner2Name}
             </span>
           </div>
@@ -59,26 +62,31 @@ export function WeddingHero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-8"
+          className="mb-10"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/60 bg-white/60 px-6 py-2.5 shadow-sm backdrop-blur-sm">
-            <Calendar className="h-4 w-4 text-amber-500" />
-            <span className="text-sm font-medium text-amber-800">{formattedDate}</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-6 py-2 shadow-sm backdrop-blur-sm">
+            <Calendar className="h-4 w-4 text-primary" />
+            <span className="text-sm font-accent font-semibold uppercase tracking-widest text-primary/80">{formattedDate}</span>
           </div>
         </motion.div>
 
         {/* Countdown */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mb-6"
+          transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+          className="mb-12"
         >
-          <div className="text-7xl font-extralight text-amber-800/90 md:text-8xl">
-            {daysUntilWedding}
+          <div className="relative inline-block">
+            <div className="text-[10rem] font-serif font-bold text-primary md:text-[12rem] tracking-tighter shimmer leading-none">
+              {daysUntilWedding}
+            </div>
+            <div className="absolute -top-4 -right-12 h-24 w-24 rounded-full border border-primary/10 bg-primary/5 flex items-center justify-center shadow-inner scale-75 md:scale-100">
+              <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-primary/60">Dias</span>
+            </div>
           </div>
-          <div className="mt-2 text-sm uppercase tracking-[0.2em] text-amber-600/80">
-            dias para o grande dia
+          <div className="mt-6 text-[11px] uppercase tracking-[0.5em] font-accent font-bold text-muted-foreground/30">
+            Contagem Regressiva para a Celebração
           </div>
         </motion.div>
 
@@ -88,10 +96,10 @@ export function WeddingHero({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex items-center justify-center gap-2 text-amber-700/80"
+            className="flex items-center justify-center gap-2 text-foreground/60 font-medium"
           >
-            <MapPin className="h-4 w-4" />
-            <span className="text-sm">{venue}</span>
+            <MapPin className="h-4 w-4 text-primary/40" />
+            <span className="text-xs uppercase tracking-widest font-accent font-semibold text-muted-foreground/50">{venue}</span>
           </motion.div>
         )}
       </div>

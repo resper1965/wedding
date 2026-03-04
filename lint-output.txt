@@ -1,0 +1,19 @@
+
+> nextjs_tailwind_shadcn_ts@0.2.0 lint
+> eslint .
+
+
+/home/wedding/ai-microservice/dist/index.js
+  6:35  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  7:30  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  8:36  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/home/wedding/ai-microservice/dist/routes/ai.js
+  7:44  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/home/wedding/docs/replace_fetch.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 6 problems (6 errors, 0 warnings)
+

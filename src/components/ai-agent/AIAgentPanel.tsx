@@ -33,10 +33,10 @@ const AGENT_MODES: {
 }[] = [
     {
       id: 'concierge',
-      label: 'Assistente de Convidados',
+      label: 'Gabi Concierge',
       icon: MessageCircle,
-      description: 'Responde dúvidas dos convidados sobre local, horário, dress code, estacionamento...',
-      color: 'text-blue-600 bg-blue-50',
+      description: 'Respondo dúvidas dos convidados sobre local, horário, dress code e logística...',
+      color: 'text-primary bg-primary/5',
       suggestions: [
         'Qual é o dress code do casamento?',
         'Como chego até o local?',
@@ -47,10 +47,10 @@ const AGENT_MODES: {
     },
     {
       id: 'writer',
-      label: 'Redator de Mensagens',
+      label: 'Gabi Redatora',
       icon: PenLine,
-      description: 'Cria convites, mensagens de agradecimento, lembretes e save-the-dates personalizados',
-      color: 'text-rose-600 bg-rose-50',
+      description: 'Crio convites, mensagens de agradecimento e save-the-dates memoráveis...',
+      color: 'text-accent bg-accent/5',
       suggestions: [
         'Escreva uma mensagem de convite elegante para WhatsApp',
         'Crie uma mensagem de agradecimento pós-casamento',
@@ -61,10 +61,10 @@ const AGENT_MODES: {
     },
     {
       id: 'planner',
-      label: 'Planejador de Casamento',
+      label: 'Gabi Personal Planner',
       icon: CalendarHeart,
-      description: 'Sugere fornecedores, aloca orçamento, cria checklist e dá dicas de organização',
-      color: 'text-amber-600 bg-amber-50',
+      description: 'Sugiro fornecedores, aloco orçamento e cuido do seu checklist executivo...',
+      color: 'text-primary/80 bg-primary/5',
       suggestions: [
         'Crie um checklist de 6 meses antes do casamento',
         'Como distribuir o orçamento entre os fornecedores?',
@@ -75,10 +75,10 @@ const AGENT_MODES: {
     },
     {
       id: 'coordinator',
-      label: 'Coordenador do Dia',
+      label: 'Gabi Coordenadora',
       icon: Users,
-      description: 'No dia do casamento: check-in inteligente, alertas e sugestões de ajuste',
-      color: 'text-emerald-600 bg-emerald-50',
+      description: 'Gestão de check-in em tempo real e resolução de imprevistos na celebração...',
+      color: 'text-accent/80 bg-accent/5',
       suggestions: [
         'Crie um cronograma para o dia do casamento',
         'O que fazer se um fornecedor atrasar?',
@@ -175,76 +175,82 @@ export function AIAgentPanel() {
   const modeMessages = messages.filter(m => !m.mode || m.mode === activeMode)
 
   return (
-    <div className="flex h-[calc(100dvh-8rem)] flex-col gap-4 md:h-[calc(100dvh-6rem)]">
+    <div className="flex h-[calc(100dvh-8rem)] flex-col gap-6 md:h-[calc(100dvh-6rem)]">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50">
-            <Bot className="h-5 w-5 text-teal-600" />
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-inner">
+              <Sparkles className="h-6 w-6 text-primary" />
+            </div>
+            <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-background bg-success" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-stone-800">Assistente IA</h2>
-            <p className="text-sm text-stone-500">Powered by GPT-4o</p>
+            <h2 className="text-2xl font-serif font-bold text-foreground">Gabi AI</h2>
+            <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40 mt-1">Sua Concierge Executiva</p>
           </div>
         </div>
         {modeMessages.length > 0 && (
-          <Button variant="ghost" size="sm" onClick={clearChat} className="gap-2 text-stone-400">
-            <RefreshCw className="h-4 w-4" />
+          <Button variant="ghost" size="sm" onClick={clearChat} className="gap-2 text-muted-foreground/40 hover:text-primary hover:bg-primary/5 rounded-xl font-accent font-bold uppercase tracking-widest text-[10px]">
+            <RefreshCw className="h-3.5 w-3.5" />
             Limpar
           </Button>
         )}
       </div>
 
       {/* Mode selector */}
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {AGENT_MODES.map(mode => (
           <button
             key={mode.id}
             onClick={() => setActiveMode(mode.id)}
             className={cn(
-              'flex flex-col gap-1 rounded-xl border p-3 text-left transition-all',
+              'flex flex-col gap-2 rounded-2xl border p-4 text-left transition-all group relative overflow-hidden',
               activeMode === mode.id
-                ? 'border-amber-300 bg-amber-50 shadow-sm'
-                : 'border-stone-200 bg-white hover:border-stone-300'
+                ? 'border-primary/30 bg-primary/5 shadow-sm scale-[1.02]'
+                : 'border-primary/5 bg-white/50 hover:border-primary/20 hover:bg-primary/[0.02]'
             )}
           >
-            <div className={cn('flex h-7 w-7 items-center justify-center rounded-lg', mode.color)}>
+            <div className={cn('flex h-8 w-8 items-center justify-center rounded-xl shadow-sm transition-transform group-hover:scale-110', mode.color)}>
               <mode.icon className="h-4 w-4" />
             </div>
-            <p className="text-xs font-semibold text-stone-700 leading-tight">{mode.label}</p>
+            <div>
+              <p className="text-[11px] font-serif font-bold text-foreground leading-tight">{mode.label}</p>
+            </div>
+            {activeMode === mode.id && <div className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" />}
           </button>
         ))}
       </div>
 
       {/* Chat area */}
-      <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-stone-100 bg-white shadow-sm">
+      <div className="flex flex-1 flex-col overflow-hidden glass-card">
         {/* Mode description */}
-        <div className="flex items-center gap-2 border-b border-stone-100 px-4 py-2.5">
-          <div className={cn('flex h-6 w-6 items-center justify-center rounded-lg', currentMode.color)}>
-            <currentMode.icon className="h-3.5 w-3.5" />
+        <div className="flex items-center gap-3 border-b border-primary/5 px-6 py-3.5 bg-primary/[0.02]">
+          <div className={cn('flex h-6 w-6 items-center justify-center rounded-lg shadow-inner', currentMode.color)}>
+            <currentMode.icon className="h-3 w-3" />
           </div>
-          <p className="text-xs text-stone-500">{currentMode.description}</p>
+          <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/60">{currentMode.description}</p>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
           {modeMessages.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center gap-4 py-8">
-              <div className={cn('flex h-16 w-16 items-center justify-center rounded-2xl', currentMode.color)}>
-                <currentMode.icon className="h-8 w-8" />
+            <div className="flex h-full flex-col items-center justify-center gap-6 py-8">
+              <div className={cn('flex h-20 w-20 items-center justify-center rounded-3xl shadow-lg transition-transform hover:scale-105', currentMode.color)}>
+                <currentMode.icon className="h-10 w-10" />
               </div>
               <div className="text-center">
-                <p className="font-semibold text-stone-700">{currentMode.label}</p>
-                <p className="mt-1 text-sm text-stone-500">Sugestões para começar:</p>
+                <p className="text-lg font-serif font-bold text-foreground">{currentMode.label}</p>
+                <p className="mt-1 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Como posso ajudar hoje?</p>
               </div>
-              <div className="w-full max-w-md space-y-2">
+              <div className="w-full max-w-sm space-y-2.5">
                 {currentMode.suggestions.map((s, i) => (
                   <button
                     key={i}
                     onClick={() => handleSend(s)}
-                    className="flex w-full items-center gap-2 rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-left text-xs text-stone-600 transition-colors hover:bg-stone-100 active:bg-stone-200"
+                    className="flex w-full items-center gap-3 rounded-2xl border border-primary/5 bg-primary/[0.01] px-4 py-3 text-left text-[11px] font-sans font-medium text-foreground/70 transition-all hover:bg-primary/5 hover:border-primary/10 hover:translate-x-1 active:scale-[0.98] group"
                   >
-                    <Lightbulb className="h-3.5 w-3.5 shrink-0 text-amber-400" />
+                    <Lightbulb className="h-4 w-4 shrink-0 text-primary opacity-30 group-hover:opacity-100 transition-opacity" />
                     {s}
                   </button>
                 ))}
@@ -255,42 +261,42 @@ export function AIAgentPanel() {
               {modeMessages.map(message => (
                 <motion.div
                   key={message.id}
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={cn(
-                    'flex gap-3',
+                    'flex gap-4',
                     message.role === 'user' ? 'justify-end' : 'justify-start'
                   )}
                 >
                   {message.role === 'assistant' && (
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-100">
-                      <Bot className="h-4 w-4 text-teal-600" />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-primary/5 shadow-inner border border-primary/10">
+                      <Sparkles className="h-5 w-5 text-primary" />
                     </div>
                   )}
 
                   <div className={cn(
-                    'group relative max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed',
+                    'group relative max-w-[85%] rounded-[2rem] px-6 py-4 text-sm leading-relaxed shadow-sm',
                     message.role === 'user'
-                      ? 'rounded-br-sm bg-stone-800 text-white'
-                      : 'rounded-bl-sm bg-stone-50 text-stone-700'
+                      ? 'rounded-br-lg bg-foreground text-background font-medium'
+                      : 'rounded-bl-lg bg-primary/[0.03] text-foreground border border-primary/5'
                   )}>
-                    <div className="whitespace-pre-wrap">{message.content}</div>
+                    <div className="whitespace-pre-wrap font-sans">{message.content}</div>
                     {message.role === 'assistant' && (
                       <button
                         onClick={() => handleCopy(message.id, message.content)}
-                        className="absolute -right-8 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute -right-10 top-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-primary/5 rounded-full"
                       >
                         {copiedId === message.id
-                          ? <Check className="h-4 w-4 text-emerald-500" />
-                          : <Copy className="h-4 w-4 text-stone-400 hover:text-stone-600" />
+                          ? <Check className="h-4 w-4 text-primary" />
+                          : <Copy className="h-4 w-4 text-muted-foreground/30 hover:text-primary transition-colors" />
                         }
                       </button>
                     )}
                   </div>
 
                   {message.role === 'user' && (
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-stone-800">
-                      <Heart className="h-3.5 w-3.5 text-white" />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-foreground shadow-lg">
+                      <Heart className="h-4 w-4 text-background" />
                     </div>
                   )}
                 </motion.div>
@@ -298,21 +304,21 @@ export function AIAgentPanel() {
 
               {isLoading && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-4"
                 >
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-100">
-                    <Bot className="h-4 w-4 text-teal-600" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-primary/5 border border-primary/10">
+                    <Sparkles className="h-5 w-5 text-primary" />
                   </div>
-                  <div className="rounded-2xl rounded-bl-sm bg-stone-50 px-4 py-3">
-                    <div className="flex gap-1">
+                  <div className="rounded-[2rem] rounded-bl-lg bg-primary/[0.03] px-6 py-4 border border-primary/5">
+                    <div className="flex gap-1.5">
                       {[0, 1, 2].map(i => (
                         <motion.div
                           key={i}
-                          animate={{ y: [0, -4, 0] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-                          className="h-1.5 w-1.5 rounded-full bg-stone-400"
+                          animate={{ y: [0, -6, 0], opacity: [0.3, 1, 0.3] }}
+                          transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                          className="h-2 w-2 rounded-full bg-primary/40"
                         />
                       ))}
                     </div>
@@ -325,32 +331,32 @@ export function AIAgentPanel() {
         </div>
 
         {/* Input */}
-        <div className="border-t border-stone-100 p-3">
-          <div className="flex items-end gap-2">
+        <div className="border-t border-primary/5 p-4 bg-primary/[0.01]">
+          <div className="flex items-end gap-3">
             <textarea
               ref={inputRef}
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`Pergunte ao ${currentMode.label}...`}
+              placeholder={`Mensagem para ${currentMode.label}...`}
               rows={1}
-              className="flex-1 resize-none rounded-xl border border-stone-200 bg-stone-50 px-3 py-2.5 text-sm text-stone-700 placeholder-stone-400 focus:border-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-400 transition-colors"
-              style={{ maxHeight: '120px', overflowY: 'auto' }}
+              className="flex-1 resize-none rounded-2xl border border-primary/10 bg-white/50 px-4 py-3.5 text-[13px] font-sans text-foreground placeholder-muted-foreground/40 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all custom-scrollbar"
+              style={{ maxHeight: '160px', overflowY: 'auto' }}
             />
             <Button
               onClick={() => handleSend()}
               disabled={!input.trim() || isLoading}
               size="sm"
-              className="h-10 w-10 shrink-0 rounded-xl bg-stone-800 p-0 hover:bg-stone-700"
+              className="h-12 w-12 shrink-0 rounded-2xl bg-foreground p-0 hover:bg-foreground/90 shadow-lg active:scale-95 transition-transform"
             >
               {isLoading
-                ? <Loader2 className="h-4 w-4 animate-spin" />
-                : <Send className="h-4 w-4" />
+                ? <Loader2 className="h-5 w-5 animate-spin text-background" />
+                : <Send className="h-5 w-5 text-background" />
               }
             </Button>
           </div>
-          <p className="mt-1.5 text-[10px] text-stone-400 text-center">
-            Enter para enviar · Shift+Enter para nova linha
+          <p className="mt-3 text-[9px] font-accent font-bold uppercase tracking-[0.2em] text-muted-foreground/30 text-center">
+            Gabi Intelligence · Executive Standard
           </p>
         </div>
       </div>

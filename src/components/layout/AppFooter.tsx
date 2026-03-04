@@ -5,14 +5,16 @@ import { Heart } from 'lucide-react'
 
 export function AppFooter() {
   return (
-    <footer className="mt-auto border-t border-amber-100/50 bg-gradient-to-r from-amber-50/50 to-orange-50/30 py-4">
-      <div className="flex flex-col items-center justify-center gap-2">
-        <div className="flex items-center gap-2 text-sm text-stone-500">
-          <span>Feito com</span>
-          <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
-          <span>para Louise & Nicolas</span>
+    <footer className="mt-auto border-t border-primary/5 bg-background/30 backdrop-blur-sm py-10">
+      <div className="container mx-auto px-8 flex flex-col items-center justify-center gap-4">
+        <div className="flex items-center gap-6 text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/20">
+          <a href="/trustcenter" className="hover:text-primary transition-colors cursor-pointer">Trust Center</a>
+          <div className="h-3 w-px bg-primary/10" />
+          <span>&copy; {new Date().getFullYear()}</span>
+          <div className="h-3 w-px bg-primary/10" />
+          <span className="text-primary/40">MarryFlow</span>
         </div>
-        <p className="text-xs text-stone-400">11 de novembro de 2026</p>
+        <p className="text-[8px] font-accent font-bold uppercase tracking-[0.4em] text-muted-foreground/10">Design & Estratégia por Gabi AI</p>
       </div>
     </footer>
   )

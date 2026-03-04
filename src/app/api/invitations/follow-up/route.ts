@@ -1,31 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 import { getWhatsAppClient } from '@/services/whatsapp/client'
 
 export async function POST(request: NextRequest) {
   try {
     const auth = await verifySupabaseToken(request)
     if (!auth.authorized) return auth.response
-    
-    // Only admins or editors can trigger follow-ups
-    if (auth.role !== 'admin' && auth.role !== 'editor') {
-      return NextResponse.json({ success: false, error: 'Acesso negado' }, { status: 403 })
-    }
 
     const { weddingId, hoursThreshold = 48 } = await request.json()
 
-    if (!weddingId) {
-      return NextResponse.json({ success: false, error: 'ID do casamento é obrigatório' }, { status: 400 })
-    }
+    // Auth-Tenant RBAC Check
+    const access = await verifyTenantAccess(weddingId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
-    // Identify guests who were sent an invitation but haven't responded
-    // and haven't received a follow-up yet.
     const thresholdDate = new Date(Date.now() - hoursThreshold * 60 * 60 * 1000).toISOString()
-    
+
     const { data: guests, error: guestError } = await db.from('Guest')
       .select('*, group:GuestGroup(*)')
-      .eq('weddingId', weddingId)
+      .eq('weddingId', access.weddingId)
       .eq('inviteStatus', 'sent')
       .lte('inviteSentAt', thresholdDate)
       .is('waFollowUpSentAt', null)
@@ -48,13 +42,11 @@ export async function POST(request: NextRequest) {
 
           results.sent++
 
-          // Update guest follow-up status
           await db.from('Guest').update({
             waFollowUpSentAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           }).eq('id', guest.id)
 
-          // Log the message
           await db.from('MessageLog').insert({
             id: crypto.randomUUID(),
             guestId: guest.id,
@@ -80,3 +72,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: 'Erro ao processar follow-ups' }, { status: 500 })
   }
 }
+

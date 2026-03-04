@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react'
 import { authFetch } from '@/lib/auth-fetch'
 import { motion } from 'framer-motion'
-import { Save, Heart, Calendar, MapPin, Clock, Plus, Trash2, Edit, Bell, CalendarClock } from 'lucide-react'
+import { Save, Heart, Calendar, MapPin, Clock, Plus, Trash2, Edit, Bell, CalendarClock, Link2, AlertTriangle, ExternalLink, Download, ShieldCheck } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PrivacyRightsHub } from '@/components/ui-custom/PrivacyRightsHub'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
@@ -29,6 +31,7 @@ interface WeddingData {
   venueAddress: string | null
   replyByDate: string | null
   messageFooter: string | null
+  couple_email?: string | null
 }
 
 interface EventData {
@@ -57,6 +60,12 @@ export function SettingsManager() {
   const [isSaving, setIsSaving] = useState(false)
   const [editingEvent, setEditingEvent] = useState<EventData | null>(null)
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
+  const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+
+  // Track component auth role so we can hide destructive options from the couple
+  const [userRole, setUserRole] = useState<'owner' | 'couple' | 'unknown'>('unknown')
 
   // Form states
   const [weddingForm, setWeddingForm] = useState({
@@ -66,7 +75,8 @@ export function SettingsManager() {
     venue: '',
     venueAddress: '',
     replyByDate: '',
-    messageFooter: ''
+    messageFooter: '',
+    couple_email: ''
   })
 
   const [eventForm, setEventForm] = useState({
@@ -90,7 +100,7 @@ export function SettingsManager() {
           authFetch('/api/events'),
           authFetch('/api/groups')
         ])
-        
+
         const weddingData = await weddingRes.json()
         const eventsData = await eventsRes.json()
         const groupsData = await groupsRes.json()
@@ -104,8 +114,16 @@ export function SettingsManager() {
             venue: weddingData.data.venue || '',
             venueAddress: weddingData.data.venueAddress || '',
             replyByDate: weddingData.data.replyByDate?.split('T')[0] || '',
-            messageFooter: weddingData.data.messageFooter || ''
+            messageFooter: weddingData.data.messageFooter || '',
+            couple_email: weddingData.data.couple_email || ''
           })
+          // Determine Role for UI Restrictions
+          if (weddingData.data.owner_id && weddingData.data.couple_email) {
+            // we will query a local endpoint if needed, but for now we can default 'couple' if it's not the owner to just be safe on the client. The actual block is enforced on the API.
+            setUserRole(weddingData.data.couple_email ? 'couple' : 'owner')
+          } else {
+            setUserRole('owner')
+          }
         }
 
         if (eventsData.success) {
@@ -141,7 +159,7 @@ export function SettingsManager() {
       })
 
       const data = await response.json()
-      
+
       if (data.success) {
         setWedding(data.data)
         toast.success('Configurações salvas!')
@@ -202,7 +220,7 @@ export function SettingsManager() {
       })
 
       const data = await response.json()
-      
+
       if (data.success) {
         toast.success(editingEvent ? 'Evento atualizado!' : 'Evento criado!')
         setIsEventDialogOpen(false)
@@ -227,13 +245,65 @@ export function SettingsManager() {
     try {
       const response = await fetch(`/api/events/${id}`, { method: 'DELETE' })
       const data = await response.json()
-      
+
       if (data.success) {
         toast.success('Evento excluído')
         setEvents(events.filter(e => e.id !== id))
       }
     } catch {
       toast.error('Erro ao excluir')
+    }
+  }
+
+  // Delete wedding (Danger Zone)
+  const handleDeleteWedding = async () => {
+    const confirmName = prompt('Para excluir este evento permanentemente, digite o nome do evento (Noiva & Noivo):')
+    const matchName = `${wedding?.partner1Name} & ${wedding?.partner2Name}`
+    if (confirmName !== matchName) {
+      toast.error('O nome digitado não confere. Exclusão cancelada.')
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      const response = await authFetch('/api/wedding', {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        toast.success('Evento excluído permanentemente!')
+        router.push('/projects')
+      } else {
+        toast.error('Erro ao excluir evento')
+      }
+    } catch {
+      toast.error('Falha de conexão ao excluir evento')
+    }
+    setIsDeleting(false)
+  }
+
+  const handleExportObsidian = async () => {
+    if (!wedding) return
+    setIsExporting(true)
+    try {
+      const response = await authFetch('/api/wedding/export')
+      if (!response.ok) throw new Error('Falha na exportação')
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `marryflow-obsidian-vault-${wedding.id.substring(0, 8)}.zip`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      toast.success('Dossiê Obsidian exportado com sucesso!')
+    } catch (error) {
+      console.error('Export error:', error)
+      toast.error('Erro ao gerar exportação do Obsidian')
+    } finally {
+      setIsExporting(false)
     }
   }
 
@@ -251,11 +321,11 @@ export function SettingsManager() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-orange-50/30 p-6"
+        className="rounded-2xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50/50 to-emerald-50/30 p-6"
       >
         <div className="mb-6 flex items-center gap-3">
-          <div className="rounded-full bg-gradient-to-br from-amber-100 to-orange-100 p-2">
-            <Heart className="h-5 w-5 text-amber-600" fill="currentColor" />
+          <div className="rounded-full bg-gradient-to-br from-emerald-100 to-emerald-100 p-2">
+            <Heart className="h-5 w-5 text-orange-500" fill="currentColor" />
           </div>
           <div>
             <h2 className="text-xl font-medium text-stone-800">Dados do Casamento</h2>
@@ -328,13 +398,25 @@ export function SettingsManager() {
               placeholder="Agradecemos sua presença neste dia especial!"
             />
           </div>
+          <div className="md:col-span-2 mt-4 pt-4 border-t border-emerald-100/50">
+            <h3 className="text-sm font-semibold text-stone-800 mb-3">Acesso Exclusivo (Noivos)</h3>
+            <Label className="text-stone-600">E-mail dos Noivos (Para conceder acesso ao Painel)</Label>
+            <Input
+              type="email"
+              value={weddingForm.couple_email || ''}
+              onChange={(e) => setWeddingForm({ ...weddingForm, couple_email: e.target.value })}
+              className="mt-1.5 border-emerald-200/60 bg-white/80 focus:border-emerald-400 font-mono text-sm"
+              placeholder="casal@gmail.com"
+            />
+            <p className="text-[11px] text-stone-500 mt-2">Ao salvar, este e-mail poderá acessar o painel de convidados sem excluir o evento.</p>
+          </div>
         </div>
 
         <div className="mt-6 flex justify-end">
           <Button
             onClick={handleSaveWedding}
             disabled={isSaving}
-            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
           >
             {isSaving ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -347,6 +429,51 @@ export function SettingsManager() {
           </Button>
         </div>
       </motion.div>
+
+      {/* Wedding Link Generator */}
+      {wedding && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="rounded-2xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50/50 to-emerald-50/30 p-6"
+        >
+          <div className="mb-4 flex items-center gap-3">
+            <div className="rounded-full bg-gradient-to-br from-emerald-100 to-emerald-100 p-2">
+              <Link2 className="h-5 w-5 text-emerald-600" />
+            </div>
+            <div>
+              <h2 className="text-xl font-medium text-stone-800">Acesso aos Noivos / Convidados</h2>
+              <p className="text-sm text-stone-500">Compartilhe este link da sua landing page do Casamento</p>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <Input
+              readOnly
+              value={`https://wedding.louise.com.br/info?tenantId=${wedding.id}`}
+              className="bg-white/80 font-mono text-sm border-emerald-200 focus:border-emerald-400 focus-visible:ring-emerald-400"
+            />
+            <Button
+              onClick={() => {
+                navigator.clipboard.writeText(`https://wedding.louise.com.br/info?tenantId=${wedding.id}`)
+                toast.success('Link copiado!')
+              }}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0 w-full sm:w-auto"
+            >
+              Copiar Link
+            </Button>
+            <Button
+              variant="outline"
+              className="shrink-0 w-full sm:w-auto border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+              onClick={() => window.open(`/info?tenantId=${wedding.id}`, '_blank')}
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Testar Rota
+            </Button>
+          </div >
+        </motion.div >
+      )
+      }
 
       {/* Events */}
       <motion.div
@@ -521,46 +648,149 @@ export function SettingsManager() {
       </Dialog>
 
       {/* Reminder Settings */}
-      {wedding && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="rounded-2xl border border-rose-200/50 bg-gradient-to-br from-rose-50/30 to-pink-50/20 p-6"
-        >
-          <div className="mb-4 flex items-center gap-3">
-            <div className="rounded-full bg-gradient-to-br from-rose-100 to-pink-100 p-2">
-              <Bell className="h-5 w-5 text-rose-600" />
+      {
+        wedding && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="rounded-2xl border border-rose-200/50 bg-gradient-to-br from-rose-50/30 to-pink-50/20 p-6"
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div className="rounded-full bg-gradient-to-br from-rose-100 to-pink-100 p-2">
+                <Bell className="h-5 w-5 text-rose-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-medium text-stone-800">Lembretes Automáticos</h2>
+                <p className="text-sm text-stone-500">Configure os lembretes para convidados pendentes</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-medium text-stone-800">Lembretes Automáticos</h2>
-              <p className="text-sm text-stone-500">Configure os lembretes para convidados pendentes</p>
-            </div>
-          </div>
-          <ReminderSettings weddingId={wedding.id} />
-        </motion.div>
-      )}
+            <ReminderSettings weddingId={wedding.id} />
+          </motion.div>
+        )
+      }
 
       {/* Message Scheduler */}
-      {wedding && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-50/30 to-indigo-50/20 p-6"
-        >
-          <div className="mb-4 flex items-center gap-3">
-            <div className="rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 p-2">
-              <CalendarClock className="h-5 w-5 text-blue-600" />
+      {
+        wedding && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-50/30 to-indigo-50/20 p-6"
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div className="rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 p-2">
+                <CalendarClock className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-medium text-stone-800">Agendador de Mensagens</h2>
+                <p className="text-sm text-stone-500">Programe envios de mensagens para os convidados</p>
+              </div>
+            </div>
+            <MessageScheduler weddingId={wedding.id} groups={groups} />
+          </motion.div>
+        )
+      }
+
+      {/* Obsidian Export */}
+      {
+        wedding && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="rounded-2xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 p-6"
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div className="rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 p-2">
+                <Download className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-medium text-stone-800">Exportar Dossiê IA (Obsidian Vault)</h2>
+                <p className="text-sm text-stone-500 max-w-2xl mt-1">Gere um pacote ZIP contendo toda a memória relacional deste evento em arquivos Markdown limpos. Ideal para backup perpétuo offline ou ingestão em Agentes de IA via RAG com cruzamento dinâmico.</p>
+              </div>
+            </div>
+            <div className="pt-2">
+              <Button
+                onClick={handleExportObsidian}
+                disabled={isExporting}
+                className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto soft-shadow"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                {isExporting ? 'Processando Grafo...' : 'Exportar Grafo de Conhecimento (.zip)'}
+              </Button>
+            </div>
+          </motion.div>
+        )
+      }
+
+      {/* ISO 27701 / GDPR / LGPD Rights Hub */}
+      {wedding && <PrivacyRightsHub />}
+
+      {/* Trust Center Entry */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.38 }}
+        className="rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.02] to-primary/[0.05] p-6"
+      >
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <ShieldCheck className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-xl font-medium text-stone-800">Agendador de Mensagens</h2>
-              <p className="text-sm text-stone-500">Programe envios de mensagens para os convidados</p>
+              <h3 className="font-bold text-foreground">Centro de Confiança MarryFlow</h3>
+              <p className="text-sm text-muted-foreground">Visualize nossos certificados ISO 27001, política de transparência e auditoria OWASP.</p>
             </div>
           </div>
-          <MessageScheduler weddingId={wedding.id} groups={groups} />
-        </motion.div>
-      )}
-    </div>
+          <Button
+            variant="outline"
+            className="border-primary/20 text-primary hover:bg-primary/5 rounded-xl px-6"
+            onClick={() => window.open('/trustcenter', '_blank')}
+          >
+            Acessar Trust Center
+            <ExternalLink className="h-4 w-4 ml-2" />
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Danger Zone */}
+      {
+        wedding && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="rounded-2xl border border-red-200/50 bg-red-50/30 p-6"
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div className="rounded-full bg-red-100 p-2">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-medium text-red-800">Zona de Perigo</h2>
+                <p className="text-sm text-red-600/80">Ações destrutivas e irreversíveis</p>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/50 p-5 rounded-xl border border-red-100">
+              <div>
+                <h3 className="font-semibold text-stone-800">Excluir Evento</h3>
+                <p className="text-sm text-stone-500 max-w-2xl mt-1">Ao excluir este casamento, todos os dados, convidados, confirmações, mensagens de IA e configurações serão apagados instantaneamente da plataforma Marryflow e não há como reverter.</p>
+              </div>
+              <Button
+                onClick={handleDeleteWedding}
+                disabled={isDeleting}
+                variant="destructive"
+                className="shrink-0 w-full sm:w-auto bg-red-600 hover:bg-red-700"
+              >
+                {isDeleting ? 'Excluindo Evento...' : 'Excluir Este Evento'}
+              </Button>
+            </div>
+          </motion.div>
+        )
+      }
+    </div >
   )
 }

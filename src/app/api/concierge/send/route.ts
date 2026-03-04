@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 /**
  * Concierge Send Message API
  * Sends a test message via WhatsApp

@@ -15,9 +15,9 @@ interface StatsOverviewProps {
 
 export function StatsOverview({ stats }: StatsOverviewProps) {
   const { totalInvited, totalConfirmed, totalDeclined, totalPending } = stats
-  
-  const confirmationRate = totalInvited > 0 
-    ? Math.round((totalConfirmed / totalInvited) * 100) 
+
+  const confirmationRate = totalInvited > 0
+    ? Math.round((totalConfirmed / totalInvited) * 100)
     : 0
 
   return (
@@ -29,7 +29,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
           value={totalInvited}
           subtitle="total enviados"
           icon={Users}
-          variant="default"
+          variant="primary"
           delay={0}
         />
         <StatCard
@@ -57,38 +57,45 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
         />
       </div>
 
-      {/* Progress Bar - Indie style */}
+      {/* Progress Bar - Executive style */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.4 }}
-        className="rounded-2xl border border-amber-200/40 bg-gradient-to-br from-amber-50/50 to-orange-50/30 p-6 shadow-sm"
+        transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
+        className="glass-card p-8"
       >
-        <div className="mb-3 flex items-center justify-between">
-          <span className="text-sm font-medium text-stone-600">Progresso das Respostas</span>
-          <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700">{confirmationRate}%</span>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-accent font-bold uppercase tracking-[0.2em] text-muted-foreground/40">Engajamento de Respostas</span>
+            <p className="text-xl font-serif font-bold text-foreground mt-1">Status da Lista de Convidados</p>
+          </div>
+          <div className="text-right">
+            <span className="rounded-2xl bg-primary/5 border border-primary/10 px-4 py-2 text-sm font-accent font-bold text-primary shadow-inner">
+              {confirmationRate}%
+            </span>
+          </div>
         </div>
-        <div className="h-4 overflow-hidden rounded-full bg-gradient-to-r from-amber-100 to-orange-100">
+        <div className="h-4 overflow-hidden rounded-full bg-primary/5 shadow-inner p-1">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${confirmationRate}%` }}
-            transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
-            className="h-full rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400"
+            transition={{ duration: 1.5, delay: 0.5, ease: 'circOut' }}
+            className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary shadow-lg"
           />
         </div>
-        <div className="mt-4 flex items-center gap-6 text-xs text-stone-500">
-          <span className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-gradient-to-br from-amber-400 to-orange-400" />
-            Confirmados
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-gradient-to-br from-rose-300 to-orange-300" />
-            Recusados
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-gradient-to-br from-stone-200 to-amber-100" />
-            Pendentes
-          </span>
+        <div className="mt-8 grid grid-cols-3 gap-4">
+          <div className="flex flex-col gap-1.5 border-l-2 border-primary/20 pl-4 py-1">
+            <span className="text-[9px] font-accent font-bold uppercase tracking-widest text-muted-foreground/30">Confirmados</span>
+            <p className="text-lg font-serif font-bold text-foreground">{totalConfirmed}</p>
+          </div>
+          <div className="flex flex-col gap-1.5 border-l-2 border-warning/20 pl-4 py-1">
+            <span className="text-[9px] font-accent font-bold uppercase tracking-widest text-muted-foreground/30">Recusados</span>
+            <p className="text-lg font-serif font-bold text-foreground">{totalDeclined}</p>
+          </div>
+          <div className="flex flex-col gap-1.5 border-l-2 border-primary/5 pl-4 py-1">
+            <span className="text-[9px] font-accent font-bold uppercase tracking-widest text-muted-foreground/30">Pendentes</span>
+            <p className="text-lg font-serif font-bold text-foreground">{totalPending}</p>
+          </div>
         </div>
       </motion.div>
     </div>

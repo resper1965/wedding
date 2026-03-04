@@ -20,9 +20,9 @@ interface TimelineChartProps {
 }
 
 const COLORS = {
-  confirmed: '#22c55e',  // green-500
-  declined: '#f43f5e',   // rose-500
-  cumulative: '#d97706'  // amber-600
+  confirmed: 'oklch(var(--primary))',
+  declined: 'oklch(var(--error))',
+  cumulative: 'oklch(var(--warning))'
 }
 
 export function TimelineChart({ data }: TimelineChartProps) {
@@ -45,15 +45,15 @@ export function TimelineChart({ data }: TimelineChartProps) {
   const displayData = useMemo(() => {
     const last14Days = data.slice(-14)
     const hasActivity = last14Days.some(d => d.total > 0)
-    
+
     if (!hasActivity) {
       return data.slice(-7) // Show last 7 days even if no activity
     }
-    
+
     return last14Days
   }, [data])
 
-  const totalResponses = useMemo(() => 
+  const totalResponses = useMemo(() =>
     data.reduce((sum, d) => sum + d.total, 0),
     [data]
   )
@@ -64,96 +64,90 @@ export function TimelineChart({ data }: TimelineChartProps) {
   }, [displayData])
 
   return (
-    <Card className="border-amber-200/40 bg-gradient-to-br from-white to-amber-50/30">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-lg font-medium text-stone-700">
-              Respostas ao Longo do Tempo
-            </CardTitle>
-            <CardDescription className="text-sm text-stone-500">
-              Últimos 14 dias • {totalResponses} respostas totais
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5">
-            <TrendingUp className="h-4 w-4 text-amber-600" />
-            <span className="text-sm font-medium text-amber-700">
-              Pico: {peakDay.max}
-            </span>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[250px] w-full">
-          <AreaChart data={displayData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorConfirmed" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={COLORS.confirmed} stopOpacity={0.4}/>
-                <stop offset="95%" stopColor={COLORS.confirmed} stopOpacity={0}/>
-              </linearGradient>
-              <linearGradient id="colorDeclined" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={COLORS.declined} stopOpacity={0.4}/>
-                <stop offset="95%" stopColor={COLORS.declined} stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" vertical={false} />
-            <XAxis 
-              dataKey="dateLabel" 
-              tick={{ fontSize: 10, fill: '#78716c' }}
-              tickLine={false}
-              axisLine={false}
-              interval="preserveStartEnd"
-            />
-            <YAxis 
-              tick={{ fontSize: 10, fill: '#78716c' }}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => value >= 0 ? value : ''}
-              allowDecimals={false}
-            />
-            <Tooltip 
-              content={<ChartTooltipContent />}
-              formatter={(value: number, name: string) => [
-                `${value} ${name === 'confirmed' ? 'confirmações' : name === 'declined' ? 'recusas' : 'respostas'}`,
-                name === 'confirmed' ? 'Confirmados' : name === 'declined' ? 'Recusados' : name
-              ]}
-            />
-            <Area
-              type="monotone"
-              dataKey="confirmed"
-              stroke={COLORS.confirmed}
-              strokeWidth={2}
-              fill="url(#colorConfirmed)"
-              animationDuration={800}
-            />
-            <Area
-              type="monotone"
-              dataKey="declined"
-              stroke={COLORS.declined}
-              strokeWidth={2}
-              fill="url(#colorDeclined)"
-              animationDuration={800}
-            />
-          </AreaChart>
-        </ChartContainer>
-        
-        {/* Summary */}
-        <div className="mt-4 flex items-center justify-between border-t border-amber-100 pt-4">
-          <div className="flex items-center gap-4 text-xs text-stone-500">
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-gradient-to-br from-green-400 to-green-500" />
-              Confirmações
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-gradient-to-br from-rose-400 to-rose-500" />
-              Recusas
-            </span>
-          </div>
-          <p className="text-xs text-stone-400">
-            {peakDay.date && peakDay.max > 0 ? `Maior atividade em ${peakDay.date}` : 'Sem atividade recente'}
+    <div className="glass-card p-6">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h3 className="text-lg font-serif font-bold text-foreground">Respostas ao Longo do Tempo</h3>
+          <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40 mt-1">
+            Histórico de 14 dias • {totalResponses} total
           </p>
         </div>
-      </CardContent>
-    </Card>
+        <div className="flex items-center gap-2 rounded-full bg-primary/5 border border-primary/10 px-4 py-1.5 shadow-sm">
+          <TrendingUp className="h-3.5 w-3.5 text-primary" />
+          <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-primary">
+            Pico: {peakDay.max}
+          </span>
+        </div>
+      </div>
+      <ChartContainer config={chartConfig} className="h-[250px] w-full">
+        <AreaChart data={displayData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <defs>
+            <linearGradient id="colorConfirmed" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={COLORS.confirmed} stopOpacity={0.4} />
+              <stop offset="95%" stopColor={COLORS.confirmed} stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorDeclined" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={COLORS.declined} stopOpacity={0.4} />
+              <stop offset="95%" stopColor={COLORS.declined} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} opacity={0.5} />
+          <XAxis
+            dataKey="dateLabel"
+            tick={{ fontSize: 9, fill: 'oklch(var(--muted-foreground))', fontWeight: 600 }}
+            tickLine={false}
+            axisLine={false}
+            interval="preserveStartEnd"
+          />
+          <YAxis
+            tick={{ fontSize: 9, fill: 'oklch(var(--muted-foreground))', fontWeight: 600 }}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => value >= 0 ? value : ''}
+            allowDecimals={false}
+          />
+          <Tooltip
+            content={<ChartTooltipContent />}
+            formatter={(value: number, name: string) => [
+              `${value} ${name === 'confirmed' ? 'confirmações' : name === 'declined' ? 'recusas' : 'respostas'}`,
+              name === 'confirmed' ? 'Confirmados' : name === 'declined' ? 'Recusados' : name
+            ]}
+          />
+          <Area
+            type="monotone"
+            dataKey="confirmed"
+            stroke={COLORS.confirmed}
+            strokeWidth={2}
+            fill="url(#colorConfirmed)"
+            animationDuration={800}
+          />
+          <Area
+            type="monotone"
+            dataKey="declined"
+            stroke={COLORS.declined}
+            strokeWidth={2}
+            fill="url(#colorDeclined)"
+            animationDuration={800}
+          />
+        </AreaChart>
+      </ChartContainer>
+
+      {/* Summary - Executive Labels */}
+      <div className="mt-8 flex items-center justify-between border-t border-primary/5 pt-6">
+        <div className="flex items-center gap-6 text-[9px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">
+          <span className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-primary" />
+            Presença
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-error" />
+            Recusas
+          </span>
+        </div>
+        <p className="text-[10px] font-serif italic text-muted-foreground/40">
+          {peakDay.date && peakDay.max > 0 ? `Maior volume em ${peakDay.date}` : 'Estável'}
+        </p>
+      </div>
+    </div>
   )
 }

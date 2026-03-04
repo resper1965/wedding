@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/components/auth/SessionProvider'
 import { Heart, LogIn } from 'lucide-react'
+import { BrandLogo } from '@/components/ui-custom/BrandLogo'
 import { Button } from '@/components/ui/button'
 import { getSupabase } from '@/lib/supabase'
 import { publicFetch } from '@/lib/public-fetch'
@@ -68,11 +69,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-stone-50 via-white to-rose-50/30 p-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-rose-100/30 blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-stone-100/50 blur-3xl" />
-      </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 relative overflow-hidden">
+      {/* Glow Effects */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-96 bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-accent/10 blur-3xl pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -81,39 +81,29 @@ export default function LoginPage() {
         className="relative z-10 w-full max-w-md"
       >
         <div className="mb-8 text-center">
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mb-4 flex items-center justify-center gap-3"
-          >
-            {partner1Name ? (
-              <>
-                <span className="text-2xl font-light tracking-wide text-stone-700">{partner1Name}</span>
-                <Heart className="h-5 w-5 text-rose-400" fill="currentColor" />
-                <span className="text-2xl font-light tracking-wide text-stone-700">{partner2Name}</span>
-              </>
-            ) : (
-              <div className="flex items-center gap-3">
-                <div className="h-7 w-20 animate-pulse rounded-md bg-stone-100" />
-                <Heart className="h-5 w-5 text-rose-200" />
-                <div className="h-7 w-20 animate-pulse rounded-md bg-stone-100" />
+          <div className="mb-4 flex flex-col items-center gap-4">
+            <BrandLogo size="lg" link={true} />
+            {partner1Name && (
+              <div className="flex items-center gap-2 text-sm font-serif text-foreground/60 animate-fade-in">
+                <span>{partner1Name}</span>
+                <Heart className="h-3 w-3 text-accent" fill="currentColor" />
+                <span>{partner2Name}</span>
               </div>
             )}
-          </motion.div>
-          <p className="text-sm text-stone-500">Gestão de Convidados</p>
+          </div>
+          <p className="text-xs font-bold uppercase tracking-widest text-foreground/40">Plataforma Segura</p>
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="rounded-2xl border border-stone-200 bg-white/80 p-8 shadow-sm backdrop-blur-sm"
+          className="rounded-[2.5rem] border border-border/50 bg-white/60 p-10 shadow-2xl backdrop-blur-xl"
         >
-          <div className="mb-6 text-center">
-            <h1 className="text-xl font-semibold text-stone-800">Bem-vindo</h1>
-            <p className="mt-2 text-sm text-stone-500">
-              Entre com suas credenciais para acessar o painel
+          <div className="mb-8 text-center">
+            <h1 className="text-2xl font-bold text-foreground">Bem-vindo de volta</h1>
+            <p className="mt-2 text-sm font-medium text-foreground/50">
+              Acesse sua conta para gerenciar seu evento
             </p>
           </div>
 
@@ -127,12 +117,12 @@ export default function LoginPage() {
             variant="outline"
             onClick={handleGoogleLogin}
             disabled={isGoogleLoading || isLoading}
-            className="mb-4 w-full gap-2 border-stone-300 bg-white text-stone-700 hover:bg-stone-50"
+            className="mb-6 w-full h-12 gap-3 border-border bg-white/50 text-foreground font-bold rounded-xl hover:bg-white hover:soft-shadow"
           >
             {isGoogleLoading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-stone-300 border-t-stone-600" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
             ) : (
-              <svg className="h-4 w-4" viewBox="0 0 24 24">
+              <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -153,7 +143,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-stone-700 mb-1">Email</label>
+              <label htmlFor="email" className="block text-xs font-bold text-foreground/40 uppercase tracking-widest mb-2 ml-1">Email</label>
               <input
                 id="email"
                 type="email"
@@ -162,11 +152,11 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
-                className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-stone-800 placeholder-stone-400 focus:border-stone-500 focus:outline-none focus:ring-1 focus:ring-stone-500 transition-colors"
+                className="w-full h-12 rounded-xl border border-border bg-white px-4 text-foreground placeholder-foreground/20 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-medium"
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-stone-700 mb-1">Senha</label>
+              <label htmlFor="password" className="block text-xs font-bold text-foreground/40 uppercase tracking-widest mb-2 ml-1">Senha</label>
               <input
                 id="password"
                 type="password"
@@ -175,18 +165,18 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-stone-800 placeholder-stone-400 focus:border-stone-500 focus:outline-none focus:ring-1 focus:ring-stone-500 transition-colors"
+                className="w-full h-12 rounded-xl border border-border bg-white px-4 text-foreground placeholder-foreground/20 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-medium"
               />
             </div>
             <Button
               type="submit"
               disabled={isLoading || isGoogleLoading}
-              className="w-full bg-stone-800 hover:bg-stone-700"
+              className="w-full h-14 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
             >
               {isLoading ? (
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
-                <><LogIn className="mr-2 h-5 w-5" />Entrar</>
+                <><LogIn className="mr-2 h-5 w-5" />Entrar no Painel</>
               )}
             </Button>
           </form>
@@ -200,7 +190,7 @@ export default function LoginPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8 text-center text-xs text-stone-400"
         >
-          11 de novembro de 2026 • São Paulo
+          &copy; {new Date().getFullYear()} MarryFlow • São Paulo
         </motion.p>
       </motion.div>
     </div>

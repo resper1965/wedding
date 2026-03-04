@@ -1,30 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 import { emailService } from '@/services/email/email-service'
 
 export async function POST(request: NextRequest) {
   try {
     const auth = await verifySupabaseToken(request)
     if (!auth.authorized) return auth.response
-    
-    // Only admins or editors can send invitations
-    if (auth.role !== 'admin' && auth.role !== 'editor') {
-      return NextResponse.json({ success: false, error: 'Acesso negado' }, { status: 403 })
-    }
 
+    // Auth-Tenant RBAC Check
     const body = await request.json()
     const { guestIds, subject, content, weddingId } = body
 
-    if (!weddingId) {
-      return NextResponse.json({ success: false, error: 'ID do casamento é obrigatório' }, { status: 400 })
-    }
+    const access = await verifyTenantAccess(weddingId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
-    let guestQuery = db.from('Guest').select('*').eq('weddingId', weddingId)
+    let guestQuery = db.from('Guest').select('*').eq('weddingId', access.weddingId)
     if (guestIds && guestIds.length > 0) {
       guestQuery = guestQuery.in('id', guestIds)
     }
-    
+
     const { data: guests, error: guestError } = await guestQuery
     if (guestError) throw guestError
 
@@ -32,14 +28,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Nenhum convidado selecionado' }, { status: 404 })
     }
 
-    const { data: wedding } = await db.from('Wedding').select('*').eq('id', weddingId).single()
+    const { data: wedding } = await db.from('Wedding').select('*').eq('id', access.weddingId).single()
 
     const results = { sent: 0, failed: 0, errors: [] as string[] }
 
     for (const guest of guests) {
       try {
         if (guest.email) {
-          // Use high-end email service
           const personalizedContent = (content || '')
             .replace(/\{\{nome\}\}/g, guest.firstName)
             .replace(/\{\{sobrenome\}\}/g, guest.lastName)
@@ -54,7 +49,6 @@ export async function POST(request: NextRequest) {
 
           results.sent++
 
-          // Log the message
           await db.from('MessageLog').insert({
             id: crypto.randomUUID(),
             guestId: guest.id,
@@ -66,7 +60,6 @@ export async function POST(request: NextRequest) {
             createdAt: new Date().toISOString()
           })
 
-          // Update guest status
           await db.from('Guest').update({
             inviteStatus: 'sent',
             inviteSentAt: new Date().toISOString(),
@@ -89,3 +82,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: 'Erro ao processar envios' }, { status: 500 })
   }
 }
+

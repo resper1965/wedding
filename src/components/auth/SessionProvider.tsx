@@ -14,8 +14,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  signIn: async () => {},
-  signOut: async () => {},
+  signIn: async () => { },
+  signOut: async () => { },
   getToken: async () => null,
 })
 
@@ -26,6 +26,8 @@ export function useAuth() {
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<(User & { role?: string; isApproved?: boolean }) | null>(null)
   const [loading, setLoading] = useState(true)
+
+  const SUPER_ADMINS = ['resper@bekaa.eu', 'resper@gmail.com', 'resper@ness.com.br']
 
   useEffect(() => {
     const supabase = getSupabase()
@@ -38,18 +40,18 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             .select('role, is_approved')
             .eq('id', supabaseUser.uid)
             .single()
-          
+
           setUser({
             ...supabaseUser,
-            role: profile?.role || 'viewer',
-            isApproved: profile?.is_approved || false
+            role: SUPER_ADMINS.includes(supabaseUser.email || '') ? 'admin' : (profile?.role || 'viewer'),
+            isApproved: SUPER_ADMINS.includes(supabaseUser.email || '') ? true : (profile?.is_approved || false)
           })
         } catch (error) {
           console.error('Error fetching profile:', error)
           setUser({
             ...supabaseUser,
-            role: 'viewer',
-            isApproved: false
+            role: SUPER_ADMINS.includes(supabaseUser.email || '') ? 'admin' : 'viewer',
+            isApproved: SUPER_ADMINS.includes(supabaseUser.email || '') ? true : false
           })
         }
       } else {

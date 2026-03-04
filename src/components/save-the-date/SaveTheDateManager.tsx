@@ -150,7 +150,7 @@ export function SaveTheDateManager() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/wedding').then(r => r.json()),
+      authFetch('/api/wedding').then(r => r.json()),
       authFetch('/api/guests').then(r => r.json()),
     ]).then(([weddingData, guestsData]) => {
       if (weddingData.success) setWedding(weddingData.data)

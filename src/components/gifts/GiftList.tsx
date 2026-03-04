@@ -28,13 +28,13 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
   const [categories, setCategories] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
+
   // Filters
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  
+
   // Dialog
   const [selectedGift, setSelectedGift] = useState<GiftData | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -141,15 +141,17 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
           <Input
+            id="gift-search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar presente..."
             className="pl-10 border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+            aria-label="Buscar presente pelo nome ou descrição"
           />
         </div>
 
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[160px] border-amber-200 focus:ring-amber-200">
+          <SelectTrigger className="w-[160px] border-amber-200 focus:ring-amber-200" aria-label="Filtrar por status">
             <Filter className="w-4 h-4 mr-2 text-stone-400" />
             <SelectValue placeholder="Status" />
           </SelectTrigger>
@@ -162,7 +164,7 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
         </Select>
 
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-[160px] border-amber-200 focus:ring-amber-200">
+          <SelectTrigger className="w-[160px] border-amber-200 focus:ring-amber-200" aria-label="Filtrar por categoria">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
@@ -179,7 +181,9 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
           variant="outline"
           size="icon"
           onClick={fetchGifts}
+          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && fetchGifts()}
           className="border-amber-200 text-amber-700 hover:bg-amber-50"
+          aria-label="Atualizar lista de presentes"
         >
           <RefreshCw className="w-4 h-4" />
         </Button>

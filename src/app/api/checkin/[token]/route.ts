@@ -1,85 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { validateQRCode } from '@/services/concierge/qr-service'
 import { db } from '@/lib/db'
-import { validateQRCode, QRTokenPayload } from '@/services/concierge/qr-service'
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ token: string }> }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { token: string } }
+) {
   try {
-    const { token } = await params
-    if (!token) return NextResponse.json({ error: 'Token não fornecido' }, { status: 400 })
+    const { token } = params
 
+    if (!token) {
+      return NextResponse.json({ valid: false, error: 'Token não fornecido' }, { status: 400 })
+    }
+
+    // Validate token using qr-service
     const validation = validateQRCode(token)
-    if (!validation.valid) return NextResponse.json({ error: validation.error || 'Token inválido ou expirado' }, { status: 400 })
 
-    const payload = validation.payload as QRTokenPayload
+    if (!validation.valid || !validation.payload) {
+      return NextResponse.json({
+        valid: false,
+        error: validation.error || 'Token inválido ou expirado'
+      }, { status: 401 })
+    }
 
-    const { data: invitation } = await db.from('Invitation')
-      .select('*, guests:Guest(id, firstName, lastName, dietaryRestrictions, specialNeeds)')
-      .eq('id', payload.invitationId).maybeSingle()
+    const payload = validation.payload
 
-    if (!invitation) return NextResponse.json({ error: 'Convite não encontrado' }, { status: 404 })
+    // Fetch invitation and guests from DB to get the most up-to-date status
+    const { data: invitation, error } = await db.from('Invitation')
+      .select('*, guests:Guest(*)')
+      .eq('id', payload.invitationId)
+      .maybeSingle()
 
-    const { data: groupWithTable } = await db.from('Guest')
-      .select('group:GuestGroup(table:Table(name))')
-      .eq('invitationId', payload.invitationId)
-      .not('groupId', 'is', null)
-      .limit(1).maybeSingle()
+    if (error || !invitation) {
+      return NextResponse.json({
+        valid: false,
+        error: 'Convite não encontrado no banco de dados'
+      }, { status: 404 })
+    }
 
-    const tableName = (groupWithTable as any)?.group?.table?.name || payload.tableNumber
-
+    // Return the scan result in the format expected by QRScanner
     return NextResponse.json({
-      valid: true, alreadyCheckedIn: invitation.checkedIn, checkedInAt: invitation.checkedInAt,
+      valid: true,
+      alreadyCheckedIn: invitation.checkedIn,
+      checkedInAt: invitation.checkedInAt,
       data: {
         invitationId: invitation.id,
         familyName: invitation.familyName || payload.familyName,
-        tableNumber: tableName,
-        guests: (invitation.guests || []).map((g: any) => ({ id: g.id, firstName: g.firstName, lastName: g.lastName, fullName: `${g.firstName} ${g.lastName}`, dietaryRestrictions: g.dietaryRestrictions, specialNeeds: g.specialNeeds }))
+        tableNumber: invitation.tableNumber || payload.tableNumber,
+        guests: (invitation.guests || []).map((g: any) => ({
+          id: g.id,
+          firstName: g.firstName,
+          lastName: g.lastName,
+          fullName: `${g.firstName} ${g.lastName}`,
+          dietaryRestrictions: g.dietaryRestrictions,
+          specialNeeds: g.specialNeeds
+        }))
       }
     })
+
   } catch (error) {
-    console.error('QR validation error:', error)
-    return NextResponse.json({ error: 'Erro ao validar QR Code' }, { status: 500 })
-  }
-}
-
-export async function POST(request: NextRequest, { params }: { params: Promise<{ token: string }> }) {
-  try {
-    const { token } = await params
-    const body = await request.json().catch(() => ({}))
-    const { staffId } = body
-    if (!token) return NextResponse.json({ error: 'Token não fornecido' }, { status: 400 })
-
-    const validation = validateQRCode(token)
-    if (!validation.valid) return NextResponse.json({ error: validation.error || 'Token inválido ou expirado' }, { status: 400 })
-
-    const payload = validation.payload as QRTokenPayload
-
-    const { data: invitation } = await db.from('Invitation')
-      .select('*, guests:Guest(id, firstName, lastName)')
-      .eq('id', payload.invitationId).maybeSingle()
-
-    if (!invitation) return NextResponse.json({ error: 'Convite não encontrado' }, { status: 404 })
-
-    if (invitation.checkedIn) {
-      return NextResponse.json({ success: true, alreadyCheckedIn: true, message: `${invitation.familyName || 'Convidado'} já fez check-in`, checkedInAt: invitation.checkedInAt, data: { invitationId: invitation.id, familyName: invitation.familyName || payload.familyName, guests: (invitation.guests || []).map((g: any) => ({ id: g.id, firstName: g.firstName, lastName: g.lastName, fullName: `${g.firstName} ${g.lastName}` })) } })
-    }
-
-    const now = new Date().toISOString()
-    await db.from('Invitation').update({ checkedIn: true, checkedInAt: now, updatedAt: now }).eq('id', payload.invitationId)
-
-    const { data: groupWithTable } = await db.from('Guest')
-      .select('group:GuestGroup(table:Table(name))')
-      .eq('invitationId', payload.invitationId).not('groupId', 'is', null).limit(1).maybeSingle()
-
+    console.error('QR Token validation error:', error)
     return NextResponse.json({
-      success: true, alreadyCheckedIn: false, message: 'Check-in realizado com sucesso!', checkedInAt: now,
-      data: {
-        invitationId: invitation.id, familyName: invitation.familyName || payload.familyName,
-        tableNumber: (groupWithTable as any)?.group?.table?.name || payload.tableNumber,
-        guests: (invitation.guests || []).map((g: any) => ({ id: g.id, firstName: g.firstName, lastName: g.lastName, fullName: `${g.firstName} ${g.lastName}` }))
-      }, staffId
-    })
-  } catch (error) {
-    console.error('QR check-in error:', error)
-    return NextResponse.json({ error: 'Erro ao realizar check-in' }, { status: 500 })
+      valid: false,
+      error: 'Erro interno ao validar QR Code'
+    }, { status: 500 })
   }
 }

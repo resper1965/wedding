@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 /**
  * ============================================================================
  * REMINDERS API - Wedding Guest Platform

@@ -2,9 +2,12 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    const tenantId = request.headers.get('x-tenant-id')
+    if (!tenantId) return NextResponse.json({ success: false, error: 'ID do casamento não fornecido' }, { status: 400 })
+
+    const { data: wedding } = await db.from('Wedding').select('id').eq('id', tenantId).maybeSingle()
     if (!wedding) return NextResponse.json({ success: true, data: [] })
 
     const { data: transports, error } = await db.from('Transport').select('*').eq('weddingId', wedding.id).order('order')
@@ -18,7 +21,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+    const tenantId = request.headers.get('x-tenant-id')
+    if (!tenantId) return NextResponse.json({ success: false, error: 'ID do casamento não fornecido' }, { status: 400 })
+
+    const { data: wedding } = await db.from('Wedding').select('id').eq('id', tenantId).maybeSingle()
     if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
 
     const body = await request.json()

@@ -64,8 +64,8 @@ const CATEGORIES = [
 
 const STATUS_CONFIG = {
   available: { label: 'Disponível', color: 'bg-emerald-100 text-emerald-700' },
-  reserved: { label: 'Reservado', color: 'bg-amber-100 text-amber-700' },
-  purchased: { label: 'Comprado', color: 'bg-stone-100 text-stone-600' },
+  reserved: { label: 'Reservado', color: 'bg-emerald-100 text-emerald-700' },
+  purchased: { label: 'Comprado', color: 'bg-slate-100 text-slate-600' },
 }
 
 const emptyForm = {
@@ -231,15 +231,15 @@ export function GiftManagerEnhanced() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50">
-            <Gift className="h-5 w-5 text-amber-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50">
+            <Gift className="h-5 w-5 text-emerald-600" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-stone-800">Lista de Presentes</h2>
-            <p className="text-sm text-stone-500">{stats.total} presentes cadastrados</p>
+            <h2 className="text-xl font-semibold text-emerald-950">Lista de Presentes</h2>
+            <p className="text-sm font-medium text-teal-900/50">{stats.total} presentes cadastrados</p>
           </div>
         </div>
-        <Button onClick={handleOpenAdd} className="bg-stone-800 hover:bg-stone-700 gap-2">
+        <Button onClick={handleOpenAdd} className="bg-emerald-600 hover:bg-emerald-700 text-white soft-shadow gap-2">
           <Plus className="h-4 w-4" />
           Adicionar
         </Button>
@@ -247,33 +247,33 @@ export function GiftManagerEnhanced() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl border border-stone-100 bg-white p-3 text-center">
+        <div className="rounded-2xl border border-emerald-100 bg-white p-4 text-center soft-shadow">
           <p className="text-2xl font-bold text-emerald-600">{stats.available}</p>
-          <p className="text-xs text-stone-500">Disponíveis</p>
+          <p className="text-xs font-semibold text-teal-900/60 uppercase tracking-wide mt-1">Disponíveis</p>
         </div>
-        <div className="rounded-xl border border-stone-100 bg-white p-3 text-center">
-          <p className="text-2xl font-bold text-amber-600">{stats.reserved}</p>
-          <p className="text-xs text-stone-500">Reservados</p>
+        <div className="rounded-2xl border border-emerald-100 bg-white p-4 text-center soft-shadow">
+          <p className="text-2xl font-bold text-emerald-600">{stats.reserved}</p>
+          <p className="text-xs font-semibold text-teal-900/60 uppercase tracking-wide mt-1">Reservados</p>
         </div>
-        <div className="rounded-xl border border-stone-100 bg-white p-3 text-center">
-          <p className="text-2xl font-bold text-stone-600">{stats.purchased}</p>
-          <p className="text-xs text-stone-500">Comprados</p>
+        <div className="rounded-2xl border border-emerald-100 bg-white p-4 text-center soft-shadow">
+          <p className="text-2xl font-bold text-slate-600">{stats.purchased}</p>
+          <p className="text-xs font-semibold text-teal-900/60 uppercase tracking-wide mt-1">Comprados</p>
         </div>
       </div>
 
       {/* Filters */}
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-400" />
           <Input
             placeholder="Buscar presente..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9"
+            className="pl-9 border-emerald-100"
           />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-40">
+          <SelectTrigger className="w-full sm:w-40 border-emerald-100">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
@@ -282,7 +282,7 @@ export function GiftManagerEnhanced() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-40">
+          <SelectTrigger className="w-full sm:w-40 border-emerald-100">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -297,13 +297,13 @@ export function GiftManagerEnhanced() {
       {/* Gift grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-stone-200 p-12 text-center">
-          <Gift className="mx-auto h-10 w-10 text-stone-300" />
-          <p className="mt-3 text-sm font-medium text-stone-600">Nenhum presente encontrado</p>
-          <Button variant="outline" size="sm" className="mt-4" onClick={handleOpenAdd}>
+        <div className="rounded-2xl border border-dashed border-emerald-200 p-12 text-center bg-white soft-shadow">
+          <Gift className="mx-auto h-10 w-10 text-emerald-200" />
+          <p className="mt-3 text-sm font-medium text-teal-900/50">Nenhum presente encontrado</p>
+          <Button variant="outline" size="sm" className="mt-4 border-emerald-200 text-emerald-700 hover:bg-emerald-50" onClick={handleOpenAdd}>
             <Plus className="mr-2 h-4 w-4" /> Adicionar primeiro presente
           </Button>
         </div>
@@ -318,53 +318,53 @@ export function GiftManagerEnhanced() {
                 layout
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="group relative flex flex-col overflow-hidden rounded-xl border border-stone-100 bg-white shadow-sm transition-shadow hover:shadow-md"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-emerald-50 bg-white soft-shadow hover:soft-shadow-hover transition-all duration-300"
               >
                 {/* Status badge */}
                 <div className="absolute right-3 top-3 z-10">
-                  <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-semibold', statusConf.color)}>
+                  <span className={cn('rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide uppercase', statusConf.color)}>
                     {statusConf.label}
                   </span>
                 </div>
 
                 {/* Image */}
                 {gift.imageUrl ? (
-                  <div className="aspect-[4/3] overflow-hidden bg-stone-50">
+                  <div className="aspect-[4/3] overflow-hidden bg-emerald-50/50">
                     <img
                       src={gift.imageUrl}
                       alt={gift.name}
-                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                 ) : (
-                  <div className="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-stone-50 to-amber-50/30">
-                    <Gift className="h-12 w-12 text-stone-200" />
+                  <div className="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-50/30">
+                    <Gift className="h-12 w-12 text-emerald-200" />
                   </div>
                 )}
 
-                <div className="flex flex-1 flex-col p-4">
+                <div className="flex flex-1 flex-col p-5">
                   {/* Category + Store */}
-                  <div className="mb-2 flex flex-wrap gap-1.5">
+                  <div className="mb-3 flex flex-wrap gap-2">
                     {gift.category && (
-                      <span className="rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-medium text-stone-600">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold tracking-wide uppercase text-slate-600">
                         {gift.category}
                       </span>
                     )}
                     {gift.store && (
-                      <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-medium flex items-center gap-1', store.color)}>
+                      <span className={cn('rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-wide uppercase flex items-center gap-1.5', store.color)}>
                         <span>{store.emoji}</span>
                         {store.label}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="mb-1 font-semibold text-stone-800 leading-tight">{gift.name}</h3>
+                  <h3 className="mb-1.5 font-bold text-emerald-950 leading-tight">{gift.name}</h3>
                   {gift.description && (
-                    <p className="mb-2 line-clamp-2 text-xs text-stone-500">{gift.description}</p>
+                    <p className="mb-3 line-clamp-2 text-xs font-medium text-teal-900/50">{gift.description}</p>
                   )}
 
                   {gift.price && (
-                    <p className="mb-3 text-base font-bold text-stone-700">
+                    <p className="mb-4 text-lg font-bold tracking-tight text-emerald-700">
                       {gift.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </p>
                   )}
@@ -375,24 +375,24 @@ export function GiftManagerEnhanced() {
                         href={gift.externalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 transition-colors hover:bg-emerald-100"
                       >
-                        <ShoppingCart className="h-3.5 w-3.5" />
+                        <ShoppingCart className="h-4 w-4" />
                         Ver na loja
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     )}
                     <button
                       onClick={() => handleOpenEdit(gift)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-stone-200 text-stone-400 transition-colors hover:bg-stone-50 hover:text-stone-600"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-100 text-emerald-400 transition-colors hover:bg-emerald-50 hover:text-emerald-600"
                     >
-                      <Edit className="h-3.5 w-3.5" />
+                      <Edit className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(gift)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-stone-200 text-stone-400 transition-colors hover:bg-red-50 hover:text-red-500"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-100 text-emerald-400 transition-colors hover:bg-red-50 hover:text-red-500"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
@@ -451,7 +451,7 @@ export function GiftManagerEnhanced() {
                       'flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition-all border',
                       form.store === store.id
                         ? `${store.color} border-current`
-                        : 'border-stone-200 text-stone-500 hover:border-stone-300'
+                        : 'border-emerald-100 text-teal-900/50 hover:border-emerald-200 bg-white'
                     )}
                   >
                     <span>{store.emoji}</span>
@@ -525,8 +525,8 @@ export function GiftManagerEnhanced() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={isSaving} className="bg-stone-800 hover:bg-stone-700">
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">Cancelar</Button>
+            <Button onClick={handleSave} disabled={isSaving} className="bg-emerald-600 hover:bg-emerald-700 text-white soft-shadow">
               {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               {editingGift ? 'Salvar' : 'Adicionar'}
             </Button>

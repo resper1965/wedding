@@ -56,7 +56,7 @@ export interface ProcessedMessage {
 // SYSTEM PROMPT - LUXURY CONCIERGE PERSONALITY
 // ============================================================================
 
-const LUXURY_CONCIERGE_SYSTEM_PROMPT = `Você é o Concierge Oficial do Casamento de Louise & Nicolas. 
+const LUXURY_CONCIERGE_SYSTEM_PROMPT = `Você é o Concierge Oficial do Casamento. 
 
 ## Sua Personalidade
 - Elegante e prestativo, jamais robótico
@@ -66,18 +66,19 @@ const LUXURY_CONCIERGE_SYSTEM_PROMPT = `Você é o Concierge Oficial do Casament
 - Proativo em antecipar perguntas e oferecer informações úteis
 
 ## Seu Papel
-Você é a ponte entre os noivos e seus queridos convidados. Cada mensagem deve refletir:
-- O amor e a alegria que Louise & Nicolas sentem por compartilhar esse momento
-- A importância de cada convidado na história do casal
+Você é a ponte entre as pessoas que vão se casar e seus queridos convidados. Cada mensagem deve refletir:
+- O amor e a alegria que o casal sente por compartilhar esse momento
+- A importância de cada convidado na história deles
 - O cuidado em tornar essa experiência memorável e sem fricção
 
-## Regras de Comunicação
+## Regras de Comunicação e Inclusão (MUITO IMPORTANTE)
 1. NUNCA use linguagem robótica ou genérica ("Obrigado pela sua mensagem")
 2. SEMPRE use o nome do convidado quando conhecido
 3. Seja conciso mas caloroso - mensagens breves e elegantes
 4. Use emojis com moderação e elegância: 💍 ✨ 🥂 🌸
 5. Antecipe necessidades: se confirmou presença, pergunte sobre restrições alimentares
 6. Celebre cada confirmação com genuíno entusiasmo
+7. GÊNERO NEUTRO E INCLUSIVO: Evite assumir o gênero do casal ("noivos", "noivo e noiva"). Refira-se a eles como "o casal", "nossos queridos", ou simplesmente pelos seus nomes. Trate os casamentos de forma universal, respeitando qualquer configuração de gênero.
 
 ## Funções Disponíveis
 Você pode executar ações diretamente através de function calling:
@@ -97,7 +98,7 @@ Você pode executar ações diretamente através de function calling:
 {{CONVERSATION_HISTORY}}
 
 ---
-Responda sempre em português brasileiro, com elegância e calor humano. Você não é um robô - é o concierge de um dos dias mais especiais na vida de Louise & Nicolas.`
+Responda sempre em português brasileiro, com elegância e calor humano. Você não é um robô - é o concierge de um dos dias mais especiais na vida do casal e de seus convidados.`
 
 // ============================================================================
 // AI CONCIERGE SERVICE
@@ -105,7 +106,7 @@ Responda sempre em português brasileiro, com elegância e calor humano. Você n
 
 export class AIConcierge {
   private zai: Awaited<ReturnType<typeof ZAI.create>> | null = null
-  
+
   /**
    * Initialize the AI SDK instance
    */
@@ -114,7 +115,7 @@ export class AIConcierge {
       this.zai = await ZAI.create()
     }
   }
-  
+
   /**
    * Build the wedding context for RAG injection
    */
@@ -133,7 +134,7 @@ export class AIConcierge {
           hour: '2-digit',
           minute: '2-digit'
         })
-        
+
         return `📍 **${e.name}**
    📅 ${formattedDate} às ${formattedTime}
    ${e.venue ? `🏛️ Local: ${e.venue}` : ''}
@@ -141,7 +142,7 @@ export class AIConcierge {
    ${e.dressCode ? `👔 Dress Code: ${e.dressCode}` : ''}`
       })
       .join('\n\n')
-    
+
     const weddingDate = new Date(wedding.weddingDate)
     const formattedWeddingDate = weddingDate.toLocaleDateString('pt-BR', {
       weekday: 'long',
@@ -149,7 +150,7 @@ export class AIConcierge {
       month: 'long',
       year: 'numeric'
     })
-    
+
     return `💒 **Casamento de ${wedding.partner1Name} & ${wedding.partner2Name}**
 
 📅 Data: ${formattedWeddingDate}
@@ -161,7 +162,7 @@ ${eventDetails}
 
 ${wedding.conciergeContext ? `\n**Informações Adicionais:**\n${wedding.conciergeContext}` : ''}`
   }
-  
+
   /**
    * Build guest context for personalized responses
    */
@@ -169,12 +170,12 @@ ${wedding.conciergeContext ? `\n**Informações Adicionais:**\n${wedding.concier
     if (!invitation) {
       return 'Convidado não identificado - aguardando identificação pelo número de WhatsApp.'
     }
-    
+
     const guestList = guests.map((g: any) => {
       const status = g.inviteStatus === 'responded' ? '✅' : '⏳'
       return `${status} ${g.firstName} ${g.lastName}${g.dietaryRestrictions ? ` (Restrições: ${g.dietaryRestrictions})` : ''}`
     }).join('\n')
-    
+
     return `📱 Contato Principal: ${invitation.primaryContactName || 'Não identificado'}
 🏷️ Família: ${invitation.familyName || 'Individual'}
 📱 WhatsApp: ${invitation.primaryPhone}
@@ -185,7 +186,7 @@ ${guestList}
 **Status do Fluxo:** ${invitation.flowStatus}
 ${invitation.conversationSummary ? `\n**Resumo da Conversa:** ${invitation.conversationSummary}` : ''}`
   }
-  
+
   /**
    * Format conversation history for context
    */
@@ -193,13 +194,13 @@ ${invitation.conversationSummary ? `\n**Resumo da Conversa:** ${invitation.conve
     if (history.length === 0) {
       return 'Nenhuma mensagem anterior.'
     }
-    
+
     return history
       .slice(-10) // Keep last 10 messages for context
       .map(m => `${m.role === 'user' ? '👤 Convidado' : '🎩 Concierge'}: ${m.content}`)
       .join('\n\n')
   }
-  
+
   /**
    * Process an incoming message and generate AI response
    * Accepts either (content, context) or (wedding, invitation, guests, history, content)
@@ -236,48 +237,56 @@ ${invitation.conversationSummary ? `\n**Resumo da Conversa:** ${invitation.conve
       history = conversationHistory || []
       userMessage = userMessageArg || ''
     }
-    
+
     // Build context
     const weddingContext = this.buildWeddingContext(wedding)
     const guestContext = this.buildGuestContext(invitation, guestList)
     const historyContext = this.formatConversationHistory(history)
-    
+
     // Build system prompt with injected context
     const systemPrompt = LUXURY_CONCIERGE_SYSTEM_PROMPT
       .replace('{{WEDDING_CONTEXT}}', weddingContext)
       .replace('{{GUEST_CONTEXT}}', guestContext)
       .replace('{{CONVERSATION_HISTORY}}', historyContext)
-    
+
+    // "Invisible Experience" - Detect if first interaction
+    const isFirstInteraction = history.length === 0
+    let finalUserMessage = userMessage
+
+    if (isFirstInteraction) {
+      finalUserMessage = `[SISTEMA: Este é o primeiro contato desse convidado. Apresente-se elegantemente como o concierge de ${wedding.partner1Name} & ${wedding.partner2Name} e pergunte se pode ajudar com informações do casamento ou confirmação de presença. O UUID da mensagem do usuário é: "${userMessage}"]`
+    }
+
     // Prepare messages for completion
     const messages = [
       { role: 'assistant' as const, content: systemPrompt },
-      { role: 'user' as const, content: userMessage }
+      { role: 'user' as const, content: finalUserMessage }
     ]
-    
+
     // Get AI completion
     const completion = await this.zai!.chat.completions.create({
       messages,
       thinking: { type: 'disabled' }
     })
-    
+
     const response = completion.choices[0]?.message?.content || 'Desculpe, não consegui processar sua mensagem. Pode tentar novamente?'
-    
+
     // Detect intent (simplified - in production, use function calling)
     const intent = this.detectIntent(userMessage, response)
-    
+
     return {
       response,
       functionCalls: [], // Will be populated by function calling integration
       intent
     }
   }
-  
+
   /**
    * Detect user intent from message
    */
   private detectIntent(userMessage: string, _response: string): string {
     const lowerMessage = userMessage.toLowerCase()
-    
+
     if (lowerMessage.includes('confirm') || lowerMessage.includes('vou') || lowerMessage.includes('vamos') || lowerMessage.includes('presença')) {
       return 'confirm'
     }
@@ -296,7 +305,7 @@ ${invitation.conversationSummary ? `\n**Resumo da Conversa:** ${invitation.conve
     if (lowerMessage.includes('qr') || lowerMessage.includes('check-in') || lowerMessage.includes('checkin')) {
       return 'qrcode'
     }
-    
+
     return 'general'
   }
 }

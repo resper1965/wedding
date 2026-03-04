@@ -1,17 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 
 export async function GET(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const searchParams = request.nextUrl.searchParams
     const status = searchParams.get('status')
     const category = searchParams.get('category')
     const search = searchParams.get('search')
 
-    let query = db.from('Gift').select('*').eq('weddingId', wedding.id)
+    let query = db.from('Gift').select('*').eq('weddingId', access.weddingId)
     if (status) query = query.eq('status', status)
     if (category) query = query.eq('category', category)
     if (search) query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`)
@@ -30,15 +34,17 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const body = await request.json()
     const { name, description, imageUrl, price, currency, externalUrl, store, priority, category } = body
 
     const { data: gift, error } = await db.from('Gift').insert({
       id: crypto.randomUUID(),
-      weddingId: wedding.id,
+      weddingId: access.weddingId,
       name,
       description: description || null,
       imageUrl: imageUrl || null,

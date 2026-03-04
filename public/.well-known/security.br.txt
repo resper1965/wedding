@@ -1,0 +1,6 @@
+Contato: mailto:security@marryflow.com
+Expiração: 2027-03-04T12:00:00.000Z
+Idiomas-Preferidos: pt-br, en
+Canônico: https://marryflow.com/.well-known/security.br.txt
+Política: https://marryflow.com/privacy
+# Este arquivo segue o padrão RFC 9116 para divulgação de vulnerabilidades.

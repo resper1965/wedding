@@ -1,42 +1,39 @@
-# PLAN: Repositorio Hygienic Cleanup & Enterprise Documentation
+# 🎼 Security Alignment Plan: OWASP & Transparency
 
-**Orquestração de Agentes Envolvidos:**
-- `explorer-agent` (Mapeamento do Repositório)
-- `devops-engineer` (Limpeza de Dependências e Build)
-- `documentation-writer` (Produção dos Documentos)
-- `security-auditor` & `test-engineer` (Validação Final)
+This plan details the orchestration of security-auditor, frontend-specialist, and devops-engineer to bring MarryFlow into alignment with OWASP Top 10, modern disclosure standards, and a "TrustCenter" experience.
+
+## 🔴 User Review Required
+> [!IMPORTANT]
+> This plan introduces a public-facing Security TrustCenter and a standardized vulnerability disclosure file (`security.txt`). These are critical for professional transparency.
+
+## Proposed Changes
+
+### 🛡️ Core Security (OWASP Top 10 Alignment) [@security-auditor]
+- **Broken Access Control**: Audit all API routes in `src/app/api` to ensure `verifySupabaseToken` and `verifyTenantAccess` are strictly enforced. [@security-auditor]
+- **Cryptographic Failures**: Ensure HSTS is strictly enforced with `includeSubDomains` and `preload` in `next.config.ts`. [@security-auditor]
+- **Injection (XSS)**: Implement a custom sanitization hook for user-generated content (GUEST names, notes) using `dompurify`. [@frontend-specialist]
+
+### 📄 Transparency & Disclosure [@devops-engineer]
+- **[NEW] [security.txt](file:///home/wedding/public/.well-known/security.txt)**: Standardized RFC 9116 file for vulnerability reporting.
+- **[NEW] [security.br.txt](file:///home/wedding/public/.well-known/security.br.txt)**: Portuguese version of the security disclosure policy for Brazilian compliance.
+
+### ✨ TrustCenter UI/UX [@frontend-specialist]
+- **[NEW] [trustcenter/page.tsx](file:///home/wedding/src/app/trustcenter/page.tsx)**: A premium "Executive Wellness" page explaining:
+  - Data Residency (Supabase/Firebase)
+  - Encryption Standards (AES-256)
+  - Compliance (ISO 27001/27701)
+  - Audit Trail & Transparency
 
 ---
 
-## Phase 1: Codebase Hygiene & Cleanup
-*Objetivo: Escanear todas as sobras do ciclo MVP e reduzir o peso do repo.*
+## Verification Plan
 
-1. **Varredura de Arquivos Órfãos:**
-   - Buscar e excluir componentes que não estão sendo instanciados ou arquivos `.bak`, `.old`.
-   - Limpar rastros de imagens ou SVGs inutilizados (pasta `/public`).
-2. **Higiene de Dependências:**
-   - Executar análise estática para parear o `package.json` com o uso real no código, expurgando pacotes mortos.
-3. **Limpeza de Terminal/Console:**
-   - Remover resíduos de `console.log()` focados puramente em debug local.
-   - Apagar lixo residual de configurações velhas.
+### Automated Checks
+- **OWASP Scan**: Run `.agent/skills/vulnerability-scanner/scripts/security_scan.py .`
+- **Lint & Types**: Run `.agent/skills/lint-and-validate/scripts/lint_runner.py .`
+- **Header Audit**: Verify HSTS and Permissions-Policy via `verify_ssdlc.py`.
 
-## Phase 2: Enterprise-Grade Documentation
-*Objetivo: Subir a régua da documentação do sistema a um padrão de adoção Open-Source/Enterprise.*
-
-1. **`README.md` (Vitrine Global):**
-   - Introduzir Shields (Badges de Build, Licença, etc).
-   - Diagrama alto-nível da Arquitetura e Tech Stack (Next.js, Supabase, Cloud Run).
-   - Quickstart detalhado p/ Desenvolvedores (Variáveis de Ambiente, Node.js version).
-2. **`docs/ARCHITECTURE.md`:**
-   - Detalhamento de como o Multi-Tenancy opera dentro do NextJS App Router;
-   - Separação de competências entre o Vercel Frontend e a API de WhatsApp (Python/Go - Cloud Run).
-3. **`docs/API_REFERENCE.md`:**
-   - Documentar os endpoints REST (/api/rsvp, /api/users, etc) para integração de sistemas terceiros ou apps mobile futuros.
-4. **`docs/DEVSECOPS.md`:**
-   - Atestar sobre as diretrizes de CI/CD que foram integradas recentemente, explicitando o Fluxo de Pentest, CSP, Headers, e Hooks de Segurança (Husky).
-
-## Phase 3: Verification & Auditing
-1. Validar integridade após o apagão rodando `npm run build`;
-2. Executar `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .`;
-3. Executar `python .agent/skills/lint-and-validate/scripts/lint_runner.py .`;
-4. Emitir `Orchestration Report` completo na tela.
+### Manual Verification
+- Access `/.well-known/security.txt` and verify RFC 9116 compliance.
+- Review the TrustCenter UI for "Executive Wellness" aesthetic alignment.
+- Verify that non-authenticated users cannot access guest data via direct API calls.

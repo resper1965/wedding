@@ -1,64 +1,62 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
 import { LucideIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface StatCardProps {
   title: string
-  value: number | string
+  value: string | number
   subtitle?: string
   icon?: LucideIcon
-  variant?: 'default' | 'success' | 'warning' | 'muted'
+  variant?: 'primary' | 'success' | 'warning' | 'muted'
   delay?: number
 }
 
-// Indie style color variants
-const variants = {
-  default: 'bg-gradient-to-br from-amber-50 to-orange-50/50 border-amber-200/50',
-  success: 'bg-gradient-to-br from-emerald-50 to-teal-50/50 border-emerald-200/50',
-  warning: 'bg-gradient-to-br from-rose-50 to-orange-50/50 border-rose-200/50',
-  muted: 'bg-gradient-to-br from-stone-50 to-amber-50/30 border-stone-200/50'
-}
-
 const iconVariants = {
-  default: 'text-amber-500',
-  success: 'text-emerald-500',
-  warning: 'text-rose-500',
-  muted: 'text-stone-400'
+  primary: "text-primary",
+  success: "text-primary",
+  warning: "text-warning",
+  muted: "text-muted-foreground/40"
 }
 
 const bgVariants = {
-  default: 'bg-gradient-to-br from-amber-100 to-orange-100',
-  success: 'bg-gradient-to-br from-emerald-100 to-teal-100',
-  warning: 'bg-gradient-to-br from-rose-100 to-orange-100',
-  muted: 'bg-gradient-to-br from-stone-100 to-amber-50'
+  primary: "bg-primary/5 shadow-inner",
+  success: "bg-primary/10 shadow-inner",
+  warning: "bg-warning/10 shadow-inner",
+  muted: "bg-primary/[0.02] shadow-inner"
 }
 
-export function StatCard({ title, value, subtitle, icon: Icon, variant = 'default', delay = 0 }: StatCardProps) {
+export function StatCard({ title, value, subtitle, icon: Icon, variant = 'primary', delay = 0 }: StatCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
-      className={cn(
-        'rounded-2xl border p-5 shadow-sm transition-all hover:shadow-md',
-        variants[variant]
-      )}
+      whileHover={{ y: -2 }}
+      className="magnetic-hover"
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm font-medium text-stone-500">{title}</p>
-          <p className="mt-1 text-3xl font-semibold text-stone-800">{value}</p>
-          {subtitle && (
-            <p className="mt-1 text-xs text-stone-400">{subtitle}</p>
-          )}
-        </div>
-        {Icon && (
-          <div className={cn('rounded-xl p-2.5 shadow-sm', bgVariants[variant])}>
-            <Icon className={cn('h-5 w-5', iconVariants[variant])} />
+      <div className="glass-card overflow-hidden group transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]">
+        <div className="p-6">
+          <div className="flex items-center gap-5">
+            {Icon && (
+              <div className={cn(
+                "h-14 w-14 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3",
+                bgVariants[variant]
+              )}>
+                <Icon className={cn("h-6 w-6", iconVariants[variant])} />
+              </div>
+            )}
+            <div>
+              <p className="text-[10px] font-accent font-bold uppercase tracking-[0.2em] text-muted-foreground/30">{title}</p>
+              <p className="text-3xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">{value}</p>
+              {subtitle && (
+                <p className="mt-1 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/20 italic">{subtitle}</p>
+              )}
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </motion.div>
   )

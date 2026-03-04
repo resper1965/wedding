@@ -3,29 +3,41 @@
 import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, Heart, Info } from 'lucide-react'
+import { Loader2, Heart, Bot } from 'lucide-react'
 import { authFetch } from '@/lib/auth-fetch'
 import { useAuth } from '@/components/auth/SessionProvider'
 
-// Components
-import { Navigation, PageTransition, SidebarNav, BottomNav } from '@/components/ui-custom/Navigation'
-import { WeddingHero } from '@/components/dashboard/WeddingHero'
-import { StatsOverview } from '@/components/dashboard/StatsOverview'
-import { RecentActivity } from '@/components/dashboard/RecentActivity'
-import { GuestManager } from '@/components/guests/GuestManager'
-import { MessageCenter } from '@/components/messages/MessageCenter'
-import { AppFooter } from '@/components/layout/AppFooter'
-import { UserMenu } from '@/components/auth/UserMenu'
-import { SettingsManager } from '@/components/settings/SettingsManager'
-import { AnalyticsDashboard } from '@/components/analytics/AnalyticsDashboard'
-import { SeatingPlanner } from '@/components/seating/SeatingPlanner'
-import { BudgetManager } from '@/components/budget/BudgetManager'
-import { VendorManager } from '@/components/vendors/VendorManager'
-import { ChecklistManager } from '@/components/checklist/ChecklistManager'
-import { UserManager } from '@/components/users/UserManager'
-import { SaveTheDateManager } from '@/components/save-the-date/SaveTheDateManager'
-import { GiftManagerEnhanced } from '@/components/gifts/GiftManagerEnhanced'
-import { AIAgentPanel } from '@/components/ai-agent/AIAgentPanel'
+import dynamic from 'next/dynamic'
+
+// Components - High Performance Dynamic Loading
+const Navigation = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.Navigation), { ssr: false })
+const SidebarNav = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.SidebarNav), { ssr: false })
+const BottomNav = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.BottomNav), { ssr: false })
+const PageTransition = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.PageTransition), { ssr: false })
+
+const WeddingHero = dynamic(() => import('@/components/dashboard/WeddingHero').then(mod => mod.WeddingHero), { ssr: true })
+const StatsOverview = dynamic(() => import('@/components/dashboard/StatsOverview').then(mod => mod.StatsOverview), { ssr: true })
+const RecentActivity = dynamic(() => import('@/components/dashboard/RecentActivity').then(mod => mod.RecentActivity), { ssr: true })
+
+const GuestManager = dynamic(() => import('@/components/guests/GuestManager').then(mod => mod.GuestManager), {
+  ssr: false,
+  loading: () => <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary/20" /></div>
+})
+
+const MessageCenter = dynamic(() => import('@/components/messages/MessageCenter').then(mod => mod.MessageCenter), { ssr: false })
+const AppFooter = dynamic(() => import('@/components/layout/AppFooter').then(mod => mod.AppFooter), { ssr: true })
+const UserMenu = dynamic(() => import('@/components/auth/UserMenu').then(mod => mod.UserMenu), { ssr: false })
+const SettingsManager = dynamic(() => import('@/components/settings/SettingsManager').then(mod => mod.SettingsManager), { ssr: false })
+const AnalyticsDashboard = dynamic(() => import('@/components/analytics/AnalyticsDashboard').then(mod => mod.AnalyticsDashboard), { ssr: false })
+const SeatingPlanner = dynamic(() => import('@/components/seating/SeatingPlanner').then(mod => mod.SeatingPlanner), { ssr: false })
+const BudgetManager = dynamic(() => import('@/components/budget/BudgetManager').then(mod => mod.BudgetManager), { ssr: false })
+const VendorManager = dynamic(() => import('@/components/vendors/VendorManager').then(mod => mod.VendorManager), { ssr: false })
+const ChecklistManager = dynamic(() => import('@/components/checklist/ChecklistManager').then(mod => mod.ChecklistManager), { ssr: false })
+const UserManager = dynamic(() => import('@/components/users/UserManager').then(mod => mod.UserManager), { ssr: false })
+const SaveTheDateManager = dynamic(() => import('@/components/save-the-date/SaveTheDateManager').then(mod => mod.SaveTheDateManager), { ssr: false })
+const GiftManagerEnhanced = dynamic(() => import('@/components/gifts/GiftManagerEnhanced').then(mod => mod.GiftManagerEnhanced), { ssr: false })
+const AIAgentPanel = dynamic(() => import('@/components/ai-agent/AIAgentPanel').then(mod => mod.AIAgentPanel), { ssr: false })
+const InteractivityDashboard = dynamic(() => import('@/components/dashboard/InteractivityDashboard').then(mod => mod.InteractivityDashboard), { ssr: false })
 import Link from 'next/link'
 
 // Types
@@ -73,7 +85,7 @@ interface Group {
   _count?: { guests: number }
 }
 
-export function WeddingGuestPlatform() {
+export function MarryflowPlatform() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const activeTab = searchParams.get('tab') || 'dashboard'
@@ -96,7 +108,7 @@ export function WeddingGuestPlatform() {
     try {
       const response = await authFetch('/api/dashboard/stats')
       const data = await response.json()
-      
+
       if (data.success) {
         setDashboardData(data.data)
       }
@@ -110,7 +122,7 @@ export function WeddingGuestPlatform() {
     try {
       const response = await authFetch('/api/guests')
       const data = await response.json()
-      
+
       if (data.success) {
         setGuests(data.data)
       }
@@ -124,7 +136,7 @@ export function WeddingGuestPlatform() {
     try {
       const response = await authFetch('/api/groups')
       const data = await response.json()
-      
+
       if (data.success) {
         setGroups(data.data)
       }
@@ -146,16 +158,16 @@ export function WeddingGuestPlatform() {
 
     const initialize = async () => {
       setIsLoading(true)
-      
+
       await Promise.all([
         fetchDashboardData(),
         fetchGuests(),
         fetchGroups()
       ])
-      
+
       setIsLoading(false)
     }
-    
+
     initialize()
   }, [user, fetchDashboardData, fetchGuests, fetchGroups])
 
@@ -170,14 +182,14 @@ export function WeddingGuestPlatform() {
   // Loading state (auth or data)
   if (authLoading || isLoading || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-stone-50">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-stone-400" />
-          <p className="mt-4 text-sm text-stone-500">Carregando...</p>
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-primary mb-4 mx-auto" />
+          <p className="mt-4 text-sm font-medium text-primary/70">Carregando painel...</p>
         </motion.div>
       </div>
     )
@@ -186,20 +198,20 @@ export function WeddingGuestPlatform() {
   // No data state
   if (!dashboardData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-stone-50">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <p className="text-stone-500">Erro ao carregar dados</p>
+          <p className="text-primary/70">Erro ao carregar dados do evento</p>
         </motion.div>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+    <div className="flex min-h-screen bg-[oklch(0.99_0.005_160)] dark:bg-[oklch(0.14_0.02_160)]">
       {/* Sidebar — desktop */}
       <SidebarNav
         activeTab={activeTab}
@@ -213,24 +225,36 @@ export function WeddingGuestPlatform() {
       {/* Right column */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="border-b border-amber-100/50 bg-white/80 backdrop-blur-sm">
-          <div className="px-4 py-4">
+        <header className="sticky top-0 z-30 border-b border-primary/5 bg-background/60 backdrop-blur-xl h-20 flex items-center">
+          <div className="w-full px-8">
             <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="flex items-center gap-2.5 text-lg font-medium">
-                  <span className="bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-transparent">{dashboardData.partner1Name}</span>
-                  <Heart className="h-4 w-5 text-rose-400" fill="currentColor" />
-                  <span className="bg-gradient-to-r from-orange-600 to-amber-700 bg-clip-text text-transparent">{dashboardData.partner2Name}</span>
+
+              {/* Couple Names / Event Info */}
+              <div className="flex items-center gap-6">
+                <div className="hidden lg:flex items-center gap-3">
+                  <span className="text-2xl font-serif font-bold text-foreground">{dashboardData.partner1Name}</span>
+                  <div className="flex flex-col items-center">
+                    <Heart className="h-3 w-3 text-primary animate-pulse" fill="currentColor" />
+                    <div className="h-4 w-px bg-primary/20 mt-1" />
+                  </div>
+                  <span className="text-2xl font-serif font-bold text-foreground">{dashboardData.partner2Name}</span>
                 </div>
-              </Link>
-              <div className="flex items-center gap-3">
+                <div className="h-8 w-px bg-primary/10 hidden lg:block mx-2" />
+                <div className="flex flex-col">
+                  <p className="text-[10px] font-accent font-bold uppercase tracking-[0.2em] text-muted-foreground/40">Celebração de Luxo</p>
+                  <p className="text-xs font-serif font-medium text-primary/60">{dashboardData.daysUntilWedding} dias para o Sim</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
                 <Link
-                  href="/info"
-                  className="flex items-center gap-1.5 rounded-full border border-amber-200/50 px-4 py-2 text-sm text-amber-700 transition-colors hover:bg-amber-50 hover:border-amber-300"
+                  href="?tab=ai-agent"
+                  className="flex items-center gap-2 rounded-2xl border border-primary/10 bg-primary/5 px-6 py-2.5 text-[10px] font-accent font-bold uppercase tracking-widest text-primary transition-all hover:bg-primary/10 hover:border-primary/20 hover:scale-105 active:scale-95 shadow-sm"
                 >
-                  <Info className="h-4 w-4" />
-                  <span className="hidden sm:inline">Informações</span>
+                  <Bot className="h-4 w-4" />
+                  <span className="hidden sm:inline">Falar com Gabi AI</span>
                 </Link>
+                <div className="h-8 w-px bg-primary/10 mx-2" />
                 <UserMenu />
               </div>
             </div>
@@ -344,6 +368,12 @@ export function WeddingGuestPlatform() {
                   <AIAgentPanel />
                 </PageTransition>
               )}
+
+              {activeTab === 'war-room' && (
+                <PageTransition key="war-room">
+                  <InteractivityDashboard />
+                </PageTransition>
+              )}
             </AnimatePresence>
           </div>
         </main>
@@ -363,7 +393,7 @@ export function WeddingGuestPlatform() {
 export default function Page() {
   return (
     <Suspense>
-      <WeddingGuestPlatform />
+      <MarryflowPlatform />
     </Suspense>
   )
 }

@@ -1,15 +1,20 @@
-export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 
 export async function GET(request: NextRequest) {
   try {
-    const tenantId = request.headers.get('x-tenant-id');
-    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized) return auth.response
+
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const [{ data: tables }, { data: unassignedGroups }] = await Promise.all([
-      db.from('Table').select('*, groups:GuestGroup(*, guests:Guest(*, rsvps:Rsvp(id, status)))').eq('weddingId', tenantId).order('name'),
-      db.from('GuestGroup').select('*, guests:Guest(*, rsvps:Rsvp(id, status))').eq('weddingId', tenantId).is('tableId', null).order('name'),
+      db.from('Table').select('*, groups:GuestGroup(*, guests:Guest(*, rsvps:Rsvp(id, status)))').eq('weddingId', access.weddingId).order('name'),
+      db.from('GuestGroup').select('*, guests:Guest(*, rsvps:Rsvp(id, status))').eq('weddingId', access.weddingId).is('tableId', null).order('name'),
     ])
 
     const formatGuests = (guests: any[]) => (guests || []).map((g: any) => ({
@@ -48,21 +53,25 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const tenantId = request.headers.get('x-tenant-id');
-    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized) return auth.response
+
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const body = await request.json()
     const { name, capacity, shape } = body
 
     let tableName = name
     if (!tableName) {
-      const { count } = await db.from('Table').select('*', { count: 'exact', head: true }).eq('weddingId', tenantId)
+      const { count } = await db.from('Table').select('*', { count: 'exact', head: true }).eq('weddingId', access.weddingId)
       tableName = `Mesa ${(count ?? 0) + 1}`
     }
 
     const { data: table, error } = await db.from('Table').insert({
       id: crypto.randomUUID(),
-      weddingId: tenantId,
+      weddingId: access.weddingId,
       name: tableName,
       capacity: capacity || 8,
       shape: shape || 'round',
@@ -80,11 +89,25 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized) return auth.response
+
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
+
     const body = await request.json()
     const { tables } = body as { tables: Array<{ id: string; positionX: number; positionY: number }> }
 
+    // Verify all tables belong to this wedding before updating
+    const tableIds = tables.map(t => t.id)
+    const { data: existingTables } = await db.from('Table').select('id').in('id', tableIds).eq('weddingId', access.weddingId)
+    const allowedIds = new Set(existingTables?.map(t => t.id))
+
     await Promise.all(
-      tables.map(t => db.from('Table').update({ positionX: t.positionX, positionY: t.positionY, updatedAt: new Date().toISOString() }).eq('id', t.id))
+      tables.filter(t => allowedIds.has(t.id)).map(t =>
+        db.from('Table').update({ positionX: t.positionX, positionY: t.positionY, updatedAt: new Date().toISOString() }).eq('id', t.id)
+      )
     )
 
     return NextResponse.json({ success: true })
@@ -93,3 +116,4 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }
+

@@ -12,10 +12,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Não autorizado' }, { status: 401 })
     }
 
-    // Retorna todos os casamentos ONDE o dono é o usuário atual
-    const { data: weddings, error } = await db.from('Wedding')
+    // Return weddings where the user is the owner OR the registered couple email
+    let query = db.from('Wedding')
       .select('*')
-      .eq('owner_id', auth.uid)
+
+    if (auth.email) {
+      query = query.or(`owner_id.eq.${auth.uid},couple_email.ilike.${auth.email}`)
+    } else {
+      query = query.eq('owner_id', auth.uid)
+    }
+
+    const { data: weddings, error } = await query
 
     if (error) throw error
 
@@ -106,7 +113,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { partner1Name, partner2Name, weddingDate, venue, venueAddress, replyByDate, messageFooter } = body
+    const { partner1Name, partner2Name, weddingDate, venue, venueAddress, replyByDate, messageFooter, couple_email } = body
 
     const { data: updated, error } = await db.from('Wedding').update({
       partner1Name,
@@ -116,6 +123,7 @@ export async function PUT(request: NextRequest) {
       venueAddress: venueAddress || null,
       replyByDate: replyByDate ? new Date(replyByDate).toISOString() : null,
       messageFooter: messageFooter || null,
+      couple_email: couple_email !== undefined ? (couple_email ? couple_email.toLowerCase() : null) : undefined,
       updatedAt: new Date().toISOString(),
     })
       .eq('id', tenantId)
@@ -127,5 +135,30 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error('Error updating wedding:', error)
     return NextResponse.json({ success: false, error: 'Erro ao salvar dados' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized || !auth.uid) {
+      return NextResponse.json({ success: false, error: 'Não autorizado' }, { status: 401 })
+    }
+
+    const tenantId = request.headers.get('x-tenant-id')
+    if (!tenantId) {
+      return NextResponse.json({ success: false, error: 'ID do casamento não fornecido' }, { status: 400 })
+    }
+
+    const { error } = await db.from('Wedding')
+      .delete()
+      .eq('id', tenantId)
+      .eq('owner_id', auth.uid)
+
+    if (error) throw error
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting wedding:', error)
+    return NextResponse.json({ success: false, error: 'Erro interno ao excluir casamento' }, { status: 500 })
   }
 }

@@ -85,7 +85,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
 
     try {
       const response = await fetch(`/api/checkin?q=${encodeURIComponent(searchQuery)}`)
-      
+
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Erro na busca')
@@ -132,7 +132,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoFocus={autoFocus}
-          className="border-amber-200/60 bg-white pl-9 pr-9 focus:border-amber-400"
+          className="border-primary/10 bg-white pl-9 pr-9 focus:border-primary/40"
         />
         {query && (
           <Button
@@ -149,18 +149,18 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
       {/* Status */}
       <div className="flex items-center gap-2">
         {isLoading && (
-          <Badge variant="outline" className="gap-1 border-amber-200 text-amber-700">
+          <Badge variant="outline" className="gap-1 border-primary/20 text-primary">
             <Loader2 className="h-3 w-3 animate-spin" />
             Buscando...
           </Badge>
         )}
         {!isLoading && query.length >= 2 && results && (
-          <Badge variant="outline" className="border-stone-200 text-stone-600">
+          <Badge variant="outline" className="border-primary/20 text-primary/60 font-semibold tracking-wide uppercase text-[10px]">
             {totalResults} resultado{totalResults !== 1 ? 's' : ''}
           </Badge>
         )}
         {!isLoading && error && (
-          <Badge variant="outline" className="gap-1 border-red-200 text-red-600">
+          <Badge variant="outline" className="gap-1 border-orange-200 text-orange-600">
             {error}
           </Badge>
         )}
@@ -191,15 +191,14 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
               exit={{ opacity: 0, x: -20 }}
               transition={{ delay: index * 0.03 }}
               onClick={() => onGuestSelect(invitation)}
-              className="mb-2 w-full rounded-xl border border-amber-200/50 bg-white/80 p-4 text-left transition-all hover:border-amber-300 hover:bg-amber-50/50"
+              className="mb-2 w-full rounded-2xl border border-primary/10 bg-white p-5 text-left transition-all hover:bg-primary/5 soft-shadow"
             >
               <div className="flex items-center gap-3">
                 {/* Avatar */}
-                <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
-                  invitation.checkedIn
-                    ? 'bg-emerald-100 text-emerald-600'
-                    : 'bg-gradient-to-br from-amber-100 to-orange-100 text-amber-700'
-                }`}>
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold ${invitation.checkedIn
+                  ? 'bg-primary/10 text-primary'
+                  : 'bg-gradient-to-br from-primary/5 to-primary/5 text-primary/80'
+                  }`}>
                   {invitation.checkedIn ? (
                     <Check className="h-5 w-5" />
                   ) : (
@@ -210,19 +209,19 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
                 {/* Info */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="truncate font-medium text-stone-800">
+                    <p className="truncate font-bold text-stone-800">
                       {invitation.familyName || 'Família'}
                     </p>
                     {invitation.checkedIn && (
-                      <Badge className="bg-emerald-100 text-xs text-emerald-700">
+                      <Badge className="bg-primary/10 text-[10px] font-bold tracking-wide uppercase text-primary border-none">
                         Check-in
                       </Badge>
                     )}
                   </div>
-                  <p className="mt-0.5 text-xs text-stone-500">
+                  <p className="mt-1 text-xs font-medium text-stone-400">
                     {invitation.guests?.length || 0} convidado{(invitation.guests?.length || 0) !== 1 ? 's' : ''}
                     {invitation.checkedIn && invitation.checkedInAt && (
-                      <span className="ml-2 text-emerald-600">
+                      <span className="ml-2 text-primary">
                         às {formatTime(invitation.checkedInAt)}
                       </span>
                     )}
@@ -230,7 +229,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
                 </div>
 
                 {/* Arrow */}
-                <div className="text-stone-300">
+                <div className="text-emerald-300">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -264,15 +263,14 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
               exit={{ opacity: 0, x: -20 }}
               transition={{ delay: (results.invitations?.length || 0 + index) * 0.03 }}
               onClick={() => onGuestSelect(guest)}
-              className="mb-2 w-full rounded-xl border border-amber-200/50 bg-white/80 p-4 text-left transition-all hover:border-amber-300 hover:bg-amber-50/50"
+              className="mb-2 w-full rounded-2xl border border-emerald-100 bg-white p-5 text-left transition-all hover:bg-emerald-50/50 soft-shadow"
             >
               <div className="flex items-center gap-3">
                 {/* Avatar */}
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-medium ${
-                  guest.invitation?.checkedIn
-                    ? 'bg-emerald-100 text-emerald-600'
-                    : 'bg-gradient-to-br from-amber-100 to-orange-100 text-amber-700'
-                }`}>
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-base font-bold ${guest.invitation?.checkedIn
+                  ? 'bg-primary/10 text-primary'
+                  : 'bg-gradient-to-br from-primary/5 to-primary/5 text-primary/80'
+                  }`}>
                   {guest.invitation?.checkedIn ? (
                     <Check className="h-4 w-4" />
                   ) : (
@@ -282,15 +280,14 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
 
                 {/* Info */}
                 <div className="min-w-0 flex-1">
-                  <p className={`truncate font-medium ${
-                    guest.invitation?.checkedIn ? 'text-stone-500' : 'text-stone-800'
-                  }`}>
+                  <p className={`truncate font-bold ${guest.invitation?.checkedIn ? 'text-teal-900/50' : 'text-emerald-950'
+                    }`}>
                     {guest.fullName || `${guest.firstName} ${guest.lastName}`}
                   </p>
-                  <p className="mt-0.5 text-xs text-stone-500">
+                  <p className="mt-1 text-xs font-medium text-stone-400">
                     {guest.invitation?.familyName || 'Sem grupo'}
                     {guest.invitation?.checkedIn && guest.invitation.checkedInAt && (
-                      <span className="ml-2 flex items-center text-emerald-600">
+                      <span className="ml-3 flex items-center text-primary">
                         <Clock className="mr-1 h-3 w-3" />
                         {formatTime(guest.invitation.checkedInAt)}
                       </span>
@@ -299,7 +296,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
                 </div>
 
                 {/* Arrow */}
-                <div className="text-stone-300">
+                <div className="text-emerald-300">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

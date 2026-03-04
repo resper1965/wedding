@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
+import { logAudit } from '@/lib/audit'
 
 export async function GET(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized) return auth.response
+
+    // Auth-Tenant RBAC Check (Owner vs Couple)
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const searchParams = request.nextUrl.searchParams
     const status = searchParams.get('status')
@@ -14,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     let query = db.from('Guest')
       .select('*, group:GuestGroup(id, name), rsvps:Rsvp(*, event:Event(id, name))')
-      .eq('weddingId', wedding.id)
+      .eq('weddingId', access.weddingId)
 
     if (status) query = query.eq('inviteStatus', status)
     if (category) query = query.eq('category', category)
@@ -23,6 +31,16 @@ export async function GET(request: NextRequest) {
 
     const { data: guests, error } = await query.order('firstName').order('lastName')
     if (error) throw error
+
+    // ISO 27001: Log PII access
+    await logAudit(
+      'ACCESS_LIST',
+      auth.uid,
+      auth.email,
+      'GUEST',
+      access.weddingId,
+      { filter: { status, category, groupId, search }, count: guests?.length }
+    )
 
     return NextResponse.json({ success: true, data: guests })
   } catch (error) {
@@ -33,8 +51,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { data: wedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
-    if (!wedding) return NextResponse.json({ success: false, error: 'Nenhum casamento encontrado' }, { status: 404 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized) return auth.response
+
+    // Auth-Tenant RBAC Check
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const body = await request.json()
     const { firstName, lastName, email, phone, category, relationship, dietaryRestrictions, specialNeeds, notes, groupId } = body
@@ -42,7 +65,7 @@ export async function POST(request: NextRequest) {
     const guestId = crypto.randomUUID()
     const { data: guest, error: guestError } = await db.from('Guest').insert({
       id: guestId,
-      weddingId: wedding.id,
+      weddingId: access.weddingId,
       firstName,
       lastName,
       email: email || null,
@@ -63,7 +86,17 @@ export async function POST(request: NextRequest) {
 
     if (guestError) throw guestError
 
-    const { data: events } = await db.from('Event').select('id').eq('weddingId', wedding.id)
+    // ISO 27001: Log PII Creation
+    await logAudit(
+      'CREATE',
+      auth.uid,
+      auth.email,
+      'GUEST',
+      guestId,
+      { weddingId: access.weddingId }
+    )
+
+    const { data: events } = await db.from('Event').select('id').eq('weddingId', access.weddingId)
     if (events && events.length > 0) {
       await db.from('Rsvp').insert(
         events.map(ev => ({

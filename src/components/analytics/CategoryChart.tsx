@@ -17,31 +17,31 @@ interface CategoryChartProps {
   data: CategoryData[]
 }
 
-// Indie warm color palette
+// Semantic category color palette linked to design tokens where possible
 const CATEGORY_COLORS = [
-  '#d97706', // amber-600
-  '#ea580c', // orange-600
-  '#dc2626', // red-600
-  '#16a34a', // green-600
-  '#0891b2', // cyan-600
-  '#7c3aed', // violet-600
-  '#db2777', // pink-600
-  '#65a30d', // lime-600
+  'oklch(var(--primary))',
+  'oklch(var(--accent))',
+  'oklch(0.6 0.1 160)', // Mid Green
+  'oklch(0.4 0.05 160)', // Darker Green
+  'oklch(0.8 0.05 200)', // Soft Blue
+  'oklch(0.7 0.1 300)', // Soft Purple
+  'oklch(0.9 0.02 160)', // Very Light Green
+  'oklch(0.5 0.02 160)', // Muted Greyish Green
 ]
 
 export function CategoryChart({ data }: CategoryChartProps) {
   const chartConfig: ChartConfig = useMemo(() => ({
     total: {
       label: 'Total',
-      color: CATEGORY_COLORS[0]
+      color: 'hsl(var(--primary))'
     },
     confirmed: {
       label: 'Confirmados',
-      color: '#22c55e'
+      color: 'hsl(var(--success))'
     },
     declined: {
       label: 'Recusados',
-      color: '#f43f5e'
+      color: 'hsl(var(--error))'
     }
   }), [])
 
@@ -49,13 +49,13 @@ export function CategoryChart({ data }: CategoryChartProps) {
     return data.slice(0, 8).map((item, index) => ({
       ...item,
       fill: CATEGORY_COLORS[index % CATEGORY_COLORS.length],
-      responseRate: item.total > 0 
+      responseRate: item.total > 0
         ? Math.round(((item.confirmed + item.declined) / item.total) * 100)
         : 0
     }))
   }, [data])
 
-  const totalGuests = useMemo(() => 
+  const totalGuests = useMemo(() =>
     data.reduce((sum, d) => sum + d.total, 0),
     [data]
   )
@@ -66,100 +66,84 @@ export function CategoryChart({ data }: CategoryChartProps) {
   }, [data])
 
   return (
-    <Card className="border-amber-200/40 bg-gradient-to-br from-white to-amber-50/30">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-lg font-medium text-stone-700">
-              Convidados por Categoria
-            </CardTitle>
-            <CardDescription className="text-sm text-stone-500">
-              {data.length} categorias • {totalGuests} convidados
-            </CardDescription>
-          </div>
-          {topCategory && (
-            <div className="flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1.5">
-              <Users className="h-4 w-4 text-orange-600" />
-              <span className="text-sm font-medium text-orange-700">
-                {topCategory.category}
-              </span>
-            </div>
-          )}
+    <div className="glass-card p-6">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h3 className="text-lg font-serif font-bold text-foreground">Resumo por Categoria</h3>
+          <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40 mt-1">
+            Segmentação de {data.length} grupos • {totalGuests} total
+          </p>
         </div>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[250px] w-full">
-          <BarChart 
-            data={processedData} 
-            layout="vertical"
-            margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+        {topCategory && (
+          <div className="flex items-center gap-2 rounded-full bg-primary/5 border border-primary/10 px-4 py-1.5 shadow-sm">
+            <Users className="h-3.5 w-3.5 text-primary" />
+            <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-primary">
+              Top: {topCategory.category}
+            </span>
+          </div>
+        )}
+      </div>
+      <ChartContainer config={chartConfig} className="h-[250px] w-full">
+        <BarChart
+          data={processedData}
+          layout="vertical"
+          margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={true} vertical={false} opacity={0.5} />
+          <XAxis
+            type="number"
+            tick={{ fontSize: 9, fill: 'oklch(var(--muted-foreground))', fontWeight: 600 }}
+            tickLine={false}
+            axisLine={false}
+            allowDecimals={false}
+          />
+          <YAxis
+            type="category"
+            dataKey="category"
+            tick={{ fontSize: 10, fill: 'oklch(var(--foreground))', fontWeight: 700 }}
+            tickLine={false}
+            axisLine={false}
+            width={100}
+          />
+          <Tooltip
+            content={<ChartTooltipContent />}
+            formatter={(value: number, name: string) => [
+              `${value} convidados`,
+              name === 'total' ? 'Total' : name === 'confirmed' ? 'Confirmados' : 'Recusados'
+            ]}
+          />
+          <Bar
+            dataKey="total"
+            radius={[0, 4, 4, 0]}
+            animationDuration={800}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" horizontal={true} vertical={false} />
-            <XAxis 
-              type="number"
-              tick={{ fontSize: 10, fill: '#78716c' }}
-              tickLine={false}
-              axisLine={false}
-              allowDecimals={false}
-            />
-            <YAxis 
-              type="category"
-              dataKey="category"
-              tick={{ fontSize: 11, fill: '#57534e' }}
-              tickLine={false}
-              axisLine={false}
-              width={80}
-            />
-            <Tooltip 
-              content={<ChartTooltipContent />}
-              formatter={(value: number, name: string) => [
-                `${value} convidados`,
-                name === 'total' ? 'Total' : name === 'confirmed' ? 'Confirmados' : 'Recusados'
-              ]}
-            />
-            <Bar 
-              dataKey="total" 
-              radius={[0, 4, 4, 0]}
-              animationDuration={800}
-            >
-              {processedData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.fill} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ChartContainer>
-        
-        {/* Category Legend */}
-        <div className="mt-4 grid grid-cols-2 gap-2 border-t border-amber-100 pt-4 sm:grid-cols-4">
-          {processedData.slice(0, 4).map((item, index) => (
-            <div key={item.category} className="flex items-center gap-2">
-              <span 
-                className="h-2.5 w-2.5 rounded-full" 
+            {processedData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ChartContainer>
+
+      {/* Category Legend & Efficiency */}
+      <div className="mt-8 grid grid-cols-2 gap-6 border-t border-primary/5 pt-6 sm:grid-cols-4">
+        {processedData.slice(0, 4).map((item, index) => (
+          <div key={item.category} className="flex flex-col gap-2 p-3 rounded-2xl bg-primary/[0.02] border border-primary/5 group hover:bg-primary/[0.05] transition-all">
+            <div className="flex items-center gap-2">
+              <span
+                className="h-2 w-2 rounded-full shadow-sm group-hover:scale-125 transition-transform"
                 style={{ backgroundColor: item.fill }}
               />
-              <span className="text-xs text-stone-600 truncate">
-                {item.category} ({item.total})
+              <span className="text-[10px] font-serif font-bold text-foreground truncate">
+                {item.category}
               </span>
             </div>
-          ))}
-        </div>
-        
-        {/* Response Rates by Category */}
-        <div className="mt-4 space-y-2">
-          <p className="text-xs font-medium text-stone-500">Taxa de resposta por categoria</p>
-          <div className="flex flex-wrap gap-2">
-            {processedData.slice(0, 5).map((item) => (
-              <div 
-                key={item.category}
-                className="flex items-center gap-1.5 rounded-full bg-stone-100 px-2.5 py-1"
-              >
-                <span className="text-xs text-stone-600">{item.category}</span>
-                <span className="text-xs font-medium text-stone-700">{item.responseRate}%</span>
-              </div>
-            ))}
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-accent font-bold text-muted-foreground/40 uppercase tracking-widest">{item.total} conv.</span>
+              <span className="text-[10px] font-accent font-bold text-primary">{item.responseRate}%</span>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        ))}
+      </div>
+    </div>
   )
 }

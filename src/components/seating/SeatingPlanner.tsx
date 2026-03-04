@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { authFetch } from '@/lib/auth-fetch'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
+import {
   Plus, Users, Check, AlertCircle, RefreshCw, Trash2, Edit2,
   Circle, Square, RectangleHorizontal, Grid3X3
 } from 'lucide-react'
@@ -212,7 +212,7 @@ export function SeatingPlanner() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <RefreshCw className="h-8 w-8 animate-spin text-amber-500" />
+        <RefreshCw className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -220,8 +220,8 @@ export function SeatingPlanner() {
   if (!data) {
     return (
       <div className="flex items-center justify-center py-12">
-        <AlertCircle className="h-8 w-8 text-stone-400" />
-        <p className="ml-2 text-stone-500">Erro ao carregar dados</p>
+        <AlertCircle className="h-8 w-8 text-muted-foreground/40" />
+        <p className="ml-2 text-muted-foreground">Erro ao carregar dados</p>
       </div>
     )
   }
@@ -240,45 +240,45 @@ export function SeatingPlanner() {
       <div className="space-y-6">
         {/* Stats */}
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card className="border-amber-100/50 bg-white/80">
+          <Card className="border-border bg-card/50 soft-shadow">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-amber-50 p-2">
-                  <Grid3X3 className="h-5 w-5 text-amber-600" />
+                <div className="rounded-lg bg-primary/10 p-2">
+                  <Grid3X3 className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-stone-500">Mesas</p>
-                  <p className="text-2xl font-semibold text-stone-800">{data.tables.length}</p>
+                  <p className="text-sm text-muted-foreground">Mesas</p>
+                  <p className="text-2xl font-semibold text-foreground">{data.tables.length}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
-          <Card className="border-amber-100/50 bg-white/80">
+
+          <Card className="border-border bg-card/50 soft-shadow">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-green-50 p-2">
-                  <Check className="h-5 w-5 text-green-600" />
+                <div className="rounded-lg bg-success/10 p-2">
+                  <Check className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <p className="text-sm text-stone-500">Alocados</p>
-                  <p className="text-2xl font-semibold text-stone-800">
+                  <p className="text-sm text-muted-foreground">Alocados</p>
+                  <p className="text-2xl font-semibold text-foreground">
                     {data.tables.reduce((acc, t) => acc + t.occupiedSeats, 0)}
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
-          <Card className="border-amber-100/50 bg-white/80">
+
+          <Card className="border-border bg-card/50 soft-shadow">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-rose-50 p-2">
-                  <Users className="h-5 w-5 text-rose-600" />
+                <div className="rounded-lg bg-error/10 p-2">
+                  <Users className="h-5 w-5 text-error" />
                 </div>
                 <div>
-                  <p className="text-sm text-stone-500">Sem lugar</p>
-                  <p className="text-2xl font-semibold text-stone-800">
+                  <p className="text-sm text-muted-foreground">Sem lugar</p>
+                  <p className="text-2xl font-semibold text-foreground">
                     {data.unassignedGroups.reduce((acc, g) => acc + g.guests.filter(guest => guest.confirmed).length, 0)}
                   </p>
                 </div>
@@ -289,11 +289,11 @@ export function SeatingPlanner() {
 
         {/* Tables */}
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-medium text-stone-800">Mesas</h2>
+          <h2 className="text-lg font-medium text-foreground">Mesas</h2>
           <Button
             onClick={() => setShowNewTableDialog(true)}
             size="sm"
-            className="gap-1.5 bg-amber-600 hover:bg-amber-700"
+            className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <Plus className="h-4 w-4" />
             Nova Mesa
@@ -301,14 +301,14 @@ export function SeatingPlanner() {
         </div>
 
         {data.tables.length === 0 ? (
-          <Card className="border-dashed border-amber-200 bg-amber-50/50">
+          <Card className="border-dashed border-primary/20 bg-primary/5">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <Grid3X3 className="h-12 w-12 text-amber-300" />
-              <p className="mt-4 text-stone-600">Nenhuma mesa criada</p>
+              <Grid3X3 className="h-12 w-12 text-primary/30" />
+              <p className="mt-4 text-muted-foreground">Nenhuma mesa criada</p>
               <Button
                 onClick={() => setShowNewTableDialog(true)}
                 variant="outline"
-                className="mt-4 border-amber-200 text-amber-700 hover:bg-amber-50"
+                className="mt-4 border-primary/20 text-primary hover:bg-primary/5"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Criar primeira mesa
@@ -326,12 +326,12 @@ export function SeatingPlanner() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                 >
-                  <Card 
+                  <Card
                     className={cn(
-                      "cursor-pointer transition-all hover:shadow-md",
+                      "cursor-pointer transition-all hover:shadow-md bg-card/50",
                       selectedGroup && table.occupiedSeats < table.capacity
-                        ? "border-green-300 ring-2 ring-green-100"
-                        : "border-amber-100/50"
+                        ? "border-success ring-2 ring-success/10"
+                        : "border-border"
                     )}
                     onClick={() => {
                       if (selectedGroup) {
@@ -349,7 +349,7 @@ export function SeatingPlanner() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 text-stone-400 hover:text-stone-600"
+                            className="h-7 w-7 text-muted-foreground/50 hover:text-foreground hover:bg-muted/50"
                             onClick={(e) => {
                               e.stopPropagation()
                               setEditingTable(table)
@@ -361,7 +361,7 @@ export function SeatingPlanner() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 text-stone-400 hover:text-rose-500"
+                            className="h-7 w-7 text-muted-foreground/50 hover:text-error hover:bg-error/10"
                             onClick={(e) => {
                               e.stopPropagation()
                               deleteTable(table.id)
@@ -374,39 +374,39 @@ export function SeatingPlanner() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-stone-500">Ocupação</span>
+                        <span className="text-muted-foreground">Ocupação</span>
                         <span className={cn(
                           "font-medium",
-                          table.occupiedSeats > table.capacity ? "text-rose-600" : "text-stone-700"
+                          table.occupiedSeats > table.capacity ? "text-error" : "text-foreground"
                         )}>
                           {table.occupiedSeats} / {table.capacity}
                         </span>
                       </div>
-                      <Progress 
+                      <Progress
                         value={(table.occupiedSeats / table.capacity) * 100}
                         className={cn(
                           "h-2",
-                          table.occupiedSeats > table.capacity ? "[&>div]:bg-rose-500" : "[&>div]:bg-amber-500"
+                          table.occupiedSeats > table.capacity ? "[&>div]:bg-error" : "[&>div]:bg-primary"
                         )}
                       />
-                      
+
                       {table.groups.length > 0 && (
                         <div className="space-y-2 pt-2">
                           {table.groups.map((group) => (
                             <div
                               key={group.id}
-                              className="flex items-center justify-between rounded-lg bg-stone-50 p-2 text-sm"
+                              className="flex items-center justify-between rounded-lg bg-muted/30 p-2 text-sm"
                             >
                               <div>
-                                <p className="font-medium text-stone-700">{group.name}</p>
-                                <p className="text-xs text-stone-500">
+                                <p className="font-medium text-foreground">{group.name}</p>
+                                <p className="text-xs text-muted-foreground">
                                   {group.guests.filter(g => g.confirmed).length} confirmados
                                 </p>
                               </div>
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 text-xs text-stone-500 hover:text-rose-500"
+                                className="h-7 text-xs text-muted-foreground hover:text-error hover:bg-error/10"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   assignGroup(group.id, null)
@@ -418,9 +418,9 @@ export function SeatingPlanner() {
                           ))}
                         </div>
                       )}
-                      
+
                       {selectedGroup && table.occupiedSeats < table.capacity && (
-                        <div className="rounded-lg border-2 border-dashed border-green-300 bg-green-50 p-2 text-center text-sm text-green-700">
+                        <div className="rounded-lg border-2 border-dashed border-success/30 bg-success/5 p-2 text-center text-sm text-success">
                           Clique para alocar "{selectedGroup.name}"
                         </div>
                       )}
@@ -435,15 +435,15 @@ export function SeatingPlanner() {
 
       {/* Sidebar - Unassigned Groups */}
       <div className="lg:sticky lg:top-4 lg:self-start">
-        <Card className="border-amber-100/50 bg-white/80">
+        <Card className="border-border bg-card/50 soft-shadow">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Grupos sem Mesa</CardTitle>
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[400px] pr-4">
               {data.unassignedGroups.length === 0 ? (
-                <div className="py-8 text-center text-sm text-stone-500">
-                  <Check className="mx-auto h-8 w-8 text-green-400" />
+                <div className="py-8 text-center text-sm text-muted-foreground/40">
+                  <Check className="mx-auto h-8 w-8 text-success/50" />
                   <p className="mt-2">Todos os grupos alocados!</p>
                 </div>
               ) : (
@@ -455,17 +455,17 @@ export function SeatingPlanner() {
                       className={cn(
                         "cursor-pointer rounded-lg border p-3 transition-all",
                         selectedGroup?.id === group.id
-                          ? "border-green-300 bg-green-50 ring-2 ring-green-100"
-                          : "border-stone-100 bg-stone-50 hover:border-amber-200"
+                          ? "border-success bg-success/5 ring-2 ring-success/10"
+                          : "border-border bg-muted/30 hover:border-primary/50"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <p className="font-medium text-stone-700">{group.name}</p>
-                        <Badge variant="secondary" className="text-xs">
+                        <p className="font-medium text-foreground">{group.name}</p>
+                        <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-none">
                           {group.guests.filter(g => g.confirmed).length} pessoas
                         </Badge>
                       </div>
-                      <p className="mt-1 text-xs text-stone-500">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {group.guests.map(g => `${g.firstName} ${g.lastName}`).join(', ')}
                       </p>
                     </div>
@@ -473,18 +473,18 @@ export function SeatingPlanner() {
                 </div>
               )}
             </ScrollArea>
-            
+
             {selectedGroup && (
-              <div className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+              <div className="mt-4 rounded-lg bg-primary/10 p-3 text-sm text-primary">
                 <p className="font-medium">Grupo selecionado:</p>
                 <p className="mt-1">{selectedGroup.name}</p>
-                <p className="mt-2 text-xs text-amber-600">
+                <p className="mt-2 text-xs text-primary/70">
                   Clique em uma mesa com vagas disponíveis para alocar
                 </p>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="mt-2 w-full text-xs"
+                  className="mt-2 w-full text-xs hover:bg-primary/10"
                   onClick={() => setSelectedGroup(null)}
                 >
                   Cancelar seleção
@@ -540,7 +540,7 @@ export function SeatingPlanner() {
             <Button variant="outline" onClick={() => setShowNewTableDialog(false)}>
               Cancelar
             </Button>
-            <Button onClick={createTable} className="bg-amber-600 hover:bg-amber-700">
+            <Button onClick={createTable} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               Criar Mesa
             </Button>
           </DialogFooter>
@@ -576,8 +576,8 @@ export function SeatingPlanner() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="edit-shape">Formato</Label>
-                <Select 
-                  value={editingTable.shape} 
+                <Select
+                  value={editingTable.shape}
                   onValueChange={(v) => setEditingTable({ ...editingTable, shape: v as 'round' | 'rectangular' | 'square' })}
                 >
                   <SelectTrigger>
@@ -596,7 +596,7 @@ export function SeatingPlanner() {
             <Button variant="outline" onClick={() => setShowEditDialog(false)}>
               Cancelar
             </Button>
-            <Button onClick={updateTable} className="bg-amber-600 hover:bg-amber-700">
+            <Button onClick={updateTable} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               Salvar
             </Button>
           </DialogFooter>

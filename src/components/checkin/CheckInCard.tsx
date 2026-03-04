@@ -13,8 +13,8 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Users, Check, Clock, MapPin, AlertTriangle, 
+import {
+  Users, Check, Clock, MapPin, AlertTriangle,
   User, Utensils, Accessibility, X, Loader2, PartyPopper
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -40,6 +40,7 @@ export interface CheckInCardProps {
     fullName: string
     dietaryRestrictions?: string | null
     specialNeeds?: string | null
+    category?: string | null
   }>
   invitation?: {
     id: string
@@ -66,8 +67,8 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
 
   // Determine invitation data
   const invitationId = data.type === 'invitation' ? data.id : data.invitation?.id
-  const familyName = data.type === 'invitation' 
-    ? data.familyName 
+  const familyName = data.type === 'invitation'
+    ? data.familyName
     : data.invitation?.familyName || `${data.firstName} ${data.lastName}`
   const guests = data.guests || (data.type === 'guest' ? [{
     id: data.id,
@@ -88,7 +89,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
   // Handle check-in
   const handleCheckIn = async () => {
     if (!invitationId) return
-    
+
     setIsProcessing(true)
     try {
       await onCheckIn(invitationId)
@@ -113,10 +114,10 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
       onClick={onClose}
     >
       <Card
-        className="w-full max-w-md border-amber-200/50 bg-white shadow-xl"
+        className="w-full max-w-md border-border bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <CardHeader className="relative border-b border-amber-100 pb-4">
+        <CardHeader className="relative border-b border-border pb-4">
           <Button
             variant="ghost"
             size="icon"
@@ -125,25 +126,23 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
           >
             <X className="h-4 w-4" />
           </Button>
-          
+
           <div className="flex items-center gap-4">
             {/* Status Icon */}
-            <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${
-              alreadyCheckedIn
-                ? 'bg-emerald-100'
-                : 'bg-gradient-to-br from-amber-100 to-orange-100'
-            }`}>
+            <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${alreadyCheckedIn
+              ? 'bg-primary/10'
+              : 'bg-gradient-to-br from-accent/10 to-accent/5'
+              }`}>
               {alreadyCheckedIn ? (
-                <Check className="h-7 w-7 text-emerald-600" />
+                <Check className="h-7 w-7 text-primary" />
               ) : (
-                <Users className="h-7 w-7 text-amber-600" />
+                <Users className="h-7 w-7 text-accent" />
               )}
             </div>
 
             <div>
-              <CardTitle className={`text-lg ${
-                alreadyCheckedIn ? 'text-emerald-700' : 'text-stone-800'
-              }`}>
+              <CardTitle className={`text-lg ${alreadyCheckedIn ? 'text-primary' : 'text-stone-800'
+                }`}>
                 {familyName || 'Convidado'}
               </CardTitle>
               <p className="mt-0.5 text-sm text-stone-500">
@@ -159,11 +158,11 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
               animate={{ opacity: 1, y: 0 }}
               className="mt-3"
             >
-              <Badge className="gap-1 bg-emerald-100 text-emerald-700">
+              <Badge className="gap-1 bg-primary/10 text-primary border-none shadow-none">
                 <Check className="h-3 w-3" />
                 Check-in realizado
                 {checkedInAt && (
-                  <span className="ml-1">às {formatTime(checkedInAt)}</span>
+                  <span className="ml-1 opacity-70">às {formatTime(checkedInAt)}</span>
                 )}
               </Badge>
             </motion.div>
@@ -174,7 +173,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
           {/* Table Info */}
           {data.tableNumber && (
             <div className="mb-4 flex items-center gap-2 text-sm text-stone-600">
-              <MapPin className="h-4 w-4 text-amber-500" />
+              <MapPin className="h-4 w-4 text-accent" />
               <span>Mesa: <strong>{data.tableNumber}</strong></span>
             </div>
           )}
@@ -191,14 +190,19 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="flex items-center gap-2 rounded-lg border border-stone-100 bg-stone-50 px-3 py-2"
+                  className="flex items-center gap-2 rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-medium text-amber-700">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
                     {guest.firstName[0]}
                   </div>
                   <span className="text-sm font-medium text-stone-700">
                     {guest.fullName}
                   </span>
+                  {guest.category && (
+                    <Badge variant="outline" className="text-[10px] font-bold tracking-wide uppercase text-primary/60 border-primary/20">
+                      {guest.category}
+                    </Badge>
+                  )}
                 </motion.div>
               ))}
             </div>
@@ -209,14 +213,14 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
             <div className="mt-4">
               <Separator className="mb-3" />
               <div className="flex items-start gap-2">
-                <Utensils className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                <Utensils className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                 <div className="flex-1">
-                  <p className="text-xs font-medium uppercase tracking-wide text-stone-400">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-accent/60">
                     Restrições Alimentares
                   </p>
                   <div className="mt-1 space-y-1">
                     {guestsWithDietary.map((g) => (
-                      <p key={g.id} className="text-sm text-stone-600">
+                      <p key={g.id} className="text-sm font-medium text-stone-800">
                         <strong>{g.firstName}:</strong> {g.dietaryRestrictions}
                       </p>
                     ))}
@@ -231,14 +235,14 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
             <div className="mt-4">
               <Separator className="mb-3" />
               <div className="flex items-start gap-2">
-                <Accessibility className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                <Accessibility className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                 <div className="flex-1">
-                  <p className="text-xs font-medium uppercase tracking-wide text-stone-400">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-accent/60">
                     Necessidades Especiais
                   </p>
                   <div className="mt-1 space-y-1">
                     {guestsWithSpecialNeeds.map((g) => (
-                      <p key={g.id} className="text-sm text-stone-600">
+                      <p key={g.id} className="text-sm font-medium text-stone-800">
                         <strong>{g.firstName}:</strong> {g.specialNeeds}
                       </p>
                     ))}
@@ -256,8 +260,8 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex flex-col items-center gap-2"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                  <PartyPopper className="h-8 w-8 text-emerald-600" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                  <PartyPopper className="h-8 w-8 text-primary" />
                 </div>
                 <p className="text-center text-sm text-stone-600">
                   {familyName} já está no evento!
@@ -275,14 +279,14 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                 <Button
                   variant="outline"
                   onClick={onClose}
-                  className="flex-1"
+                  className="flex-1 border-primary/20 text-primary hover:bg-primary/5"
                 >
                   Cancelar
                 </Button>
                 <Button
                   onClick={handleCheckIn}
                   disabled={isProcessing || !invitationId}
-                  className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+                  className="flex-1 bg-primary hover:bg-primary/90 text-white soft-shadow"
                 >
                   {isProcessing ? (
                     <>
@@ -292,7 +296,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                   ) : (
                     <>
                       <Check className="mr-2 h-4 w-4" />
-                      Confirmar Check-in
+                      Confirmar Entrada
                     </>
                   )}
                 </Button>

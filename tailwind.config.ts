@@ -7,50 +7,48 @@ const config: Config = {
 		"./pages/**/*.{js,ts,jsx,tsx,mdx}",
 		"./components/**/*.{js,ts,jsx,tsx,mdx}",
 		"./app/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	theme: {
 		extend: {
 			colors: {
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
-				},
+				border: "oklch(var(--border) / <alpha-value>)",
+				input: "oklch(var(--input) / <alpha-value>)",
+				ring: "oklch(var(--ring) / <alpha-value>)",
+				background: "oklch(var(--background) / <alpha-value>)",
+				foreground: "oklch(var(--foreground) / <alpha-value>)",
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: "oklch(var(--primary) / <alpha-value>)",
+					foreground: "oklch(var(--primary-foreground) / <alpha-value>)",
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					DEFAULT: "oklch(var(--secondary) / <alpha-value>)",
+					foreground: "oklch(var(--secondary-foreground) / <alpha-value>)",
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
+					DEFAULT: "oklch(var(--destructive) / <alpha-value>)",
+					foreground: "oklch(var(--destructive-foreground) / <alpha-value>)",
 				},
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				chart: {
-					'1': 'hsl(var(--chart-1))',
-					'2': 'hsl(var(--chart-2))',
-					'3': 'hsl(var(--chart-3))',
-					'4': 'hsl(var(--chart-4))',
-					'5': 'hsl(var(--chart-5))'
-				}
+				muted: {
+					DEFAULT: "oklch(var(--muted) / <alpha-value>)",
+					foreground: "oklch(var(--muted-foreground) / <alpha-value>)",
+				},
+				accent: {
+					DEFAULT: "oklch(var(--accent) / <alpha-value>)",
+					foreground: "oklch(var(--accent-foreground) / <alpha-value>)",
+				},
+				popover: {
+					DEFAULT: "oklch(var(--popover) / <alpha-value>)",
+					foreground: "oklch(var(--popover-foreground) / <alpha-value>)",
+				},
+				card: {
+					DEFAULT: "oklch(var(--card) / <alpha-value>)",
+					foreground: "oklch(var(--card-foreground) / <alpha-value>)",
+				},
+				success: "oklch(var(--success) / <alpha-value>)",
+				warning: "oklch(var(--warning) / <alpha-value>)",
+				error: "oklch(var(--error) / <alpha-value>)",
+				info: "oklch(var(--info) / <alpha-value>)",
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -58,8 +56,11 @@ const config: Config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				serif: ['var(--font-great-vibes)', 'Georgia', 'serif'],
-			}
+				serif: ["var(--font-serif)", "serif"],
+				sans: ["var(--font-sans)", "sans-serif"],
+				accent: ["var(--font-accent)", "sans-serif"],
+				script: ["var(--font-script)", "cursive"],
+			},
 		}
 	},
 	plugins: [tailwindcssAnimate],

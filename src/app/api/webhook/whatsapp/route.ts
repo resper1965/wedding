@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { verifyWebhook, parseWebhookMessage, getWhatsAppClient, type WebhookPayload } from '@/services/whatsapp/client'
+import { verifyWebhook, parseWebhookMessage } from '@/services/whatsapp/client'
+import { getEvolutionClient } from '@/services/whatsapp/evolution-client'
 import { concierge } from '@/services/concierge/ai-concierge'
 
 const WEBHOOK_VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'wedding_concierge_2025'
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const payload: WebhookPayload = await request.json()
+    const payload = await request.json()
     processMessageAsync(payload).catch(error => console.error('[WhatsApp] Async processing error:', error))
     return NextResponse.json({ status: 'received' }, { status: 200 })
   } catch (error) {
@@ -29,13 +30,20 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function processMessageAsync(payload: WebhookPayload) {
+async function processMessageAsync(payload: any) {
   const message = parseWebhookMessage(payload)
   if (!message) return
 
   const { from, content, messageId } = message
 
-  const { data: wedding } = await db.from('Wedding').select('*, events:Event(*)').limit(1).maybeSingle()
+  // Identify the tenant by looking up the guest's phone number
+  const { data: guestMatch } = await db.from('Guest').select('weddingId').eq('phone', from).limit(1).maybeSingle()
+  if (!guestMatch) {
+    console.log(`[WhatsApp] Redeceived message from unknown number: ${from}`)
+    return // Cannot route message
+  }
+
+  const { data: wedding } = await db.from('Wedding').select('*, events:Event(*)').eq('id', guestMatch.weddingId).maybeSingle()
   if (!wedding) return
 
   const invitationId = crypto.randomUUID()
@@ -95,7 +103,7 @@ async function processMessageAsync(payload: WebhookPayload) {
       createdAt: new Date().toISOString(),
     })
 
-    const waClient = getWhatsAppClient()
+    const waClient = getEvolutionClient()
     if (waClient) {
       await waClient.sendText(from, result.response)
     }

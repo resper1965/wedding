@@ -65,5 +65,6 @@ export const config = {
     '/api/email/:path*',
     '/api/seed',
     '/api/sync',
+    '/api/admin/:path*',
   ],
 }

@@ -1,15 +1,20 @@
-export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 
 export async function GET(request: NextRequest) {
   try {
-    const tenantId = request.headers.get('x-tenant-id');
-    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized) return auth.response
+
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const { data: groups, error } = await db.from('GuestGroup')
       .select('*, guests:Guest(id), table:Table(id, name)')
-      .eq('weddingId', tenantId).order('name')
+      .eq('weddingId', access.weddingId).order('name')
     if (error) throw error
 
     const result = (groups || []).map((g: any) => ({
@@ -27,15 +32,19 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const tenantId = request.headers.get('x-tenant-id');
-    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
+    const tenantId = request.headers.get('x-tenant-id')
+    const auth = await verifySupabaseToken(request)
+    if (!auth.authorized) return auth.response
+
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const body = await request.json()
     const { name, notes, tableId } = body
 
     const { data: group, error } = await db.from('GuestGroup').insert({
       id: crypto.randomUUID(),
-      weddingId: tenantId,
+      weddingId: access.weddingId,
       name,
       notes: notes || null,
       tableId: tableId || null,
@@ -50,3 +59,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: 'Erro ao criar grupo' }, { status: 500 })
   }
 }
+

@@ -125,20 +125,20 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
         if (filter === 'all') {
           count = guests.filter((g: { email: string | null }) => g.email).length
         } else if (filter === 'pending') {
-          count = guests.filter((g: { email: string | null; rsvps: { status: string }[] }) => 
+          count = guests.filter((g: { email: string | null; rsvps: { status: string }[] }) =>
             g.email && g.rsvps?.some((r: { status: string }) => r.status === 'pending')
           ).length
         } else if (filter === 'confirmed') {
-          count = guests.filter((g: { email: string | null; rsvps: { status: string }[] }) => 
+          count = guests.filter((g: { email: string | null; rsvps: { status: string }[] }) =>
             g.email && g.rsvps?.some((r: { status: string }) => r.status === 'confirmed')
           ).length
         } else if (filter === 'declined') {
-          count = guests.filter((g: { email: string | null; rsvps: { status: string }[] }) => 
+          count = guests.filter((g: { email: string | null; rsvps: { status: string }[] }) =>
             g.email && g.rsvps?.some((r: { status: string }) => r.status === 'declined')
           ).length
         } else if (filter.startsWith('group:')) {
           const groupId = filter.split(':')[1]
-          count = guests.filter((g: { email: string | null; groupId: string | null }) => 
+          count = guests.filter((g: { email: string | null; groupId: string | null }) =>
             g.email && g.groupId === groupId
           ).length
         }
@@ -465,12 +465,12 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
           <div className="space-y-4 py-4">
             {/* Type */}
             <div className="space-y-2">
-              <Label>Tipo de Mensagem</Label>
+              <Label htmlFor="message-type">Tipo de Mensagem</Label>
               <Select
                 value={formData.type}
                 onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
               >
-                <SelectTrigger>
+                <SelectTrigger id="message-type" aria-label="Selecionar tipo de mensagem">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -483,8 +483,9 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
 
             {/* Template/Content */}
             <div className="space-y-2">
-              <Label>Conteúdo da Mensagem</Label>
+              <Label htmlFor="message-content">Conteúdo da Mensagem</Label>
               <Textarea
+                id="message-content"
                 value={formData.template}
                 onChange={(e) => setFormData(prev => ({ ...prev, template: e.target.value }))}
                 placeholder="Digite o conteúdo da mensagem..."
@@ -494,12 +495,12 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
 
             {/* Recipient Filter */}
             <div className="space-y-2">
-              <Label>Destinatários</Label>
+              <Label htmlFor="recipient-filter">Destinatários</Label>
               <Select
                 value={formData.recipientFilter}
                 onValueChange={(value) => setFormData(prev => ({ ...prev, recipientFilter: value }))}
               >
-                <SelectTrigger>
+                <SelectTrigger id="recipient-filter" aria-label="Selecionar destinatários">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -532,16 +533,18 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
             {/* Date and Time */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Data</Label>
+                <Label htmlFor="scheduled-date">Data</Label>
                 <Input
+                  id="scheduled-date"
                   type="date"
                   value={formData.scheduledDate}
                   onChange={(e) => setFormData(prev => ({ ...prev, scheduledDate: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Horário</Label>
+                <Label htmlFor="scheduled-time">Horário</Label>
                 <Input
+                  id="scheduled-time"
                   type="time"
                   value={formData.scheduledTime}
                   onChange={(e) => setFormData(prev => ({ ...prev, scheduledTime: e.target.value }))}

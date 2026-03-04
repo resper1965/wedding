@@ -1,13 +1,18 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifySupabaseToken } from '@/lib/auth'
+import { verifyTenantAccess } from '@/lib/auth-tenant'
 
 export async function GET(request: NextRequest) {
   try {
     const tenantId = request.headers.get('x-tenant-id');
-    if (!tenantId) return NextResponse.json({ success: true, data: [] })
+    const auth = await verifySupabaseToken(request)
 
-    const { data: events, error } = await db.from('Event').select('*').eq('weddingId', tenantId).order('order', { ascending: true })
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return NextResponse.json({ success: true, data: [] }) // Return empty for safety if no access instead of crashing
+
+    const { data: events, error } = await db.from('Event').select('*').eq('weddingId', access.weddingId).order('order', { ascending: true })
     if (error) throw error
 
     return NextResponse.json({ success: true, data: events })
@@ -20,14 +25,18 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const tenantId = request.headers.get('x-tenant-id');
-    if (!tenantId) return NextResponse.json({ success: false, error: 'Tenant (Casamento) não identificado' }, { status: 400 })
+    const auth = await verifySupabaseToken(request)
+
+    // Auth-Tenant RBAC Check
+    const access = await verifyTenantAccess(tenantId, auth.uid, auth.email)
+    if (!access.hasAccess) return access.response!
 
     const body = await request.json()
     const { name, description, startTime, endTime, venue, address, dressCode, maxCapacity, order } = body
 
     const { data: event, error } = await db.from('Event').insert({
       id: crypto.randomUUID(),
-      weddingId: tenantId,
+      weddingId: access.weddingId,
       name,
       description: description || null,
       startTime: new Date(startTime).toISOString(),

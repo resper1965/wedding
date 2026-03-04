@@ -16,8 +16,12 @@ const WHATSAPP_API_VERSION = 'v18.0'
 const WHATSAPP_API_URL = 'https://graph.facebook.com'
 
 export interface WhatsAppConfig {
-  accessToken: string
-  phoneNumberId: string
+  evolutionApiUrl?: string
+  evolutionApiKey?: string
+  evolutionInstanceName?: string
+
+  accessToken?: string
+  phoneNumberId?: string
   businessAccountId?: string
 }
 
@@ -81,20 +85,70 @@ export interface SendMessageResult {
 
 export class WhatsAppClient {
   private config: WhatsAppConfig
-  
+
   constructor(config: WhatsAppConfig) {
     this.config = config
   }
-  
+
   /**
    * Send a message via WhatsApp API
    */
   async sendMessage(message: WhatsAppMessage): Promise<SendMessageResult> {
+    // 1. EVOLUTION API INTEGRATION
+    if (this.config.evolutionApiUrl && this.config.evolutionApiKey && this.config.evolutionInstanceName) {
+      const instance = this.config.evolutionInstanceName
+      const baseUrl = this.config.evolutionApiUrl.replace(/\/$/, '') // Remove trailing slash
+
+      let endpoint = '/message/sendText'
+      let payload: any = { number: message.to }
+
+      switch (message.type) {
+        case 'text':
+          payload.text = message.text
+          break
+        case 'image':
+          endpoint = '/message/sendMedia'
+          payload.media = message.imageUrl
+          payload.caption = message.caption
+          payload.mediatype = 'image'
+          break
+        case 'interactive':
+          // Fallback text rendering for interactive bodies in evolution standard implementation
+          let interactiveText = message.interactive.body.text + '\n\n'
+          if (message.interactive.type === 'button' && message.interactive.action?.buttons) {
+            interactiveText += message.interactive.action.buttons.map((b: any) => `* ${b.reply.title} *`).join('\n')
+          }
+          payload.text = interactiveText
+          break
+      }
+
+      const url = `${baseUrl}${endpoint}/${instance}`
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'apikey': this.config.evolutionApiKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+        if (!response.ok) return { success: false, error: await response.text() }
+        const data = await response.json()
+        return { success: true, messageId: data.key?.id }
+      } catch (err) {
+        return { success: false, error: String(err) }
+      }
+    }
+
+    // 2. FACEBOOK META CLOUD API (LEGACY/OFFICIAL)
+    if (!this.config.phoneNumberId || !this.config.accessToken) {
+      return { success: false, error: 'No WhatsApp credentials configured.' }
+    }
+
     const url = `${WHATSAPP_API_URL}/${WHATSAPP_API_VERSION}/${this.config.phoneNumberId}/messages`
-    
+
     try {
       const payload = this.buildPayload(message)
-      
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -103,30 +157,14 @@ export class WhatsAppClient {
         },
         body: JSON.stringify(payload)
       })
-      
-      if (!response.ok) {
-        const error = await response.text()
-        console.error('WhatsApp API error:', error)
-        return {
-          success: false,
-          error: `API error: ${response.status}`
-        }
-      }
-      
+      if (!response.ok) return { success: false, error: await response.text() }
       const data = await response.json()
-      return {
-        success: true,
-        messageId: data.messages?.[0]?.id
-      }
+      return { success: true, messageId: data.messages?.[0]?.id }
     } catch (error) {
-      console.error('Failed to send WhatsApp message:', error)
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      }
+      return { success: false, error: String(error) }
     }
   }
-  
+
   /**
    * Build the payload for the WhatsApp API
    */
@@ -136,7 +174,7 @@ export class WhatsAppClient {
       recipient_type: 'individual',
       to: message.to
     }
-    
+
     switch (message.type) {
       case 'text':
         return {
@@ -147,7 +185,7 @@ export class WhatsAppClient {
             preview_url: message.previewUrl ?? false
           }
         }
-        
+
       case 'image':
         return {
           ...base,
@@ -158,25 +196,25 @@ export class WhatsAppClient {
             ...(message.caption ? { caption: message.caption } : {})
           }
         }
-        
+
       case 'interactive':
         return {
           ...base,
           type: 'interactive',
           interactive: message.interactive
         }
-        
+
       default:
         return base
     }
   }
-  
+
   /**
    * Mark a message as read
    */
   async markAsRead(messageId: string): Promise<void> {
     const url = `${WHATSAPP_API_URL}/${WHATSAPP_API_VERSION}/${this.config.phoneNumberId}/messages`
-    
+
     try {
       await fetch(url, {
         method: 'POST',
@@ -194,7 +232,7 @@ export class WhatsAppClient {
       console.error('Failed to mark message as read:', error)
     }
   }
-  
+
   /**
    * Send a simple text message
    */
@@ -205,7 +243,7 @@ export class WhatsAppClient {
       text
     })
   }
-  
+
   /**
    * Send an image with optional caption
    */
@@ -217,7 +255,7 @@ export class WhatsAppClient {
       caption
     })
   }
-  
+
   /**
    * Send interactive buttons
    */
@@ -241,7 +279,7 @@ export class WhatsAppClient {
       }
     })
   }
-  
+
   /**
    * Send a list message
    */
@@ -351,15 +389,47 @@ export interface ParsedMessage {
 /**
  * Parse a webhook message into a simplified format
  */
-export function parseWebhookMessage(payload: WebhookPayload): ParsedMessage | null {
+export function parseWebhookMessage(payload: any): ParsedMessage | null {
   try {
+    // 1. Handle Evolution API v2 Webhook
+    if (payload.event === 'messages.upsert') {
+      const data = payload.data
+      if (!data || data.key?.fromMe) return null // Ignore outgoing messages
+
+      const remoteJid = data.key.remoteJid || ''
+      if (remoteJid.includes('@g.us')) return null // Ignore group messages
+      const number = remoteJid.split('@')[0]
+
+      let content = ''
+      let type: 'text' | 'image' | 'interactive' | 'unknown' = 'unknown'
+      const msg = data.message
+
+      if (msg?.conversation || msg?.extendedTextMessage?.text) {
+        content = msg.conversation || msg.extendedTextMessage.text
+        type = 'text'
+      } else if (msg?.imageMessage) {
+        content = '[Imagem]'
+        type = 'image'
+      }
+
+      return {
+        from: number,
+        messageId: data.key.id || crypto.randomUUID(),
+        timestamp: new Date(),
+        type,
+        content,
+        contactName: data.pushName || undefined
+      }
+    }
+
+    // 2. Handle Meta Graph API Webhook
     const entry = payload.entry?.[0]
     const change = entry?.changes?.[0]
     const message = change?.value?.messages?.[0]
     const contact = change?.value?.contacts?.[0]
-    
+
     if (!message) return null
-    
+
     const parsed: ParsedMessage = {
       from: message.from,
       messageId: message.id,
@@ -368,18 +438,18 @@ export function parseWebhookMessage(payload: WebhookPayload): ParsedMessage | nu
       content: '',
       contactName: contact?.profile?.name
     }
-    
+
     switch (message.type) {
       case 'text':
         parsed.type = 'text'
         parsed.content = message.text?.body || ''
         break
-        
+
       case 'image':
         parsed.type = 'image'
         parsed.content = message.image?.id || ''
         break
-        
+
       case 'interactive':
         parsed.type = 'interactive'
         if (message.interactive?.button_reply) {
@@ -390,12 +460,12 @@ export function parseWebhookMessage(payload: WebhookPayload): ParsedMessage | nu
           parsed.content = message.interactive.list_reply.title
         }
         break
-        
+
       default:
         parsed.type = 'unknown'
         parsed.content = `[Mensagem do tipo: ${message.type}]`
     }
-    
+
     return parsed
   } catch (error) {
     console.error('Failed to parse webhook message:', error)
@@ -414,21 +484,24 @@ let whatsappClient: WhatsAppClient | null = null
  */
 export function getWhatsAppClient(config?: WhatsAppConfig): WhatsAppClient | null {
   if (!config) {
-    // Try to get from environment
-    const accessToken = process.env.WHATSAPP_ACCESS_TOKEN
-    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID
-    
-    if (!accessToken || !phoneNumberId) {
-      console.warn('WhatsApp credentials not configured')
+    // Try to get from environment mapped
+    config = {
+      accessToken: process.env.WHATSAPP_ACCESS_TOKEN,
+      phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID,
+      evolutionApiUrl: process.env.EVOLUTION_API_URL,
+      evolutionApiKey: process.env.EVOLUTION_API_KEY,
+      evolutionInstanceName: process.env.EVOLUTION_INSTANCE
+    }
+
+    if (!config.evolutionApiUrl && (!config.accessToken || !config.phoneNumberId)) {
+      console.warn('Neither Evolution API nor Meta WhatsApp credentials configured')
       return null
     }
-    
-    config = { accessToken, phoneNumberId }
   }
-  
+
   if (!whatsappClient) {
     whatsappClient = new WhatsAppClient(config)
   }
-  
+
   return whatsappClient
 }

@@ -6,7 +6,7 @@ import {
   Heart, Search, Send, Check, Calendar, Users,
   AlertCircle, Loader2, CheckCircle2, XCircle
 } from 'lucide-react'
-import { PublicNav } from '@/components/public/PublicNav'
+import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -206,18 +206,18 @@ export default function RSVPPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-amber-300 border-t-amber-500" />
-          <p className="mt-4 text-sm text-stone-500">Carregando...</p>
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary" />
+          <p className="mt-4 text-sm text-foreground/50">Carregando...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
-      <PublicNav
+    <div className="min-h-screen bg-background">
+      <MasterHeader type="wedding"
         partner1Name={wedding?.partner1Name}
         partner2Name={wedding?.partner2Name}
       />
@@ -225,8 +225,8 @@ export default function RSVPPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-12 sm:py-16">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-gradient-to-br from-rose-100/50 to-amber-100/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-gradient-to-br from-amber-100/40 to-rose-100/30 blur-3xl" />
+          <div className="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-gradient-to-br from-accent/10 to-primary/5 blur-3xl" />
+          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-gradient-to-br from-primary/10 to-accent/5 blur-3xl" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-2xl px-4 text-center">
@@ -236,14 +236,14 @@ export default function RSVPPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center justify-center gap-3">
-              <div className="h-px w-8 bg-gradient-to-r from-transparent to-rose-300" />
-              <Heart className="h-5 w-5 text-rose-400" fill="currentColor" />
-              <div className="h-px w-8 bg-gradient-to-l from-transparent to-rose-300" />
+              <div className="h-px w-8 bg-gradient-to-r from-transparent to-primary/20" />
+              <Heart className="h-5 w-5 text-accent" fill="currentColor" />
+              <div className="h-px w-8 bg-gradient-to-l from-transparent to-primary/20" />
             </div>
-            <h1 className="mb-3 text-3xl font-light text-amber-800 sm:text-4xl">
+            <h1 className="mb-3 text-3xl font-light text-primary sm:text-4xl font-serif">
               Confirmar Presença
             </h1>
-            <p className="text-stone-500">
+            <p className="text-foreground/50 italic">
               Ficaremos muito felizes com a sua presença!
             </p>
           </motion.div>
@@ -291,11 +291,11 @@ export default function RSVPPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <Card className="border-amber-200/50 bg-white/80 backdrop-blur-sm">
+                <Card className="border-border bg-white/80 backdrop-blur-sm">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-amber-800">
+                        <CardTitle className="text-primary font-serif">
                           {selectedGuest.firstName} {selectedGuest.lastName}
                         </CardTitle>
                         <CardDescription>
@@ -306,7 +306,7 @@ export default function RSVPPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setSelectedGuest(null)}
-                        className="text-stone-500"
+                        className="text-foreground/50"
                       >
                         Trocar
                       </Button>
@@ -315,14 +315,14 @@ export default function RSVPPage() {
                   <CardContent className="space-y-6">
                     {/* Events Selection */}
                     <div className="space-y-3">
-                      <Label className="text-stone-700">Eventos</Label>
+                      <Label className="text-foreground/70">Eventos</Label>
                       <div className="grid gap-3">
                         {events.map(event => (
                           <label
                             key={event.id}
                             className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${selectedEvents.includes(event.id)
-                                ? 'border-amber-300 bg-amber-50'
-                                : 'border-amber-100 bg-white/50 hover:border-amber-200'
+                              ? 'border-primary bg-primary/5'
+                              : 'border-border bg-white/50 hover:border-primary/30'
                               }`}
                           >
                             <Checkbox
@@ -330,13 +330,13 @@ export default function RSVPPage() {
                               onCheckedChange={() => handleEventToggle(event.id)}
                             />
                             <div className="flex-1">
-                              <p className="font-medium text-stone-700">{event.name}</p>
+                              <p className="font-medium text-foreground">{event.name}</p>
                               {event.venue && (
-                                <p className="text-xs text-stone-500">{event.venue}</p>
+                                <p className="text-xs text-foreground/50">{event.venue}</p>
                               )}
                             </div>
                             {selectedEvents.includes(event.id) && (
-                              <Check className="h-5 w-5 text-amber-500" />
+                              <Check className="h-5 w-5 text-primary" />
                             )}
                           </label>
                         ))}
@@ -345,11 +345,11 @@ export default function RSVPPage() {
 
                     {/* Dietary Restrictions */}
                     <div className="space-y-2">
-                      <Label htmlFor="dietary" className="text-stone-700">
+                      <Label htmlFor="dietary" className="text-foreground/70">
                         Restrições Alimentares
                       </Label>
                       <Select value={dietaryRestrictions} onValueChange={setDietaryRestrictions}>
-                        <SelectTrigger className="border-amber-200 bg-white/50">
+                        <SelectTrigger className="border-border bg-white/50">
                           <SelectValue placeholder="Selecione se houver" />
                         </SelectTrigger>
                         <SelectContent>
@@ -365,7 +365,7 @@ export default function RSVPPage() {
 
                     {/* Special Needs */}
                     <div className="space-y-2">
-                      <Label htmlFor="special" className="text-stone-700">
+                      <Label htmlFor="special" className="text-foreground/70">
                         Necessidades Especiais
                       </Label>
                       <Input
@@ -373,13 +373,13 @@ export default function RSVPPage() {
                         value={specialNeeds}
                         onChange={(e) => setSpecialNeeds(e.target.value)}
                         placeholder="Ex: Acessibilidade, alergias, etc."
-                        className="border-amber-200 bg-white/50"
+                        className="border-border bg-white/50"
                       />
                     </div>
 
                     {/* Message to Couple */}
                     <div className="space-y-2">
-                      <Label htmlFor="message" className="text-stone-700">
+                      <Label htmlFor="message" className="text-foreground/70">
                         Mensagem para os Noivos
                       </Label>
                       <Textarea
@@ -387,7 +387,7 @@ export default function RSVPPage() {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder="Deixe uma mensagem carinhosa..."
-                        className="min-h-[100px] border-amber-200 bg-white/50"
+                        className="min-h-[100px] border-border bg-white/50"
                       />
                     </div>
 
@@ -395,7 +395,7 @@ export default function RSVPPage() {
                     <Button
                       onClick={handleSubmit}
                       disabled={isSubmitting || selectedEvents.length === 0}
-                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-200/50 hover:shadow-xl hover:shadow-amber-300/50"
+                      className="w-full bg-accent text-white shadow-lg shadow-accent/20 hover:opacity-90"
                     >
                       {isSubmitting ? (
                         <>
@@ -419,9 +419,9 @@ export default function RSVPPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <Card className="border-amber-200/50 bg-white/80 backdrop-blur-sm">
+                <Card className="border-border bg-white/80 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-amber-800">Encontre seu Convite</CardTitle>
+                    <CardTitle className="text-primary font-serif">Encontre seu Convite</CardTitle>
                     <CardDescription>
                       Digite seu nome ou o código do convite para confirmar sua presença
                     </CardDescription>
@@ -434,13 +434,13 @@ export default function RSVPPage() {
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Digite seu nome ou código..."
-                          className="border-amber-200 bg-white/50"
+                          className="border-border bg-white/50"
                           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                         />
                         <Button
                           onClick={handleSearch}
                           disabled={isSearching || !searchQuery.trim()}
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+                          className="bg-accent text-white hover:opacity-90"
                         >
                           {isSearching ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -453,20 +453,20 @@ export default function RSVPPage() {
                       {/* Search Results */}
                       {searchResults.length > 0 && (
                         <div className="space-y-2">
-                          <p className="text-sm text-stone-500">
+                          <p className="text-sm text-foreground/50">
                             {searchResults.length} resultado(s) encontrado(s)
                           </p>
                           {searchResults.map((guest) => (
                             <button
                               key={guest.id}
                               onClick={() => handleSelectGuest(guest)}
-                              className="w-full rounded-xl border border-amber-100 bg-white/50 p-4 text-left transition-all hover:border-amber-200 hover:bg-amber-50"
+                              className="w-full rounded-xl border border-border bg-white/50 p-4 text-left transition-all hover:border-primary/30 hover:bg-primary/5"
                             >
-                              <p className="font-medium text-stone-700">
+                              <p className="font-medium text-foreground">
                                 {guest.firstName} {guest.lastName}
                               </p>
                               {guest.email && (
-                                <p className="text-xs text-stone-500">{guest.email}</p>
+                                <p className="text-xs text-foreground/50">{guest.email}</p>
                               )}
                             </button>
                           ))}
@@ -475,9 +475,9 @@ export default function RSVPPage() {
 
                       {/* No Results */}
                       {searchQuery && searchResults.length === 0 && !isSearching && (
-                        <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4 text-center">
-                          <AlertCircle className="mx-auto mb-2 h-6 w-6 text-amber-500" />
-                          <p className="text-sm text-stone-600">
+                        <div className="rounded-xl border border-border bg-muted/30 p-4 text-center">
+                          <AlertCircle className="mx-auto mb-2 h-6 w-6 text-accent" />
+                          <p className="text-sm text-foreground/60">
                             Nenhum convite encontrado. Verifique se o nome está correto ou entre em contato conosco.
                           </p>
                         </div>
@@ -488,25 +488,25 @@ export default function RSVPPage() {
 
                 {/* Info Cards */}
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-xl border border-amber-100/50 bg-white/50 p-4">
+                  <div className="rounded-xl border border-border bg-white/50 p-4">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-amber-100 p-2">
-                        <Calendar className="h-4 w-4 text-amber-600" />
+                      <div className="rounded-lg bg-primary/10 p-2">
+                        <Calendar className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-stone-700">Confirme até</p>
-                        <p className="text-xs text-stone-500">15 de Fevereiro de 2025</p>
+                        <p className="text-sm font-medium text-foreground">Confirme até</p>
+                        <p className="text-xs text-foreground/50">15 de Fevereiro de 2025</p>
                       </div>
                     </div>
                   </div>
-                  <div className="rounded-xl border border-amber-100/50 bg-white/50 p-4">
+                  <div className="rounded-xl border border-border bg-white/50 p-4">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-amber-100 p-2">
-                        <Users className="h-4 w-4 text-amber-600" />
+                      <div className="rounded-lg bg-primary/10 p-2">
+                        <Users className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-stone-700">Acompanhantes</p>
-                        <p className="text-xs text-stone-500">Verifique seu convite</p>
+                        <p className="text-sm font-medium text-foreground">Acompanhantes</p>
+                        <p className="text-xs text-foreground/50">Verifique seu convite</p>
                       </div>
                     </div>
                   </div>

@@ -16,9 +16,9 @@ interface RSVPChartProps {
 }
 
 const COLORS = {
-  confirmed: '#22c55e', // green-500
-  declined: '#f43f5e',  // rose-500
-  pending: '#d97706'    // amber-600
+  confirmed: 'oklch(var(--primary))',
+  declined: 'oklch(var(--error))',
+  pending: 'oklch(var(--warning))'
 }
 
 export function RSVPChart({ data }: RSVPChartProps) {
@@ -43,82 +43,71 @@ export function RSVPChart({ data }: RSVPChartProps) {
     }
   }), [])
 
-  const responseRate = data.total > 0 
+  const responseRate = data.total > 0
     ? Math.round(((data.confirmed + data.declined) / data.total) * 100)
     : 0
 
   return (
-    <Card className="border-amber-200/40 bg-gradient-to-br from-white to-amber-50/30">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium text-stone-700">
-          Status dos RSVPs
-        </CardTitle>
-        <CardDescription className="text-sm text-stone-500">
-          {responseRate}% de respostas recebidas
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[280px] w-full">
+    <div className="glass-card p-6">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h3 className="text-lg font-serif font-bold text-foreground">Status dos RSVPs</h3>
+          <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40 mt-1">
+            Eficiência de RSVP: {responseRate}%
+          </p>
+        </div>
+      </div>
+      <div className="h-[280px] w-full">
+        <ChartContainer config={chartConfig} className="h-full w-full">
           <PieChart>
             <Pie
               data={chartData}
               cx="50%"
               cy="45%"
-              innerRadius={60}
-              outerRadius={90}
-              paddingAngle={4}
+              innerRadius={70}
+              outerRadius={100}
+              paddingAngle={8}
               dataKey="value"
               nameKey="name"
-              animationBegin={0}
-              animationDuration={800}
+              stroke="white"
+              strokeWidth={2}
             >
               {chartData.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
+                <Cell
+                  key={`cell-${index}`}
                   fill={entry.fill}
-                  stroke="none"
+                  className="hover:opacity-80 transition-opacity cursor-pointer outline-none"
                 />
               ))}
             </Pie>
-            <Tooltip 
+            <Tooltip
               content={<ChartTooltipContent />}
-              formatter={(value: number, name: string) => [
-                `${value} convidados`,
-                name
-              ]}
-            />
-            <Legend 
-              content={<ChartLegendContent />}
-              verticalAlign="bottom"
             />
           </PieChart>
         </ChartContainer>
-        
-        {/* Summary Stats */}
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-lg bg-green-50 p-2">
-            <div className="flex items-center justify-center gap-1">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <span className="text-lg font-semibold text-green-700">{data.confirmed}</span>
-            </div>
-            <p className="text-xs text-green-600">Confirmados</p>
-          </div>
-          <div className="rounded-lg bg-rose-50 p-2">
-            <div className="flex items-center justify-center gap-1">
-              <XCircle className="h-4 w-4 text-rose-600" />
-              <span className="text-lg font-semibold text-rose-700">{data.declined}</span>
-            </div>
-            <p className="text-xs text-rose-600">Recusados</p>
-          </div>
-          <div className="rounded-lg bg-amber-50 p-2">
-            <div className="flex items-center justify-center gap-1">
-              <Clock className="h-4 w-4 text-amber-600" />
-              <span className="text-lg font-semibold text-amber-700">{data.pending}</span>
-            </div>
-            <p className="text-xs text-amber-600">Pendentes</p>
+      </div>
+
+      {/* Summary Stats - Executive Cards */}
+      <div className="mt-8 grid grid-cols-3 gap-3">
+        <div className="rounded-2xl border border-primary/5 bg-primary/[0.02] p-4 text-center group hover:bg-primary/[0.05] transition-all">
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-2xl font-serif font-bold text-primary group-hover:scale-110 transition-transform">{data.confirmed}</span>
+            <p className="text-[9px] font-accent font-bold uppercase tracking-widest text-primary/40">Confirmados</p>
           </div>
         </div>
-      </CardContent>
-    </Card>
+        <div className="rounded-2xl border border-error/5 bg-error/[0.02] p-4 text-center group hover:bg-error/[0.05] transition-all">
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-2xl font-serif font-bold text-error group-hover:scale-110 transition-transform">{data.declined}</span>
+            <p className="text-[9px] font-accent font-bold uppercase tracking-widest text-error/40">Recusados</p>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-warning/5 bg-warning/[0.02] p-4 text-center group hover:bg-warning/[0.05] transition-all">
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-2xl font-serif font-bold text-warning group-hover:scale-110 transition-transform">{data.pending}</span>
+            <p className="text-[9px] font-accent font-bold uppercase tracking-widest text-warning/40">No Aguardo</p>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

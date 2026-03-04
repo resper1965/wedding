@@ -39,21 +39,21 @@ export default function GiftListPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-300 border-t-amber-500" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-primary" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-16 sm:py-24">
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-gradient-to-br from-amber-100/50 to-orange-100/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-rose-100/40 to-amber-100/30 blur-3xl" />
-          <div className="absolute right-1/4 top-1/2 h-64 w-64 rounded-full bg-gradient-to-br from-orange-100/30 to-amber-100/20 blur-2xl" />
+          <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 blur-3xl" />
+          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-accent/10 to-primary/5 blur-3xl" />
+          <div className="absolute right-1/4 top-1/2 h-64 w-64 rounded-full bg-gradient-to-br from-accent/5 to-primary/5 blur-2xl" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-6xl px-4">
@@ -61,7 +61,7 @@ export default function GiftListPage() {
           <Link href="/">
             <Button
               variant="ghost"
-              className="mb-6 text-amber-700 hover:bg-amber-100 hover:text-amber-800"
+              className="mb-6 text-foreground/70 hover:bg-muted hover:text-primary"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Voltar
@@ -79,30 +79,30 @@ export default function GiftListPage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="mb-6 inline-flex items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 p-4 shadow-lg"
+              className="mb-6 inline-flex items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-accent/10 p-4 shadow-lg"
             >
-              <Gift className="h-10 w-10 text-amber-600" />
+              <Gift className="h-10 w-10 text-primary" />
             </motion.div>
 
             {/* Names */}
             <div className="mb-4 flex flex-wrap items-center justify-center gap-3">
-              <span className="bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-2xl font-light tracking-wide text-transparent sm:text-4xl">
+              <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-2xl font-light tracking-wide text-transparent sm:text-4xl">
                 {wedding?.partner1Name || 'Louise'}
               </span>
-              <Heart className="h-5 w-5 text-rose-400 sm:h-6 sm:w-6" fill="currentColor" />
-              <span className="bg-gradient-to-r from-orange-600 to-amber-700 bg-clip-text text-2xl font-light tracking-wide text-transparent sm:text-4xl">
+              <Heart className="h-5 w-5 text-accent sm:h-6 sm:w-6" fill="currentColor" />
+              <span className="bg-gradient-to-r from-primary/80 to-primary bg-clip-text text-2xl font-light tracking-wide text-transparent sm:text-4xl">
                 {wedding?.partner2Name || 'Nicolas'}
               </span>
             </div>
 
             {/* Title */}
-            <h1 className="mb-3 text-3xl font-light text-amber-800 sm:text-4xl">
+            <h1 className="mb-3 text-3xl font-serif text-foreground sm:text-4xl">
               Lista de Presentes
             </h1>
 
             {/* Subtitle */}
             <p className="mx-auto max-w-lg text-stone-600">
-              Escolha um presente especial para celebrar conosco este momento único. 
+              Escolha um presente especial para celebrar conosco este momento único.
               Sua presença e carinho já são o maior presente!
             </p>
           </motion.div>
@@ -117,9 +117,9 @@ export default function GiftListPage() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex items-center justify-center gap-4 py-8"
         >
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
-          <Sparkles className="h-5 w-5 text-amber-400" />
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+          <Sparkles className="h-5 w-5 text-accent" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
         </motion.div>
       </div>
 
@@ -143,15 +143,15 @@ export default function GiftListPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-amber-200/50 bg-white/60 p-8 text-center shadow-sm backdrop-blur-sm"
+            className="rounded-2xl border border-border bg-white/60 p-8 text-center shadow-sm backdrop-blur-sm"
           >
-            <Heart className="mx-auto mb-4 h-6 w-6 text-rose-400" fill="currentColor" />
-            <h3 className="mb-2 text-lg font-medium text-amber-800">
+            <Heart className="mx-auto mb-4 h-6 w-6 text-accent" fill="currentColor" />
+            <h3 className="mb-2 text-lg font-medium text-foreground">
               Como funciona?
             </h3>
-            <p className="text-sm text-stone-600">
-              Escolha um presente da lista e clique em &ldquo;Reservar&rdquo;. 
-              Você será solicitado a informar seu nome para que possamos organizar as reservas. 
+            <p className="text-sm text-foreground/70">
+              Escolha um presente da lista e clique em &ldquo;Reservar&rdquo;.
+              Você será solicitado a informar seu nome para que possamos organizar as reservas.
               Em caso de presentes com link externo, você pode comprar diretamente na loja indicada.
             </p>
           </motion.div>
@@ -162,19 +162,19 @@ export default function GiftListPage() {
       <footer className="border-t border-amber-100/50 bg-white/50 py-8">
         <div className="mx-auto max-w-4xl px-4 text-center">
           <div className="mb-4 flex items-center justify-center gap-2.5">
-            <span className="bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-lg font-light text-transparent">
+            <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-lg font-light text-transparent">
               {wedding?.partner1Name || 'Louise'}
             </span>
-            <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
-            <span className="bg-gradient-to-r from-orange-600 to-amber-700 bg-clip-text text-lg font-light text-transparent">
+            <Heart className="h-4 w-4 text-accent" fill="currentColor" />
+            <span className="bg-gradient-to-r from-primary/80 to-primary bg-clip-text text-lg font-light text-transparent">
               {wedding?.partner2Name || 'Nicolas'}
             </span>
           </div>
-          <p className="text-sm text-stone-500">
+          <p className="text-sm text-foreground/50">
             Agradecemos seu carinho e presença neste dia tão especial
           </p>
           <Link href="/" className="mt-4 inline-block">
-            <Button variant="link" className="text-amber-600 hover:text-amber-700">
+            <Button variant="link" className="text-primary hover:text-primary/80">
               Voltar ao início
             </Button>
           </Link>
