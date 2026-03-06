@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, MessageSquare, Settings,
   BarChart3, Grid3X3, HelpCircle, ChevronLeft, ChevronRight,
   Heart, DollarSign, Briefcase, ClipboardList, Shield, Gift,
-  MoreHorizontal, CalendarHeart, Bot, X, Zap, ChevronUp
+  MoreHorizontal, CalendarHeart, Bot, X, Zap, ChevronUp, ScanLine
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -36,6 +36,7 @@ export const tabs: Tab[] = [
   { id: 'checklist', label: 'Checklist', icon: ClipboardList },
   { id: 'settings', label: 'Configurações', icon: Settings },
   { id: 'war-room', label: 'War Room', icon: Zap },
+  { id: 'porteiro', label: 'Recepção', icon: ScanLine, href: '/porteiro' },
   { id: 'users', label: 'Usuários', icon: Shield, adminOnly: true },
   { id: 'help', label: 'Ajuda', icon: HelpCircle, href: '/ajuda' },
 ]

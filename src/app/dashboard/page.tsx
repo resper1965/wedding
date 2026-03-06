@@ -14,6 +14,7 @@ const Navigation = dynamic(() => import('@/components/ui-custom/Navigation').the
 const SidebarNav = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.SidebarNav), { ssr: false })
 const BottomNav = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.BottomNav), { ssr: false })
 const PageTransition = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.PageTransition), { ssr: false })
+import { tabs } from '@/components/ui-custom/Navigation'
 
 const WeddingHero = dynamic(() => import('@/components/dashboard/WeddingHero').then(mod => mod.WeddingHero), { ssr: true })
 const StatsOverview = dynamic(() => import('@/components/dashboard/StatsOverview').then(mod => mod.StatsOverview), { ssr: true })
@@ -91,6 +92,11 @@ export function MarryflowPlatform() {
   const activeTab = searchParams.get('tab') || 'dashboard'
 
   const setActiveTab = (tab: string) => {
+    const tabItem = tabs.find(t => t.id === tab)
+    if (tabItem?.href) {
+      router.push(tabItem.href)
+      return
+    }
     const params = new URLSearchParams(searchParams.toString())
     params.set('tab', tab)
     router.push(`?${params.toString()}`, { scroll: false })

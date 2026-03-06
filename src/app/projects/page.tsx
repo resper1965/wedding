@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Plus, AlertCircle, Heart } from 'lucide-react'
+import { Plus, AlertCircle, Heart, Trash2 } from 'lucide-react'
 import { useAuth } from '@/components/auth/SessionProvider'
 import { authFetch } from '@/lib/auth-fetch'
 
@@ -79,6 +79,32 @@ export default function ProjectsDashboard() {
         }
     }
 
+    const handleDeleteProject = async (projectId: string) => {
+        if (!confirm('Tem certeza que deseja apagar este projeto? Esta ação é irreversível.')) {
+            return
+        }
+
+        try {
+            const res = await authFetch('/api/wedding', {
+                method: 'DELETE',
+                headers: {
+                    'x-tenant-id': projectId
+                }
+            })
+
+            const data = await res.json()
+
+            if (!res.ok || !data.success) {
+                alert('Erro ao apagar projeto: ' + (data.error || 'Desconhecido'))
+            } else {
+                setProjects(prev => prev.filter(p => p.id !== projectId))
+            }
+        } catch (err) {
+            console.error(err)
+            alert('Erro ao apagar projeto.')
+        }
+    }
+
     if (loading || isFetching) return (
         <div className="flex min-h-screen items-center justify-center bg-background">
             <div className="flex flex-col items-center">
@@ -144,8 +170,20 @@ export default function ProjectsDashboard() {
                                 <div className="p-3 bg-muted rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                                     <Heart className="w-6 h-6" strokeWidth={1.5} />
                                 </div>
-                                <div className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full tracking-wide">
-                                    Ativo
+                                <div className="flex gap-2">
+                                    <div className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full tracking-wide">
+                                        Ativo
+                                    </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            handleDeleteProject(project.id)
+                                        }}
+                                        className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                        title="Apagar Projeto"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
                                 </div>
                             </div>
 

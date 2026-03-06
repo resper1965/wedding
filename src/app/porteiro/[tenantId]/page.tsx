@@ -14,6 +14,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   QrCode, Search, Users, Check, Clock, Wifi, WifiOff,
@@ -62,6 +63,8 @@ type ActiveView = 'home' | 'qr' | 'search' | 'list'
 // ============================================================================
 
 export default function PorteiroPage() {
+  const params = useParams()
+  const tenantId = params.tenantId as string
   const [activeView, setActiveView] = useState<ActiveView>('home')
   const [isScannerActive, setIsScannerActive] = useState(false)
   const [selectedGuest, setSelectedGuest] = useState<CheckInCardProps | null>(null)
@@ -231,9 +234,9 @@ export default function PorteiroPage() {
     : 0
 
   return (
-    <div className="flex min-h-screen flex-col bg-background selection:bg-primary/20">
+    <div className="flex min-h-screen flex-col bg-[oklch(0.99_0.005_160)] dark:bg-[oklch(0.14_0.02_160)] selection:bg-primary/20">
       {/* Header - Executive Glass */}
-      <header className="sticky top-0 z-30 border-b border-white/10 glass-card rounded-none">
+      <header className="sticky top-0 z-30 border-b border-primary/5 bg-background/60 backdrop-blur-xl h-20 flex items-center">
         <div className="flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-4">
             <BrandLogo size="sm" link={true} withDot={true} />
@@ -279,9 +282,9 @@ export default function PorteiroPage() {
               className="p-6 space-y-6"
             >
               {/* Stats card - Executive Minimalist */}
-              <div className="glass-card p-6">
+              <div className="bg-background/40 backdrop-blur-xl border border-primary/5 rounded-[2.5rem] p-8 shadow-sm">
                 <div className="mb-6 flex items-center justify-between">
-                  <h2 className="text-xs font-serif font-bold uppercase tracking-[0.3em] text-muted-foreground/50">Status de Ocupação</h2>
+                  <h2 className="text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-primary/40">Status de Ocupação</h2>
                   <div className="flex items-center gap-2">
                     <span className="text-xl font-sans font-bold text-primary">{progressPct}%</span>
                   </div>
@@ -319,9 +322,9 @@ export default function PorteiroPage() {
               <div className="grid grid-cols-1 gap-4">
                 <button
                   onClick={() => { setActiveView('qr'); setIsScannerActive(true) }}
-                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-background/40 backdrop-blur-xl border border-primary/5 p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                 >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-primary text-primary-foreground shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
                     <ScanLine className="h-7 w-7" />
                   </div>
                   <div>
@@ -335,25 +338,25 @@ export default function PorteiroPage() {
 
                 <button
                   onClick={() => setActiveView('search')}
-                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-background/40 backdrop-blur-xl border border-primary/5 p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                 >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-lg shadow-secondary/20 group-hover:scale-110 transition-transform">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary shadow-sm group-hover:scale-110 transition-transform">
                     <Search className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="text-lg font-serif font-semibold text-foreground group-hover:text-secondary transition-colors">Busca Manual</p>
+                    <p className="text-lg font-serif font-semibold text-foreground group-hover:text-primary transition-colors">Busca Manual</p>
                     <p className="text-xs font-sans text-muted-foreground/60">Localizar convidado por nome</p>
                   </div>
-                  <div className="ml-auto p-2 rounded-full border border-secondary/10 group-hover:bg-secondary group-hover:text-white transition-all">
+                  <div className="ml-auto p-2 rounded-full border border-primary/5 group-hover:bg-primary group-hover:text-white transition-all">
                     <ChevronRight className="h-5 w-5" />
                   </div>
                 </button>
 
                 <button
                   onClick={() => setActiveView('list')}
-                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-background/40 backdrop-blur-xl border border-primary/5 p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                 >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-background border border-border group-hover:bg-primary group-hover:text-white transition-all">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                     <List className="h-7 w-7" />
                   </div>
                   <div>
@@ -557,7 +560,7 @@ export default function PorteiroPage() {
       </main>
 
       {/* Bottom nav - Executive Glass Floating */}
-      <nav className="fixed bottom-6 left-6 right-6 z-40 flex h-16 items-center border border-white/20 glass-card rounded-[2rem] shadow-2xl shadow-black/20">
+      <nav className="fixed bottom-6 left-6 right-6 z-40 flex h-20 items-center border border-primary/5 bg-background/60 backdrop-blur-xl rounded-[2.5rem] shadow-2xl shadow-primary/5">
         {[
           { view: 'home' as ActiveView, icon: Heart, label: 'Painel' },
           { view: 'qr' as ActiveView, icon: QrCode, label: 'QR Scan' },
@@ -576,17 +579,17 @@ export default function PorteiroPage() {
               }
             }}
             className={cn(
-              'flex flex-1 flex-col items-center justify-center gap-1 transition-all duration-300',
-              activeView === item.view ? 'text-primary scale-110' : 'text-muted-foreground/40 hover:text-primary/60'
+              'flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300',
+              activeView === item.view ? 'text-primary scale-110' : 'text-primary/30 hover:text-primary/60'
             )}
           >
             <div className={cn(
-              'p-1.5 rounded-lg transition-colors',
-              activeView === item.view ? 'bg-primary/10' : ''
+              'p-2.5 rounded-2xl transition-colors',
+              activeView === item.view ? 'bg-primary/10 shadow-inner' : ''
             )}>
               <item.icon className="h-5 w-5" />
             </div>
-            <span className="text-[9px] font-accent font-bold uppercase tracking-widest">{item.label}</span>
+            <span className="text-[10px] font-accent font-bold uppercase tracking-widest leading-none">{item.label}</span>
           </button>
         ))}
       </nav>
