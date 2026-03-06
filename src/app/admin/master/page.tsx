@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ShieldAlert, Users, CreditCard, Trash2, UserPlus, RefreshCcw, Activity, ShieldCheck, Heart } from 'lucide-react'
+import { ShieldAlert, Users, CreditCard, Trash2, UserPlus, RefreshCcw, Activity, ShieldCheck, Heart, Database, Wrench, FlaskConical } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
@@ -24,6 +24,7 @@ export default function SuperAdminDashboard() {
     const [users, setUsers] = useState<AdminUser[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isProcessing, setIsProcessing] = useState<string | null>(null)
+    const [isSeeding, setIsSeeding] = useState(false)
     const { user: authUser, loading: authLoading } = useAuth()
     const router = useRouter()
 
@@ -108,6 +109,26 @@ export default function SuperAdminDashboard() {
             toast.error('Erro de conexão ao deletar usuário')
         }
         setIsProcessing(null)
+    }
+
+    const handleSeedDemo = async () => {
+        if (!confirm('Deseja realmente resetar os dados do Casamento de Demonstração? Isso apagará 100 convidados e recriará o ambiente do zero.')) return
+
+        setIsSeeding(true)
+        try {
+            const res = await authFetch('/api/admin/seed', { method: 'POST' })
+            const data = await res.json()
+            if (data.success) {
+                toast.success('Ambiente de demonstração resetado com sucesso!')
+                fetchUsers() // Refresh stats
+            } else {
+                toast.error(data.error || 'Erro ao processar seed')
+            }
+        } catch {
+            toast.error('Falha na comunicação com o servidor de infraestrutura')
+        } finally {
+            setIsSeeding(false)
+        }
     }
 
     if (authLoading || isLoading) return (
