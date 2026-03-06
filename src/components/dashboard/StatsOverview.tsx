@@ -70,12 +70,12 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
             <p className="text-xl font-serif font-bold text-foreground mt-1">Status da Lista de Convidados</p>
           </div>
           <div className="text-right">
-            <span className="rounded-2xl bg-primary/5 border border-primary/10 px-4 py-2 text-sm font-accent font-bold text-primary shadow-inner">
+            <span className="rounded-2xl bg-card border border-border px-4 py-2 text-sm font-accent font-bold text-primary shadow-inner">
               {confirmationRate}%
             </span>
           </div>
         </div>
-        <div className="h-4 overflow-hidden rounded-full bg-primary/5 shadow-inner p-1">
+        <div className="h-4 overflow-hidden rounded-full bg-muted shadow-inner p-1">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${confirmationRate}%` }}

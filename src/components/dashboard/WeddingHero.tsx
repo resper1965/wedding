@@ -64,9 +64,9 @@ export function WeddingHero({
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-10"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-6 py-2 shadow-sm backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-2 shadow-sm backdrop-blur-sm transition-all hover:bg-card">
             <Calendar className="h-4 w-4 text-primary" />
-            <span className="text-sm font-accent font-semibold uppercase tracking-widest text-primary/80">{formattedDate}</span>
+            <span className="text-sm font-accent font-semibold uppercase tracking-widest text-primary">{formattedDate}</span>
           </div>
         </motion.div>
 
@@ -81,8 +81,8 @@ export function WeddingHero({
             <div className="text-[10rem] font-serif font-bold text-primary md:text-[12rem] tracking-tighter shimmer leading-none">
               {daysUntilWedding}
             </div>
-            <div className="absolute -top-4 -right-12 h-24 w-24 rounded-full border border-primary/10 bg-primary/5 flex items-center justify-center shadow-inner scale-75 md:scale-100">
-              <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-primary/60">Dias</span>
+            <div className="absolute -top-4 -right-12 h-24 w-24 rounded-full border border-border bg-card/40 flex items-center justify-center shadow-inner scale-75 md:scale-100 backdrop-blur-md">
+              <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground">Dias</span>
             </div>
           </div>
           <div className="mt-6 text-[11px] uppercase tracking-[0.5em] font-accent font-bold text-muted-foreground/30">

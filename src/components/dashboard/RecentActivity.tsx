@@ -40,10 +40,10 @@ export function RecentActivity({ activities }: RecentActivityProps) {
       transition={{ duration: 0.4, delay: 0.5 }}
       className="glass-card p-6 flex flex-col h-full"
     >
-      <h3 className="mb-8 text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/30 flex items-center gap-3">
-        <div className="h-px flex-1 bg-primary/5" />
+      <h3 className="mb-8 text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/50 flex items-center gap-3">
+        <div className="h-px flex-1 bg-border" />
         Atividade Recente
-        <div className="h-px flex-1 bg-primary/5" />
+        <div className="h-px flex-1 bg-border" />
       </h3>
       <div className="max-h-80 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
         {activities.slice(0, 8).map((activity, index) => {
@@ -66,8 +66,8 @@ export function RecentActivity({ activities }: RecentActivityProps) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[13px] font-sans font-semibold text-foreground leading-snug tracking-tight group-hover:text-primary transition-colors">{activity.message}</p>
-                <p className="text-[9px] font-accent font-bold text-muted-foreground/20 mt-1.5 uppercase tracking-widest flex items-center gap-1.5">
-                  <Clock className="h-3 w-3 opacity-30" />
+                <p className="text-[9px] font-accent font-bold text-muted-foreground/60 mt-1.5 uppercase tracking-widest flex items-center gap-1.5">
+                  <Clock className="h-3 w-3 opacity-50" />
                   {formatDistanceToNow(new Date(activity.timestamp), {
                     addSuffix: true,
                     locale: ptBR
