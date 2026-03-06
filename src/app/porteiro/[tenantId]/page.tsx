@@ -234,7 +234,7 @@ export default function PorteiroPage() {
     : 0
 
   return (
-    <div className="flex min-h-screen flex-col bg-[oklch(0.99_0.005_160)] dark:bg-[oklch(0.14_0.02_160)] selection:bg-primary/20">
+    <div className="flex min-h-screen flex-col bg-background selection:bg-primary/20">
       {/* Header - Executive Glass */}
       <header className="sticky top-0 z-30 border-b border-primary/5 bg-background/60 backdrop-blur-xl h-20 flex items-center">
         <div className="flex h-16 items-center justify-between px-6">
@@ -282,7 +282,7 @@ export default function PorteiroPage() {
               className="p-6 space-y-6"
             >
               {/* Stats card - Executive Minimalist */}
-              <div className="bg-background/40 backdrop-blur-xl border border-primary/5 rounded-[2.5rem] p-8 shadow-sm">
+              <div className="glass-card rounded-[2.5rem] p-8">
                 <div className="mb-6 flex items-center justify-between">
                   <h2 className="text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-primary/40">Status de Ocupação</h2>
                   <div className="flex items-center gap-2">
@@ -322,7 +322,7 @@ export default function PorteiroPage() {
               <div className="grid grid-cols-1 gap-4">
                 <button
                   onClick={() => { setActiveView('qr'); setIsScannerActive(true) }}
-                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-background/40 backdrop-blur-xl border border-primary/5 p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                 >
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-primary text-primary-foreground shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
                     <ScanLine className="h-7 w-7" />
@@ -338,7 +338,7 @@ export default function PorteiroPage() {
 
                 <button
                   onClick={() => setActiveView('search')}
-                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-background/40 backdrop-blur-xl border border-primary/5 p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                 >
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary shadow-sm group-hover:scale-110 transition-transform">
                     <Search className="h-7 w-7" />
@@ -354,7 +354,7 @@ export default function PorteiroPage() {
 
                 <button
                   onClick={() => setActiveView('list')}
-                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-background/40 backdrop-blur-xl border border-primary/5 p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                 >
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                     <List className="h-7 w-7" />
@@ -465,7 +465,7 @@ export default function PorteiroPage() {
                   placeholder="Localizar convidado ou grupo..."
                   value={listSearch}
                   onChange={e => setListSearch(e.target.value)}
-                  className="pl-12 h-12 bg-white/50 border-white/20 focus:bg-white focus:border-primary transition-all rounded-xl font-sans"
+                  className="pl-12 h-12 bg-card/50 border-border focus:bg-card focus:border-primary transition-all rounded-xl font-sans"
                   autoFocus
                 />
               </div>
@@ -506,7 +506,7 @@ export default function PorteiroPage() {
                         'flex items-center gap-4 rounded-2xl p-4 transition-all magnetic-hover border',
                         guest.checkedIn
                           ? 'border-success/20 bg-success/5'
-                          : 'border-white/10 glass-card'
+                          : 'glass-card'
                       )}
                     >
                       <div className={cn(

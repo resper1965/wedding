@@ -90,7 +90,7 @@ export function SidebarNav({
         <Link
           href="/projects"
           className={cn(
-            "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-[#1A302B] dark:text-[#C6D8D3] transition-all hover:bg-primary/5 group",
+            "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-foreground/60 transition-all hover:bg-primary/5 group",
             collapsed && "justify-center px-0"
           )}
         >
@@ -101,7 +101,7 @@ export function SidebarNav({
           <Link
             href="/admin/master"
             className={cn(
-              "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50/50 transition-all hover:bg-emerald-100 group",
+              "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-primary bg-primary/10 transition-all hover:bg-primary/20 group",
               collapsed && "justify-center px-0"
             )}
           >

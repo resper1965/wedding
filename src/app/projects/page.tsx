@@ -208,7 +208,7 @@ export default function ProjectsDashboard() {
                     ))}
 
                     {projects.length === 0 && (
-                        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col items-center justify-center py-24 border-2 border-dashed border-border rounded-3xl bg-white/50">
+                        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col items-center justify-center py-24 border-2 border-dashed border-border rounded-3xl bg-muted/50">
                             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
                                 <Heart className="w-8 h-8 text-border" strokeWidth={1.5} />
                             </div>

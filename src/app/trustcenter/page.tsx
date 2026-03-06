@@ -36,8 +36,8 @@ export default function TrustCenterPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-[oklch(0.99_0.005_160)] dark:bg-[oklch(0.14_0.02_160)] flex flex-col">
-            <header className="h-20 border-b border-primary/5 bg-background/60 backdrop-blur-xl flex items-center px-8 sticky top-0 z-50">
+        <div className="min-h-screen bg-background flex flex-col">
+            <header className="h-20 border-b border-border bg-background/60 backdrop-blur-xl flex items-center px-8 sticky top-0 z-50">
                 <BrandLogo />
                 <div className="ml-auto flex items-center gap-4">
                     <div className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-accent font-bold uppercase tracking-widest border border-primary/20">
@@ -126,7 +126,7 @@ export default function TrustCenterPage() {
                         </Card>
 
                         <div className="flex flex-col gap-8">
-                            <Card className="glass-card border-primary/10 rounded-3xl bg-primary/5">
+                            <Card className="glass-card border-border rounded-3xl">
                                 <CardContent className="p-8">
                                     <div className="flex items-center gap-6 mb-8">
                                         <div className="h-16 w-16 rounded-2xl bg-white/50 flex items-center justify-center text-primary shadow-inner">
