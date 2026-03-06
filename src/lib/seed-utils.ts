@@ -69,8 +69,8 @@ export async function runDemoSeed(supabase: SupabaseClient<any>) {
     const { data: createdTables } = await (supabase.from('Table') as any).insert(tables).select()
 
     // 6. CREATE GUESTS & RSVPS
-    const guests = []
-    const rsvps = []
+    const guests: any[] = []
+    const rsvps: any[] = []
     const surnames = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Rodrigues', 'Ferreira', 'Alves', 'Pereira']
     const firstNames = ['Ana', 'Bruno', 'Carla', 'Diego', 'Elena', 'Felipe', 'Giovanna', 'Hugo', 'Isabela', 'João', 'Karen', 'Lucas', 'Mariana', 'Neymar', 'Olivia', 'Paulo', 'Quiteria', 'Ricardo', 'Sara', 'Thiago']
 

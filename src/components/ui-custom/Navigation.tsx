@@ -68,7 +68,7 @@ export function SidebarNav({
   onCollapsedChange,
 }: NavigationProps) {
   const { user } = useAuth()
-  const displayTabs = tabs.filter(t => !t.adminOnly || user?.role === 'admin')
+  const displayTabs = tabs.filter(t => !t.adminOnly || user?.isSuperAdmin)
 
   return (
     <aside
@@ -86,7 +86,7 @@ export function SidebarNav({
       </div>
 
       {/* Global Navigation - Back to Projects */}
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-4 space-y-2">
         <Link
           href="/projects"
           className={cn(
@@ -97,6 +97,18 @@ export function SidebarNav({
           <Grid3X3 className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
           {!collapsed && <span>Meus Eventos</span>}
         </Link>
+        {user?.isSuperAdmin && (
+          <Link
+            href="/admin/master"
+            className={cn(
+              "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50/50 transition-all hover:bg-emerald-100 group",
+              collapsed && "justify-center px-0"
+            )}
+          >
+            <Shield className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
+            {!collapsed && <span>Painel Master</span>}
+          </Link>
+        )}
       </div>
 
       {/* Nav items */}

@@ -358,7 +358,7 @@ export function MarryflowPlatform() {
                 </PageTransition>
               )}
 
-              {activeTab === 'users' && user?.role === 'admin' && (
+              {activeTab === 'users' && user?.isSuperAdmin && (
                 <PageTransition key="users">
                   <UserManager />
                 </PageTransition>

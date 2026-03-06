@@ -28,6 +28,8 @@ export default function ProjectsDashboard() {
     useEffect(() => {
         if (!loading && !user) {
             router.push('/login')
+        } else if (!loading && user?.isSuperAdmin) {
+            router.push('/admin/master')
         }
     }, [user, loading, router])
 
