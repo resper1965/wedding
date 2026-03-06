@@ -206,6 +206,57 @@ export default function SuperAdminDashboard() {
                     </div>
                 </div>
 
+                {/* Infrastructure Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
+                        <div className="relative">
+                            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                                <Database className="w-5 h-5 text-emerald-600" />
+                                Ações de Infraestrutura
+                            </h2>
+                            <p className="text-sm text-slate-500 mb-6 max-w-md">
+                                Ferramentas avançadas para gestão do ambiente, limpeza de caches e geração de dados sintéticos para demonstrações.
+                            </p>
+                            <div className="flex flex-wrap gap-4">
+                                <Button
+                                    onClick={handleSeedDemo}
+                                    disabled={isSeeding}
+                                    className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100"
+                                >
+                                    <FlaskConical className={`w-4 h-4 mr-2 ${isSeeding ? 'animate-spin' : ''}`} />
+                                    {isSeeding ? 'Gerando Demo...' : 'Resetar Casamento Demo'}
+                                </Button>
+                                <Button variant="outline" className="text-slate-600 border-slate-200" disabled>
+                                    <Wrench className="w-4 h-4 mr-2" />
+                                    Limpar Cache Global
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-emerald-900 p-8 rounded-2xl shadow-xl border border-emerald-800 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+                        <div className="relative flex flex-col h-full justify-between">
+                            <div>
+                                <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
+                                    <ShieldAlert className="w-5 h-5 text-amber-400" />
+                                    Terminal de Segurança
+                                </h2>
+                                <p className="text-emerald-300/80 text-sm mb-6">
+                                    Acesso restrito para auditoria de logs e verificações de integridade. Use com cautela.
+                                </p>
+                            </div>
+                            <div className="flex gap-4">
+                                <Button className="bg-emerald-800 hover:bg-emerald-700 text-emerald-100 border border-emerald-700" onClick={() => toast.info('Acesso aos logs bloqueado por política de segurança.')}>
+                                    <Activity className="w-4 h-4 mr-2" />
+                                    Logs de Auditoria
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {/* CRM / User Data Table */}
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="p-6 border-b border-slate-100 flex justify-between items-center">

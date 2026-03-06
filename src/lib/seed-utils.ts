@@ -1,29 +1,29 @@
-import { createClient } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { v4 as uuidv4 } from 'uuid'
 
 export const DEMO_TENANT_ID = 'demo-wedding-2026'
 export const OWNER_ID = '957652aa-279c-4aa2-bd45-f6df095738ed'
 
-export async function runDemoSeed(supabase: ReturnType<typeof createClient>) {
+export async function runDemoSeed(supabase: SupabaseClient<any>) {
     console.log('--- 🚀 Starting Demo Seed ---')
     const now = new Date().toISOString()
 
     // 1. CLEANUP (Reset)
-    const { data: existingGuests } = await supabase.from('Guest').select('id').eq('weddingId', DEMO_TENANT_ID)
+    const { data: existingGuests } = await (supabase.from('Guest') as any).select('id').eq('weddingId', DEMO_TENANT_ID)
     const guestIds = (existingGuests || []).map(g => g.id)
 
     if (guestIds.length > 0) {
-        await supabase.from('Rsvp').delete().in('guestId', guestIds)
+        await (supabase.from('Rsvp') as any).delete().in('guestId', guestIds)
     }
 
-    await supabase.from('Guest').delete().eq('weddingId', DEMO_TENANT_ID)
-    await supabase.from('Event').delete().eq('weddingId', DEMO_TENANT_ID)
-    await supabase.from('Table').delete().eq('weddingId', DEMO_TENANT_ID)
-    await supabase.from('GuestGroup').delete().eq('weddingId', DEMO_TENANT_ID)
-    await supabase.from('Wedding').delete().eq('id', DEMO_TENANT_ID)
+    await (supabase.from('Guest') as any).delete().eq('weddingId', DEMO_TENANT_ID)
+    await (supabase.from('Event') as any).delete().eq('weddingId', DEMO_TENANT_ID)
+    await (supabase.from('Table') as any).delete().eq('weddingId', DEMO_TENANT_ID)
+    await (supabase.from('GuestGroup') as any).delete().eq('weddingId', DEMO_TENANT_ID)
+    await (supabase.from('Wedding') as any).delete().eq('id', DEMO_TENANT_ID)
 
     // 2. CREATE WEDDING
-    const { error: weddingError } = await supabase.from('Wedding').insert({
+    const { error: weddingError } = await (supabase.from('Wedding') as any).insert({
         id: DEMO_TENANT_ID,
         partner1Name: 'Nicolas',
         partner2Name: 'Louise',
@@ -45,7 +45,7 @@ export async function runDemoSeed(supabase: ReturnType<typeof createClient>) {
         { id: uuidv4(), weddingId: DEMO_TENANT_ID, name: 'Coquetel de Boas-vindas', location: 'Espaço Alvorada', startTime: '2026-10-10T19:30:00', order: 2, createdAt: now, updatedAt: now },
         { id: uuidv4(), weddingId: DEMO_TENANT_ID, name: 'Jantar & Festa', location: 'Salão Principal', startTime: '2026-10-10T21:00:00', order: 3, createdAt: now, updatedAt: now },
     ]
-    await supabase.from('Event').insert(events)
+    await (supabase.from('Event') as any).insert(events)
 
     // 4. CREATE GROUPS
     const groupsData = [
@@ -55,7 +55,7 @@ export async function runDemoSeed(supabase: ReturnType<typeof createClient>) {
         { id: uuidv4(), weddingId: DEMO_TENANT_ID, name: 'Amigos Nicolas', createdAt: now, updatedAt: now },
         { id: uuidv4(), weddingId: DEMO_TENANT_ID, name: 'Colegas Trabalho', createdAt: now, updatedAt: now },
     ]
-    const { data: groups } = await supabase.from('GuestGroup').insert(groupsData).select()
+    const { data: groups } = await (supabase.from('GuestGroup') as any).insert(groupsData).select()
 
     // 5. CREATE TABLES
     const tables = Array.from({ length: 12 }, (_, i) => ({
@@ -66,7 +66,7 @@ export async function runDemoSeed(supabase: ReturnType<typeof createClient>) {
         createdAt: now,
         updatedAt: now,
     }))
-    const { data: createdTables } = await supabase.from('Table').insert(tables).select()
+    const { data: createdTables } = await (supabase.from('Table') as any).insert(tables).select()
 
     // 6. CREATE GUESTS & RSVPS
     const guests = []
@@ -113,8 +113,8 @@ export async function runDemoSeed(supabase: ReturnType<typeof createClient>) {
         })
     }
 
-    await supabase.from('Guest').insert(guests)
-    await supabase.from('Rsvp').insert(rsvps)
+    await (supabase.from('Guest') as any).insert(guests)
+    await (supabase.from('Rsvp') as any).insert(rsvps)
 
     return {
         weddings: 1,
