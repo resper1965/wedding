@@ -134,8 +134,16 @@ export default function SuperAdminDashboard() {
     if (authLoading || isLoading) return (
         <div className="flex min-h-screen items-center justify-center bg-background">
             <div className="flex flex-col items-center">
-                <ShieldAlert className="h-12 w-12 animate-pulse mb-4 text-primary" />
-                <div className="text-primary/70 font-medium">Validando Tokens de Alta Segurança...</div>
+                <ShieldAlert className="h-12 w-12 animate-pulse mb-6 text-primary/40" />
+                <div className="text-[10px] font-accent font-bold uppercase tracking-[0.5em] text-primary/60">Validando Credenciais Master</div>
+                <div className="mt-4 h-1 w-48 bg-primary/5 rounded-full overflow-hidden">
+                    <motion.div
+                        initial={{ x: '-100%' }}
+                        animate={{ x: '100%' }}
+                        transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
+                        className="h-full w-1/3 bg-primary"
+                    />
+                </div>
             </div>
         </div>
     )
@@ -144,64 +152,64 @@ export default function SuperAdminDashboard() {
         <div className="min-h-screen bg-background p-6 sm:p-10 font-sans">
             <div className="max-w-7xl mx-auto space-y-8">
 
-                {/* Header */}
-                <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 glass-card p-8 rounded-[2rem]">
-                    <div className="flex items-center gap-4">
-                        <div className="bg-primary/10 p-3 rounded-xl">
-                            <ShieldCheck className="w-8 h-8 text-primary" />
+                {/* Header - Premium Executive Glass */}
+                <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 bg-card/40 backdrop-blur-xl p-10 rounded-[3rem] border border-border/40 soft-shadow">
+                    <div className="flex items-center gap-6">
+                        <div className="bg-primary/10 p-4 rounded-2xl border border-primary/20 shadow-lg">
+                            <ShieldCheck className="w-10 h-10 text-primary" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                                Painel Master SaaS
-                                <span className="bg-primary text-primary-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded-full tracking-wider">Root</span>
-                            </h1>
-                            <p className="text-muted-foreground text-sm mt-1">Gestão de assinantes, clientes e infraestrutura do Marryflow.</p>
+                            <div className="flex items-center gap-3">
+                                <h1 className="text-3xl font-serif font-bold text-foreground">Painel Master</h1>
+                                <span className="bg-primary text-primary-foreground text-[8px] uppercase font-bold px-3 py-1 rounded-full tracking-[0.2em] shadow-sm">Superuser</span>
+                            </div>
+                            <p className="text-muted-foreground/60 text-sm mt-1 font-medium italic">Gestão de ecossistema, infraestrutura e quotas Marryflow.</p>
                         </div>
                     </div>
-                    <div className="flex gap-3">
-                        <Button variant="outline" className="border-border text-foreground/70" onClick={fetchUsers}>
+                    <div className="flex items-center gap-4">
+                        <Button variant="outline" className="h-12 px-6 border-border/40 bg-card/40 text-muted-foreground hover:bg-card hover:text-primary rounded-2xl font-accent font-bold uppercase tracking-widest text-[10px] transition-all" onClick={fetchUsers}>
                             <RefreshCcw className="w-4 h-4 mr-2" />
-                            Atualizar Dados
+                            Sincronizar
                         </Button>
                         <Link href="/projects">
-                            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                                Acessar Meus Eventos
+                            <Button className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/20 font-accent font-bold uppercase tracking-widest text-[10px]">
+                                Ver Eventos
                             </Button>
                         </Link>
                     </div>
                 </header>
 
-                {/* Global Statistics */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="glass-card p-8 rounded-[2rem] flex items-center gap-5">
-                        <div className="bg-blue-500/10 p-4 rounded-full">
-                            <Users className="w-6 h-6 text-blue-500" />
+                {/* Global Statistics - Premium Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="bg-card/40 backdrop-blur-xl p-10 rounded-[3rem] border border-border/40 soft-shadow flex items-center gap-6 group hover:translate-y-[-4px] transition-all">
+                        <div className="bg-primary/5 p-5 rounded-full border border-primary/10 group-hover:bg-primary/10 transition-colors">
+                            <Users className="w-8 h-8 text-primary/60" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Total de Assessores</p>
-                            <h3 className="text-3xl font-bold text-foreground">{users.length}</h3>
+                            <p className="text-[9px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/40 mb-1">Assessores</p>
+                            <h3 className="text-4xl font-serif font-bold text-foreground">{users.length}</h3>
                         </div>
                     </div>
 
-                    <div className="glass-card p-8 rounded-[2rem] flex items-center gap-5">
-                        <div className="bg-primary/10 p-4 rounded-full">
-                            <Heart className="w-6 h-6 text-primary" />
+                    <div className="bg-card/40 backdrop-blur-xl p-10 rounded-[3rem] border border-border/40 soft-shadow flex items-center gap-6 group hover:translate-y-[-4px] transition-all">
+                        <div className="bg-primary/5 p-5 rounded-full border border-primary/10 group-hover:bg-primary/10 transition-colors">
+                            <Heart className="w-8 h-8 text-primary/60" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Casamentos Criados</p>
-                            <h3 className="text-3xl font-bold text-foreground">
+                            <p className="text-[9px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/40 mb-1">Casamentos</p>
+                            <h3 className="text-4xl font-serif font-bold text-foreground">
                                 {users.reduce((acc, user) => acc + (user.Wedding?.length || 0), 0)}
                             </h3>
                         </div>
                     </div>
 
-                    <div className="glass-card p-8 rounded-[2rem] flex items-center gap-5">
-                        <div className="bg-success/10 p-4 rounded-full">
-                            <Activity className="w-6 h-6 text-success" />
+                    <div className="bg-card/40 backdrop-blur-xl p-10 rounded-[3rem] border border-border/40 soft-shadow flex items-center gap-6 group hover:translate-y-[-4px] transition-all">
+                        <div className="bg-success/5 p-5 rounded-full border border-success/10 group-hover:bg-success/10 transition-colors">
+                            <Activity className="w-8 h-8 text-success/60" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Integridade da Plataforma</p>
-                            <h3 className="text-lg font-bold text-success">Serviços Online</h3>
+                            <p className="text-[9px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/40 mb-1">Infraestrutura</p>
+                            <h3 className="text-lg font-serif font-bold text-success/80">Operacional</h3>
                         </div>
                     </div>
                 </div>
@@ -264,7 +272,7 @@ export default function SuperAdminDashboard() {
                             <UserPlus className="w-5 h-5 text-primary" />
                             Clientes Cadastrados
                         </h2>
-                        <Input placeholder="Buscar por email..." className="max-w-xs border-border bg-background/40" disabled />
+                        <Input placeholder="Buscar por email..." className="max-w-xs border-border bg-muted/20" disabled />
                     </div>
 
                     <div className="overflow-x-auto">
@@ -287,7 +295,7 @@ export default function SuperAdminDashboard() {
                                             key={u.id}
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
-                                            className="hover:bg-slate-50/50 transition-colors"
+                                            className="hover:bg-muted/30 transition-colors"
                                         >
                                             <td className="px-8 py-5 whitespace-nowrap">
                                                 <div className="font-medium text-foreground">{u.email || 'Email Privado API'}</div>

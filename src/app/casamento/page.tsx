@@ -119,9 +119,9 @@ export default function PublicWeddingPage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="mb-8"
               >
-                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white/60 px-6 py-3 shadow-sm backdrop-blur-sm">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 shadow-sm backdrop-blur-md">
                   <Calendar className="h-5 w-5 text-primary" />
-                  <span className="text-lg font-medium text-primary">
+                  <span className="text-lg font-medium text-foreground">
                     {formattedDate}
                   </span>
                 </div>
@@ -146,7 +146,7 @@ export default function PublicWeddingPage() {
               </motion.div>
             )}
 
-            {/* Countdown */}
+            {/* Countdown - Premium Design consistent with Dashboard */}
             {weddingDate && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -154,9 +154,9 @@ export default function PublicWeddingPage() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="mb-12"
               >
-                <div className="inline-flex flex-col items-center rounded-2xl border border-amber-200/50 bg-white/70 px-8 py-6 shadow-lg backdrop-blur-sm">
-                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-primary">
-                    Contagem Regressiva
+                <div className="inline-flex flex-col items-center rounded-[3rem] border border-border/40 bg-card/40 px-12 py-10 shadow-2xl backdrop-blur-xl soft-shadow">
+                  <p className="mb-6 text-[10px] font-accent font-bold uppercase tracking-[0.5em] text-primary">
+                    O Grande Dia Chega em
                   </p>
                   <CountdownTimer targetDate={weddingDate} />
                 </div>
@@ -209,9 +209,9 @@ export default function PublicWeddingPage() {
               transition={{ delay: 0 }}
             >
               <Link href="/casamento/historia" className="group block">
-                <div className="rounded-2xl border border-border bg-white/60 p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
-                  <h3 className="mb-2 text-lg font-medium text-primary font-serif">Nossa História</h3>
-                  <p className="text-sm text-foreground/50">
+                <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm transition-all hover:border-primary/30 hover:bg-card/60 hover:shadow-md backdrop-blur-sm">
+                  <h3 className="mb-2 text-lg font-medium text-foreground font-serif">Nossa História</h3>
+                  <p className="text-sm text-muted-foreground/60">
                     Conheça nossa jornada de amor e como chegamos até aqui.
                   </p>
                 </div>
@@ -225,9 +225,9 @@ export default function PublicWeddingPage() {
               transition={{ delay: 0.1 }}
             >
               <Link href="/casamento/eventos" className="group block">
-                <div className="rounded-2xl border border-border bg-white/60 p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
-                  <h3 className="mb-2 text-lg font-medium text-primary font-serif">Eventos</h3>
-                  <p className="text-sm text-foreground/50">
+                <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm transition-all hover:border-primary/30 hover:bg-card/60 hover:shadow-md backdrop-blur-sm">
+                  <h3 className="mb-2 text-lg font-medium text-foreground font-serif">Eventos</h3>
+                  <p className="text-sm text-muted-foreground/60">
                     Confira a programação completa do nosso grande dia.
                   </p>
                 </div>
@@ -242,9 +242,9 @@ export default function PublicWeddingPage() {
               className="sm:col-span-2 lg:col-span-1"
             >
               <Link href="/casamento/padrinhos" className="group block">
-                <div className="rounded-2xl border border-border bg-white/60 p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
-                  <h3 className="mb-2 text-lg font-medium text-primary font-serif">Padrinhos</h3>
-                  <p className="text-sm text-foreground/50">
+                <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm transition-all hover:border-primary/30 hover:bg-card/60 hover:shadow-md backdrop-blur-sm">
+                  <h3 className="mb-2 text-lg font-medium text-foreground font-serif">Padrinhos</h3>
+                  <p className="text-sm text-muted-foreground/60">
                     Conheça as pessoas especiais que farão parte deste momento.
                   </p>
                 </div>

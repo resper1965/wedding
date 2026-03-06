@@ -93,12 +93,12 @@ export default function ReceptionPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-border/40 bg-card/40 backdrop-blur-md">
         <div className="mx-auto max-w-lg px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-lg font-medium text-stone-800">Recepção</h1>
-              <p className="text-xs text-stone-500">Check-in de Convidados</p>
+              <h1 className="text-lg font-bold text-foreground font-serif">Recepção</h1>
+              <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Check-in de Convidados</p>
             </div>
 
             {/* Sync Status */}
@@ -132,7 +132,7 @@ export default function ReceptionPage() {
       </header>
 
       {/* Stats Bar */}
-      <div className="border-b border-border bg-muted/30 px-4 py-3">
+      <div className="border-b border-border/20 bg-muted/10 px-4 py-3">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-1 text-foreground/60">
@@ -156,12 +156,12 @@ export default function ReceptionPage() {
       {/* Search */}
       <div className="mx-auto max-w-lg px-4 py-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary/40" />
           <Input
             placeholder="Buscar convidado..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="border-border bg-white pl-9 focus:border-primary"
+            className="border-border bg-muted/20 pl-11 h-12 rounded-xl focus:bg-card focus:border-primary transition-all"
           />
         </div>
       </div>
@@ -195,16 +195,16 @@ export default function ReceptionPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ delay: index * 0.02 }}
-                    className={`overflow-hidden rounded-xl border transition-all ${isCheckedIn
-                        ? 'border-primary/20 bg-primary/5'
-                        : 'border-border bg-white/80'
+                    className={`overflow-hidden rounded-2xl border transition-all ${isCheckedIn
+                      ? 'border-primary/20 bg-primary/5'
+                      : 'border-border bg-card/40 backdrop-blur-sm'
                       }`}
                   >
                     <div className="flex items-center gap-4 p-4">
                       {/* Avatar */}
                       <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-medium ${isCheckedIn
-                          ? 'bg-primary/10 text-primary'
-                          : 'bg-muted text-foreground/70'
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-muted text-foreground/70'
                         }`}>
                         {isCheckedIn ? (
                           <Check className="h-5 w-5" />
@@ -215,11 +215,11 @@ export default function ReceptionPage() {
 
                       {/* Info */}
                       <div className="min-w-0 flex-1">
-                        <p className={`truncate font-medium ${isCheckedIn ? 'text-stone-500 line-through' : 'text-stone-800'
+                        <p className={`truncate font-bold font-serif ${isCheckedIn ? 'text-muted-foreground/40' : 'text-foreground'
                           }`}>
                           {guest.fullName}
                         </p>
-                        <p className="mt-0.5 text-xs text-stone-500">
+                        <p className="mt-0.5 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">
                           {isCheckedIn ? (
                             <>
                               <Clock className="mr-1 inline h-3 w-3" />
@@ -245,7 +245,7 @@ export default function ReceptionPage() {
                         <Button
                           size="sm"
                           onClick={() => handleCheckIn(guest)}
-                          className="bg-accent hover:opacity-90"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-accent font-bold uppercase tracking-widest text-[10px] rounded-lg px-4"
                         >
                           Check-in
                         </Button>

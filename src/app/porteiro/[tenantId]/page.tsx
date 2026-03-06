@@ -250,15 +250,15 @@ export default function PorteiroPage() {
           </div>
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background/50 border border-white/5">
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
               {isOnline ? (
-                <div className="flex items-center gap-1.5 text-success">
-                  <Wifi className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Online</span>
+                <div className="flex items-center gap-2 text-primary">
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Active</span>
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-error">
-                  <WifiOff className="h-3.5 w-3.5" />
+                <div className="flex items-center gap-2 text-destructive">
+                  <div className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
                   <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Offline</span>
                 </div>
               )}
@@ -281,39 +281,45 @@ export default function PorteiroPage() {
               exit={{ opacity: 0, y: -10 }}
               className="p-6 space-y-6"
             >
-              {/* Stats card - Executive Minimalist */}
-              <div className="glass-card rounded-[2.5rem] p-8">
-                <div className="mb-6 flex items-center justify-between">
-                  <h2 className="text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-primary/40">Status de Ocupação</h2>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl font-sans font-bold text-primary">{progressPct}%</span>
+              {/* Stats card - Executive Minimalist consistent with Dashboard */}
+              <div className="bg-card/40 backdrop-blur-xl rounded-[3rem] p-10 border border-border/40 soft-shadow">
+                <div className="mb-10 flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h2 className="text-[10px] font-accent font-bold uppercase tracking-[0.4em] text-primary/40">Métrica de Acesso</h2>
+                    <p className="text-2xl font-serif font-bold text-foreground">Fluxo de Convidados</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <p className="text-3xl font-serif font-bold text-primary">{progressPct}%</p>
+                      <p className="text-[8px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Concluído</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="text-center group">
-                    <p className="text-3xl font-serif font-light text-foreground group-hover:text-primary transition-colors">{stats.totalGuests}</p>
-                    <p className="text-[10px] font-accent font-bold text-muted-foreground/40 uppercase tracking-widest mt-1">Total</p>
+                <div className="grid grid-cols-3 gap-8 mb-10">
+                  <div className="text-center group p-4 rounded-3xl bg-primary/[0.02] border border-primary/5">
+                    <p className="text-4xl font-serif font-bold text-foreground group-hover:text-primary transition-colors">{stats.totalGuests}</p>
+                    <p className="text-[9px] font-accent font-bold text-muted-foreground/40 uppercase tracking-widest mt-2">Expectativa</p>
                   </div>
-                  <div className="text-center group">
-                    <p className="text-3xl font-serif font-light text-success group-hover:scale-110 transition-transform">{stats.checkedIn}</p>
-                    <p className="text-[10px] font-accent font-bold text-success/40 uppercase tracking-widest mt-1">Chegaram</p>
+                  <div className="text-center group p-4 rounded-3xl bg-primary/[0.04] border border-primary/10">
+                    <p className="text-4xl font-serif font-bold text-primary group-hover:scale-110 transition-transform">{stats.checkedIn}</p>
+                    <p className="text-[9px] font-accent font-bold text-primary/60 uppercase tracking-widest mt-2">Presentes</p>
                   </div>
-                  <div className="text-center group">
-                    <p className="text-3xl font-serif font-light text-info group-hover:scale-110 transition-transform">{stats.pending}</p>
-                    <p className="text-[10px] font-accent font-bold text-info/40 uppercase tracking-widest mt-1">No Aguardo</p>
+                  <div className="text-center group p-4 rounded-3xl bg-primary/[0.02] border border-primary/5">
+                    <p className="text-4xl font-serif font-bold text-foreground/40 group-hover:scale-110 transition-transform">{stats.pending}</p>
+                    <p className="text-[9px] font-accent font-bold text-muted-foreground/20 uppercase tracking-widest mt-2">No Caminho</p>
                   </div>
                 </div>
 
-                {/* Progress bar - Refined */}
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary/10">
+                {/* Progress bar - Premium style */}
+                <div className="h-2 w-full overflow-hidden rounded-full bg-primary/5 p-0.5 border border-primary/10">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPct}%` }}
-                    transition={{ duration: 1.2, ease: 'circOut' }}
-                    className="h-full rounded-full bg-primary relative"
+                    transition={{ duration: 1.5, ease: 'circOut' }}
+                    className="h-full rounded-full bg-primary relative shadow-[0_0_15px_rgba(var(--primary),0.3)]"
                   >
-                    <div className="absolute inset-0 bg-white/20 shimmer" />
+                    <div className="absolute inset-0 bg-white/10 shimmer" />
                   </motion.div>
                 </div>
               </div>
@@ -322,7 +328,7 @@ export default function PorteiroPage() {
               <div className="grid grid-cols-1 gap-4">
                 <button
                   onClick={() => { setActiveView('qr'); setIsScannerActive(true) }}
-                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:bg-card/60"
                 >
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-primary text-primary-foreground shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
                     <ScanLine className="h-7 w-7" />
@@ -338,7 +344,7 @@ export default function PorteiroPage() {
 
                 <button
                   onClick={() => setActiveView('search')}
-                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:bg-card/60"
                 >
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary shadow-sm group-hover:scale-110 transition-transform">
                     <Search className="h-7 w-7" />
@@ -354,7 +360,7 @@ export default function PorteiroPage() {
 
                 <button
                   onClick={() => setActiveView('list')}
-                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:bg-card/60"
                 >
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                     <List className="h-7 w-7" />
@@ -465,7 +471,7 @@ export default function PorteiroPage() {
                   placeholder="Localizar convidado ou grupo..."
                   value={listSearch}
                   onChange={e => setListSearch(e.target.value)}
-                  className="pl-12 h-12 bg-card/50 border-border focus:bg-card focus:border-primary transition-all rounded-xl font-sans"
+                  className="pl-12 h-14 bg-muted/20 border-border focus:bg-card focus:border-primary transition-all rounded-2xl font-sans"
                   autoFocus
                 />
               </div>

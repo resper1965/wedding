@@ -198,7 +198,7 @@ export default function CheckInPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* PWA Header */}
-      <header className="sticky top-0 z-40 border-b border-border bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-border/40 bg-card/40 backdrop-blur-md">
         <div className="mx-auto max-w-lg px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -206,8 +206,8 @@ export default function CheckInPage() {
                 <Users className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-stone-800">Check-in</h1>
-                <p className="text-xs text-stone-500">Recepção do Casamento</p>
+                <h1 className="text-lg font-bold text-foreground font-serif">Check-in</h1>
+                <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Recepção do Casamento</p>
               </div>
             </div>
 
@@ -230,7 +230,7 @@ export default function CheckInPage() {
       </header>
 
       {/* Stats Bar */}
-      <div className="border-b border-border bg-muted/30 px-4 py-3">
+      <div className="border-b border-border/20 bg-muted/10 px-4 py-3">
         <div className="mx-auto max-w-lg">
           {isLoadingStats ? (
             <div className="flex items-center justify-center gap-2 py-2">
@@ -316,7 +316,7 @@ export default function CheckInPage() {
                     setIsScannerActive(true);
                   }
                 }}
-                className="bg-accent hover:opacity-90"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-accent font-bold uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-primary/20"
                 aria-label="Abrir câmera para escanear QR Code"
               >
                 <QrCode className="mr-2 h-4 w-4" />
@@ -356,11 +356,11 @@ export default function CheckInPage() {
             exit={{ y: 100 }}
             className="fixed bottom-4 left-4 right-4 z-30 mx-auto max-w-lg"
           >
-            <div className="flex items-center gap-3 rounded-xl border border-accent/20 bg-accent/5 p-4 shadow-lg backdrop-blur-md">
-              <WifiOff className="h-5 w-5 shrink-0 text-accent" />
+            <div className="flex items-center gap-3 rounded-2xl border border-accent/20 bg-accent/5 p-5 shadow-2xl backdrop-blur-md">
+              <WifiOff className="h-6 w-6 shrink-0 text-accent" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-accent">Modo Offline</p>
-                <p className="text-xs text-accent/70">
+                <p className="text-sm font-bold text-accent uppercase tracking-widest">Modo Offline</p>
+                <p className="text-xs text-accent/60 italic">
                   Os check-ins serão sincronizados quando a internet retornar
                 </p>
               </div>
@@ -374,11 +374,11 @@ export default function CheckInPage() {
         <Button
           variant="outline"
           size="icon"
-          className="h-12 w-12 rounded-full border-border bg-white shadow-lg hover:bg-muted"
+          className="h-14 w-14 rounded-full border-border bg-card/60 backdrop-blur-xl shadow-2xl hover:bg-card hover:border-primary/30 transition-all group"
           asChild
         >
           <a href="/" aria-label="Voltar para a página inicial">
-            <Home className="h-5 w-5 text-primary" />
+            <Home className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
           </a>
         </Button>
       </div>

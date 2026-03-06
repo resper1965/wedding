@@ -128,9 +128,9 @@ export default function ProjectsDashboard() {
                     <button
                         onClick={handleCreateProject}
                         disabled={isCreating}
-                        className="flex items-center gap-2 bg-accent hover:opacity-90 text-white px-6 py-2.5 rounded-xl shadow-md shadow-accent/20 hover:shadow-lg hover:shadow-accent/40 hover:-translate-y-0.5 transform transition-all duration-200 font-medium"
+                        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-2xl shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 transform transition-all duration-300 font-accent font-bold uppercase tracking-widest text-[10px]"
                     >
-                        {isCreating ? <span className="animate-spin w-5 h-5 border-2 border-white/30 border-t-white rounded-full" /> : <Plus className="w-5 h-5" />}
+                        {isCreating ? <span className="animate-spin w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full" /> : <Plus className="w-4 h-4" />}
                         Novo Projeto
                     </button>
                 </header>
@@ -166,7 +166,7 @@ export default function ProjectsDashboard() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.05 }}
                             key={project.id}
-                            className="bg-card border border-border rounded-2xl p-6 soft-shadow hover:soft-shadow-hover transition-all duration-300 group flex flex-col h-full"
+                            className="bg-card/40 border border-border/40 backdrop-blur-md rounded-3xl p-8 shadow-sm hover:shadow-2xl hover:bg-card/60 transition-all duration-500 group flex flex-col h-full border-t-primary/10"
                         >
                             <div className="flex justify-between items-start mb-6">
                                 <div className="p-3 bg-muted rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
@@ -200,7 +200,7 @@ export default function ProjectsDashboard() {
 
                             <button
                                 onClick={() => router.push(`/dashboard?tenantId=${project.id}`)}
-                                className="w-full text-center bg-muted hover:bg-primary text-primary hover:text-white font-medium py-2.5 rounded-xl transition-all duration-300 text-sm shadow-sm"
+                                className="w-full text-center bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground font-accent font-bold uppercase tracking-widest py-3.5 rounded-2xl transition-all duration-300 text-[10px] shadow-sm active:scale-95"
                             >
                                 Acessar Painel
                             </button>

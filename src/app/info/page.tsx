@@ -108,7 +108,7 @@ export default function WeddingInfoPage() {
 
             {/* Date */}
             <div className="mb-8">
-              <p className="text-lg text-primary sm:text-xl font-serif">
+              <p className="text-lg text-primary sm:text-xl font-serif font-bold">
                 {formattedDate}
               </p>
               {wedding.venue && (
@@ -121,9 +121,9 @@ export default function WeddingInfoPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="inline-flex flex-col items-center rounded-2xl border border-border bg-white/60 px-8 py-6 shadow-sm backdrop-blur-sm"
+              className="inline-flex flex-col items-center rounded-3xl border border-border bg-card/40 px-10 py-8 shadow-2xl backdrop-blur-md"
             >
-              <p className="mb-2 text-xs uppercase tracking-[0.2em] text-primary">
+              <p className="mb-3 text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-primary">
                 Contagem Regressiva
               </p>
               <CountdownTimer targetDate={weddingDate} />
@@ -155,20 +155,20 @@ export default function WeddingInfoPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="rounded-2xl border border-border bg-white/80 p-6 shadow-sm backdrop-blur-sm"
+                  className="rounded-3xl border border-border bg-card/40 p-8 shadow-sm backdrop-blur-md hover:bg-card/60 transition-all hover:border-primary/30"
                 >
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="rounded-full bg-gradient-to-br from-primary/10 to-accent/10 p-3">
+                  <div className="mb-4 flex items-center gap-4">
+                    <div className="rounded-2xl bg-primary/10 p-4 shadow-inner">
                       {index === 0 ? (
-                        <Heart className="h-5 w-5 text-primary" />
+                        <Heart className="h-6 w-6 text-primary" />
                       ) : (
-                        <PartyPopper className="h-5 w-5 text-primary" />
+                        <PartyPopper className="h-6 w-6 text-primary" />
                       )}
                     </div>
                     <div>
-                      <h3 className="text-lg font-medium text-stone-800">{event.name}</h3>
+                      <h3 className="text-xl font-bold text-foreground font-serif">{event.name}</h3>
                       {event.description && (
-                        <p className="text-sm text-stone-500">{event.description}</p>
+                        <p className="text-sm text-muted-foreground/60 italic">{event.description}</p>
                       )}
                     </div>
                   </div>
@@ -192,7 +192,7 @@ export default function WeddingInfoPage() {
                       </div>
                     )}
                     {event.dressCode && (
-                      <p className="text-xs text-stone-500">Dress code: {event.dressCode}</p>
+                      <p className="text-xs text-muted-foreground/50 italic">Dress code: {event.dressCode}</p>
                     )}
                   </div>
                 </motion.div>
@@ -220,7 +220,7 @@ export default function WeddingInfoPage() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-border bg-white/50 py-8">
+      <footer className="border-t border-border/40 bg-card/40 py-12 backdrop-blur-xl">
         <div className="mx-auto max-w-4xl px-4 text-center">
           <div className="mb-4 flex items-center justify-center gap-2.5">
             <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-lg font-light text-transparent">{wedding.partner1Name}</span>

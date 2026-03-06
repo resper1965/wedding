@@ -101,7 +101,7 @@ export default function GiftListPage() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mx-auto max-w-lg text-stone-600">
+            <p className="mx-auto max-w-lg text-muted-foreground/60 italic">
               Escolha um presente especial para celebrar conosco este momento único.
               Sua presença e carinho já são o maior presente!
             </p>
@@ -143,13 +143,13 @@ export default function GiftListPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-border bg-white/60 p-8 text-center shadow-sm backdrop-blur-sm"
+            className="rounded-3xl border border-border bg-card/40 p-12 text-center shadow-lg backdrop-blur-md"
           >
-            <Heart className="mx-auto mb-4 h-6 w-6 text-accent" fill="currentColor" />
-            <h3 className="mb-2 text-lg font-medium text-foreground">
+            <Heart className="mx-auto mb-6 h-8 w-8 text-accent" fill="currentColor" />
+            <h3 className="mb-2 text-2xl font-bold text-foreground font-serif">
               Como funciona?
             </h3>
-            <p className="text-sm text-foreground/70">
+            <p className="text-sm text-muted-foreground/70 italic">
               Escolha um presente da lista e clique em &ldquo;Reservar&rdquo;.
               Você será solicitado a informar seu nome para que possamos organizar as reservas.
               Em caso de presentes com link externo, você pode comprar diretamente na loja indicada.
@@ -159,7 +159,7 @@ export default function GiftListPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-amber-100/50 bg-white/50 py-8">
+      <footer className="border-t border-border/40 bg-card/40 py-12 backdrop-blur-xl">
         <div className="mx-auto max-w-4xl px-4 text-center">
           <div className="mb-4 flex items-center justify-center gap-2.5">
             <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-lg font-light text-transparent">

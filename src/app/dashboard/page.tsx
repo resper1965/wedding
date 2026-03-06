@@ -231,7 +231,7 @@ export function MarryflowPlatform() {
       {/* Right column */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-primary/5 bg-background/60 backdrop-blur-xl h-20 flex items-center">
+        <header className="sticky top-0 z-30 border-b border-border/40 bg-card/40 backdrop-blur-xl h-20 flex items-center shadow-lg">
           <div className="w-full px-8">
             <div className="flex items-center justify-between">
 
@@ -255,7 +255,7 @@ export function MarryflowPlatform() {
               <div className="flex items-center gap-4">
                 <Link
                   href="/projects"
-                  className="flex items-center gap-2 rounded-2xl border border-border bg-card/40 backdrop-blur-xl px-6 py-2.5 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-card hover:text-primary hover:border-primary/20 hover:scale-105 active:scale-95 shadow-sm"
+                  className="flex items-center gap-2 rounded-2xl border border-border bg-card/40 backdrop-blur-xl px-6 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-card hover:text-primary hover:border-primary/20 hover:scale-105 active:scale-95 shadow-lg"
                 >
                   <Grid3X3 className="h-4 w-4" />
                   <span className="hidden sm:inline">Meus Eventos</span>
