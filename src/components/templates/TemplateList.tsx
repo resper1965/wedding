@@ -137,12 +137,12 @@ export function TemplateList({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-stone-800">Templates de Mensagem</h2>
+            <h2 className="text-xl font-semibold text-foreground/80">Templates de Mensagem</h2>
             <p className="text-sm text-muted-foreground">Gerencie os modelos para seus convites e comunicados</p>
           </div>
           <Button 
             onClick={onCreateNew}
-            className="bg-amber-600 hover:bg-amber-700"
+            className="bg-accent hover:bg-amber-700"
           >
             <Plus className="mr-2 h-4 w-4" />
             Novo Template
@@ -153,12 +153,12 @@ export function TemplateList({
         {templates.length === 0 ? (
           <Card className="border-dashed border-accent/20 bg-accent/5/50">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <Mail className="h-12 w-12 text-amber-300 mb-4" />
+              <Mail className="h-12 w-12 text-accent/50 mb-4" />
               <h3 className="text-lg font-medium text-muted-foreground mb-2">Nenhum template criado</h3>
               <p className="text-sm text-muted-foreground mb-4 text-center max-w-sm">
                 Crie seu primeiro template para começar a enviar convites e comunicados personalizados.
               </p>
-              <Button onClick={onCreateNew} className="bg-amber-600 hover:bg-amber-700">
+              <Button onClick={onCreateNew} className="bg-accent hover:bg-amber-700">
                 <Plus className="mr-2 h-4 w-4" />
                 Criar Primeiro Template
               </Button>
@@ -176,7 +176,7 @@ export function TemplateList({
                   transition={{ duration: 0.2, delay: index * 0.05 }}
                   layout
                 >
-                  <Card className="group overflow-hidden border-amber-100 hover:border-accent/30 hover:shadow-md transition-all h-full flex flex-col">
+                  <Card className="group overflow-hidden border-accent/10 hover:border-accent/30 hover:shadow-md transition-all h-full flex flex-col">
                     {/* Thumbnail Preview Area */}
                     <div 
                       className="h-24 bg-gradient-to-br from-amber-50 to-orange-50 relative overflow-hidden cursor-pointer"
@@ -184,9 +184,9 @@ export function TemplateList({
                     >
                       {/* Decorative elements */}
                       <div className="absolute inset-0 opacity-10">
-                        <div className="absolute top-2 left-4 w-16 h-1 bg-amber-400 rounded" />
+                        <div className="absolute top-2 left-4 w-16 h-1 bg-accent/60 rounded" />
                         <div className="absolute top-4 left-4 w-24 h-1 bg-amber-300 rounded" />
-                        <div className="absolute top-6 left-4 w-20 h-1 bg-amber-200 rounded" />
+                        <div className="absolute top-6 left-4 w-20 h-1 bg-accent/15 rounded" />
                       </div>
                       
                       {/* Type Badge */}
@@ -217,7 +217,7 @@ export function TemplateList({
 
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
-                        <CardTitle className="text-base text-stone-800 line-clamp-1">
+                        <CardTitle className="text-base text-foreground/80 line-clamp-1">
                           {template.name}
                         </CardTitle>
                         <DropdownMenu>

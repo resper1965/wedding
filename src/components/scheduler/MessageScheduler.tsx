@@ -328,9 +328,9 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
   }
 
   return (
-    <Card className="border-amber-100/50">
+    <Card className="border-accent/10/50">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="flex items-center gap-2 text-lg font-medium text-stone-800">
+        <CardTitle className="flex items-center gap-2 text-lg font-medium text-foreground/80">
           <Calendar className="h-5 w-5 text-accent" />
           Agendador de Mensagens
         </CardTitle>
@@ -361,7 +361,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            <Calendar className="h-12 w-12 mx-auto mb-3 text-stone-300" />
+            <Calendar className="h-12 w-12 mx-auto mb-3 text-muted-foreground/50" />
             <p>Nenhuma mensagem agendada</p>
             <p className="text-sm text-muted-foreground mt-1">
               Clique em "Nova Mensagem" para agendar

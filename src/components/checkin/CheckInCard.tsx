@@ -141,7 +141,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
             </div>
 
             <div>
-              <CardTitle className={`text-lg ${alreadyCheckedIn ? 'text-primary' : 'text-stone-800'
+              <CardTitle className={`text-lg ${alreadyCheckedIn ? 'text-primary' : 'text-foreground/80'
                 }`}>
                 {familyName || 'Convidado'}
               </CardTitle>
@@ -220,7 +220,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                   </p>
                   <div className="mt-1 space-y-1">
                     {guestsWithDietary.map((g) => (
-                      <p key={g.id} className="text-sm font-medium text-stone-800">
+                      <p key={g.id} className="text-sm font-medium text-foreground/80">
                         <strong>{g.firstName}:</strong> {g.dietaryRestrictions}
                       </p>
                     ))}
@@ -242,7 +242,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                   </p>
                   <div className="mt-1 space-y-1">
                     {guestsWithSpecialNeeds.map((g) => (
-                      <p key={g.id} className="text-sm font-medium text-stone-800">
+                      <p key={g.id} className="text-sm font-medium text-foreground/80">
                         <strong>{g.firstName}:</strong> {g.specialNeeds}
                       </p>
                     ))}

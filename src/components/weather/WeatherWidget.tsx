@@ -148,7 +148,7 @@ export function WeatherWidget() {
             <Badge
               variant={weather.isForecast ? 'default' : 'outline'}
               className={weather.isForecast
-                ? 'bg-amber-500 text-white'
+                ? 'bg-accent text-white'
                 : 'border-border text-muted-foreground'
               }
             >
@@ -162,7 +162,7 @@ export function WeatherWidget() {
             <div className="flex items-center">
               <span className="text-6xl">{weather.icon}</span>
               <div className="ml-3">
-                <div className="text-4xl font-light text-stone-800">
+                <div className="text-4xl font-light text-foreground/80">
                   {weather.tempMax}°
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -173,7 +173,7 @@ export function WeatherWidget() {
 
             {/* Condition */}
             <div className="flex-1">
-              <p className="text-lg font-medium text-stone-800">
+              <p className="text-lg font-medium text-foreground/80">
                 {weather.condition}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
@@ -199,7 +199,7 @@ export function WeatherWidget() {
             </div>
 
             {/* Precipitation bar */}
-            <div className="mt-2 h-2 bg-stone-200 rounded-full overflow-hidden">
+            <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${weather.precipitationProbability}%` }}

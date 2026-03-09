@@ -115,21 +115,21 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
   return (
     <div className="space-y-6">
       {/* Stats Bar */}
-      <div className="flex flex-wrap gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100">
+      <div className="flex flex-wrap gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-accent/10">
         <div className="flex items-center gap-2">
           <Gift className="w-5 h-5 text-accent" />
           <span className="text-muted-foreground">
-            <strong className="text-amber-800">{stats.total}</strong> presentes
+            <strong className="text-accent">{stats.total}</strong> presentes
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-emerald-400" />
+          <div className="w-3 h-3 rounded-full bg-primary/60" />
           <span className="text-muted-foreground">
             <strong className="text-primary">{stats.available}</strong> disponíveis
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-amber-400" />
+          <div className="w-3 h-3 rounded-full bg-accent/60" />
           <span className="text-muted-foreground">
             <strong className="text-accent">{stats.reserved}</strong> reservados
           </span>
@@ -227,7 +227,7 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
       {/* Empty State */}
       {!loading && !error && gifts.length === 0 && (
         <div className="text-center py-12">
-          <Gift className="w-16 h-16 mx-auto text-amber-300 mb-4" />
+          <Gift className="w-16 h-16 mx-auto text-accent/50 mb-4" />
           <h3 className="text-lg font-semibold text-muted-foreground mb-2">
             Nenhum presente encontrado
           </h3>

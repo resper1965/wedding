@@ -23,20 +23,25 @@ interface Tab {
 }
 
 export const tabs: Tab[] = [
+  // Core — always first
   { id: 'dashboard', label: 'Painel', icon: LayoutDashboard },
   { id: 'guests', label: 'Convidados', icon: Users },
+  { id: 'seating', label: 'Mesas', icon: Grid3X3 },
+  // Communication
   { id: 'messages', label: 'Mensagens', icon: MessageSquare },
-  { id: 'gifts', label: 'Presentes', icon: Gift },
   { id: 'save-the-date', label: 'Avisos', icon: CalendarHeart },
   { id: 'ai-agent', label: 'Gabi AI', icon: Bot },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'seating', label: 'Mesas', icon: Grid3X3 },
+  // Planning
+  { id: 'checklist', label: 'Checklist', icon: ClipboardList },
   { id: 'budget', label: 'Orçamento', icon: DollarSign },
   { id: 'vendors', label: 'Fornecedores', icon: Briefcase },
-  { id: 'checklist', label: 'Checklist', icon: ClipboardList },
-  { id: 'settings', label: 'Configurações', icon: Settings },
-  { id: 'war-room', label: 'War Room', icon: Zap },
+  { id: 'gifts', label: 'Presentes', icon: Gift },
+  // Operations
   { id: 'porteiro', label: 'Recepção', icon: ScanLine },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'war-room', label: 'War Room', icon: Zap },
+  // Admin
+  { id: 'settings', label: 'Configurações', icon: Settings },
   { id: 'users', label: 'Usuários', icon: Shield, adminOnly: true },
   { id: 'help', label: 'Ajuda', icon: HelpCircle, href: '/ajuda' },
 ]
@@ -109,27 +114,6 @@ export function SidebarNav({
             {!collapsed && <span>Painel Master</span>}
           </Link>
         )}
-        <div className="h-px bg-primary/5 mx-4 my-2" />
-        <Link
-          href="/privacy"
-          className={cn(
-            "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-foreground/40 transition-all hover:bg-primary/5 group",
-            collapsed && "justify-center px-0"
-          )}
-        >
-          <Shield className="h-4 w-4 shrink-0 text-primary/30 group-hover:text-primary transition-colors" />
-          {!collapsed && <span>Privacidade</span>}
-        </Link>
-        <Link
-          href="/terms"
-          className={cn(
-            "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-foreground/40 transition-all hover:bg-primary/5 group",
-            collapsed && "justify-center px-0"
-          )}
-        >
-          <ClipboardList className="h-4 w-4 shrink-0 text-primary/30 group-hover:text-primary transition-colors" />
-          {!collapsed && <span>Termos</span>}
-        </Link>
       </div>
 
       {/* Nav items */}

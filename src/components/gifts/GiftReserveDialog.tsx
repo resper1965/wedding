@@ -94,9 +94,9 @@ export function GiftReserveDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-card border-amber-100">
+      <DialogContent className="sm:max-w-md bg-card border-accent/10">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-amber-800">
+          <DialogTitle className="flex items-center gap-2 text-accent">
             <Gift className="w-5 h-5" />
             Reservar Presente
           </DialogTitle>
@@ -106,7 +106,7 @@ export function GiftReserveDialog({
         </DialogHeader>
 
         {/* Gift Preview */}
-        <div className="flex gap-4 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-100">
+        <div className="flex gap-4 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-accent/10">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-accent/10 flex-shrink-0">
             {gift.imageUrl ? (
               <img
@@ -116,12 +116,12 @@ export function GiftReserveDialog({
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <Gift className="w-6 h-6 text-amber-400" />
+                <Gift className="w-6 h-6 text-accent/70" />
               </div>
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-stone-800 line-clamp-2">{gift.name}</h4>
+            <h4 className="font-semibold text-foreground/80 line-clamp-2">{gift.name}</h4>
             {gift.price && (
               <p className="text-sm text-accent font-medium">
                 {formatPrice(gift.price, gift.currency)}

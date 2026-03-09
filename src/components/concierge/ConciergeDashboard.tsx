@@ -344,7 +344,7 @@ export function ConciergeDashboard() {
               <CardContent>
                 {conversations.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    <MessageSquare className="mx-auto h-12 w-12 text-stone-300 mb-3" />
+                    <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground/50 mb-3" />
                     <p>Nenhuma conversa ainda</p>
                     <p className="text-sm">As conversas aparecerão aqui quando os convidados enviarem mensagens</p>
                   </div>
@@ -353,7 +353,7 @@ export function ConciergeDashboard() {
                     {conversations.map(conv => (
                       <div
                         key={conv.id}
-                        className="flex items-start gap-3 p-3 rounded-lg border border-stone-100 hover:bg-muted transition-colors"
+                        className="flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-muted transition-colors"
                       >
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent font-medium">
                           {conv.familyName?.charAt(0) || '?'}
@@ -487,7 +487,7 @@ export function ConciergeDashboard() {
                   </div>
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
-                    <QrCode className="mx-auto h-16 w-16 text-stone-300 mb-3" />
+                    <QrCode className="mx-auto h-16 w-16 text-muted-foreground/50 mb-3" />
                     <p>Configure os dados e clique em gerar</p>
                   </div>
                 )}
@@ -558,7 +558,7 @@ export function ConciergeDashboard() {
                   </div>
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
-                    <ImageIcon className="mx-auto h-16 w-16 text-stone-300 mb-3" />
+                    <ImageIcon className="mx-auto h-16 w-16 text-muted-foreground/50 mb-3" />
                     <p>Configure os dados e clique em gerar</p>
                   </div>
                 )}

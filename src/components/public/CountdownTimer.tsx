@@ -71,7 +71,7 @@ export function CountdownTimer({ targetDate, className = '' }: CountdownTimerPro
     return (
       <div className={`flex flex-col items-center gap-2 ${className}`}>
         <Heart className="h-8 w-8 text-rose-400 animate-pulse" fill="currentColor" />
-        <p className="text-lg font-medium text-amber-800">O grande dia chegou!</p>
+        <p className="text-lg font-medium text-accent">O grande dia chegou!</p>
         <p className="text-sm text-accent/80">Louise &amp; Nicolas 💕</p>
       </div>
     )
@@ -89,7 +89,7 @@ export function CountdownTimer({ targetDate, className = '' }: CountdownTimerPro
       <div className={`flex items-center gap-3 sm:gap-4 ${className}`}>
         {timeUnits.map((unit) => (
           <div key={unit.label} className="text-center">
-            <div className="text-3xl font-light text-amber-800 sm:text-4xl">00</div>
+            <div className="text-3xl font-light text-accent sm:text-4xl">00</div>
             <div className="text-xs text-accent">{unit.label}</div>
           </div>
         ))}
@@ -110,7 +110,7 @@ export function CountdownTimer({ targetDate, className = '' }: CountdownTimerPro
           >
             <div className="relative">
               <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-amber-200/30 to-orange-200/30 blur-sm" />
-              <div className="relative text-3xl font-light tracking-tight text-amber-800 sm:text-4xl">
+              <div className="relative text-3xl font-light tracking-tight text-accent sm:text-4xl">
                 {String(unit.value).padStart(2, '0')}
               </div>
             </div>

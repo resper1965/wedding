@@ -70,7 +70,7 @@ export function PWAInstallPrompt() {
               <Heart className="h-5 w-5 text-primary" fill="currentColor" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-stone-800">Instalar o app MarryFlow</p>
+              <p className="text-sm font-semibold text-foreground/80">Instalar o app MarryFlow</p>
               <p className="mt-0.5 text-xs text-muted-foreground">
                 Adicione à tela inicial para acesso rápido ao painel do casamento
               </p>

@@ -176,7 +176,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
               exit={{ opacity: 0 }}
               className="py-8 text-center"
             >
-              <User className="mx-auto h-10 w-10 text-stone-300" />
+              <User className="mx-auto h-10 w-10 text-muted-foreground/50" />
               <p className="mt-2 text-sm text-muted-foreground">Nenhum convidado encontrado</p>
               <p className="text-xs text-muted-foreground">Tente outro nome</p>
             </motion.div>
@@ -209,7 +209,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
                 {/* Info */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="truncate font-bold text-stone-800">
+                    <p className="truncate font-bold text-foreground/80">
                       {invitation.familyName || 'Família'}
                     </p>
                     {invitation.checkedIn && (
@@ -229,7 +229,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
                 </div>
 
                 {/* Arrow */}
-                <div className="text-emerald-300">
+                <div className="text-primary/50">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -263,7 +263,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
               exit={{ opacity: 0, x: -20 }}
               transition={{ delay: (results.invitations?.length || 0 + index) * 0.03 }}
               onClick={() => onGuestSelect(guest)}
-              className="mb-2 w-full rounded-2xl border border-emerald-100 bg-card p-5 text-left transition-all hover:bg-primary/5/50 soft-shadow"
+              className="mb-2 w-full rounded-2xl border border-primary/10 bg-card p-5 text-left transition-all hover:bg-primary/5/50 soft-shadow"
             >
               <div className="flex items-center gap-3">
                 {/* Avatar */}
@@ -296,7 +296,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
                 </div>
 
                 {/* Arrow */}
-                <div className="text-emerald-300">
+                <div className="text-primary/50">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

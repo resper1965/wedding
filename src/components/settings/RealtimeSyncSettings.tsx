@@ -222,9 +222,9 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
 
     switch (syncStatus?.status) {
       case 'syncing':
-        return <Badge variant="outline" className="gap-1 border-blue-300 text-primary"><RefreshCw className="h-3 w-3 animate-spin" /> Syncing</Badge>
+        return <Badge variant="outline" className="gap-1 border-primary/30 text-primary"><RefreshCw className="h-3 w-3 animate-spin" /> Syncing</Badge>
       case 'error':
-        return <Badge variant="outline" className="gap-1 border-red-300 text-destructive"><AlertCircle className="h-3 w-3" /> Error</Badge>
+        return <Badge variant="outline" className="gap-1 border-destructive/30 text-destructive"><AlertCircle className="h-3 w-3" /> Error</Badge>
       case 'disabled':
         return <Badge variant="outline" className="gap-1 border-gray-300 text-gray-600"><CloudOff className="h-3 w-3" /> Disabled</Badge>
       default:
@@ -235,7 +235,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
   return (
     <div className="space-y-6">
       {/* Header Card */}
-      <Card className="border-amber-100/50 bg-gradient-to-br from-white to-amber-50/30">
+      <Card className="border-accent/10/50 bg-gradient-to-br from-white to-amber-50/30">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -243,7 +243,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
                 <Cloud className="h-5 w-5" />
               </div>
               <div>
-                <CardTitle className="text-lg text-stone-800">Firestore Sync</CardTitle>
+                <CardTitle className="text-lg text-foreground/80">Firestore Sync</CardTitle>
                 <CardDescription>Cloud synchronization with offline support</CardDescription>
               </div>
             </div>
@@ -253,9 +253,9 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
 
         <CardContent className="space-y-4">
           {/* Enable/Disable Switch */}
-          <div className="flex items-center justify-between rounded-lg border border-amber-100/50 bg-card/50 p-4">
+          <div className="flex items-center justify-between rounded-lg border border-accent/10/50 bg-card/50 p-4">
             <div className="space-y-0.5">
-              <p className="text-sm font-medium text-stone-800">Enable Sync</p>
+              <p className="text-sm font-medium text-foreground/80">Enable Sync</p>
               <p className="text-xs text-muted-foreground">Automatically sync data with Firestore</p>
             </div>
             <Switch
@@ -266,7 +266,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
           </div>
 
           {/* Connection Status */}
-          <div className="flex items-center justify-between rounded-lg border border-amber-100/50 bg-card/50 p-4">
+          <div className="flex items-center justify-between rounded-lg border border-accent/10/50 bg-card/50 p-4">
             <div className="flex items-center gap-3">
               {isOnline ? (
                 <Wifi className="h-5 w-5 text-primary" />
@@ -274,7 +274,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
                 <WifiOff className="h-5 w-5 text-accent" />
               )}
               <div>
-                <p className="text-sm font-medium text-stone-800">Connection</p>
+                <p className="text-sm font-medium text-foreground/80">Connection</p>
                 <p className="text-xs text-muted-foreground">
                   {isOnline ? 'Online - Changes will sync automatically' : 'Offline - Changes saved locally'}
                 </p>
@@ -314,9 +314,9 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
       </Card>
 
       {/* Sync Statistics */}
-      <Card className="border-amber-100/50">
+      <Card className="border-accent/10/50">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base text-stone-800">Sync Statistics</CardTitle>
+          <CardTitle className="text-base text-foreground/80">Sync Statistics</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
@@ -325,7 +325,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
                 <Users className="h-4 w-4 text-accent" />
                 <span>Guests Synced</span>
               </div>
-              <p className="text-2xl font-semibold text-stone-800">
+              <p className="text-2xl font-semibold text-foreground/80">
                 {syncStatus?.guestsSynced || 0}
               </p>
             </div>
@@ -335,7 +335,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
                 <Calendar className="h-4 w-4 text-accent" />
                 <span>RSVPs Synced</span>
               </div>
-              <p className="text-2xl font-semibold text-stone-800">
+              <p className="text-2xl font-semibold text-foreground/80">
                 {syncStatus?.rsvpsSynced || 0}
               </p>
             </div>
@@ -345,7 +345,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
                 <Check className="h-4 w-4 text-accent" />
                 <span>Check-ins Synced</span>
               </div>
-              <p className="text-2xl font-semibold text-stone-800">
+              <p className="text-2xl font-semibold text-foreground/80">
                 {syncStatus?.checkInsSynced || 0}
               </p>
             </div>
@@ -355,7 +355,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
                 <Clock className="h-4 w-4 text-accent" />
                 <span>Last Sync</span>
               </div>
-              <p className="text-sm font-medium text-stone-800">
+              <p className="text-sm font-medium text-foreground/80">
                 {formatDate(syncStatus?.lastSyncAt || null)}
               </p>
             </div>
@@ -364,14 +364,14 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
       </Card>
 
       {/* Advanced Settings */}
-      <Card className="border-amber-100/50">
+      <Card className="border-accent/10/50">
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="flex w-full items-center justify-between p-4 text-left"
         >
           <div className="flex items-center gap-2">
             <Settings className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-stone-800">Advanced Settings</span>
+            <span className="text-sm font-medium text-foreground/80">Advanced Settings</span>
           </div>
           {showAdvanced ? (
             <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -392,7 +392,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
               <CardContent className="pt-4">
                 {/* Offline Storage Info */}
                 <div className="mb-4 space-y-2">
-                  <div className="flex items-center gap-2 text-sm font-medium text-stone-800">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground/80">
                     <Database className="h-4 w-4 text-accent" />
                     Offline Storage
                   </div>
@@ -402,20 +402,20 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
 
                   {offlineStats && (
                     <div className="mt-3 grid grid-cols-2 gap-2">
-                      <div className="rounded-lg border border-amber-100/50 bg-accent/5/30 p-2 text-center">
-                        <p className="text-lg font-semibold text-stone-800">{offlineStats.guests}</p>
+                      <div className="rounded-lg border border-accent/10/50 bg-accent/5/30 p-2 text-center">
+                        <p className="text-lg font-semibold text-foreground/80">{offlineStats.guests}</p>
                         <p className="text-xs text-muted-foreground">Guests</p>
                       </div>
-                      <div className="rounded-lg border border-amber-100/50 bg-accent/5/30 p-2 text-center">
-                        <p className="text-lg font-semibold text-stone-800">{offlineStats.invitations}</p>
+                      <div className="rounded-lg border border-accent/10/50 bg-accent/5/30 p-2 text-center">
+                        <p className="text-lg font-semibold text-foreground/80">{offlineStats.invitations}</p>
                         <p className="text-xs text-muted-foreground">Invitations</p>
                       </div>
-                      <div className="rounded-lg border border-amber-100/50 bg-accent/5/30 p-2 text-center">
-                        <p className="text-lg font-semibold text-stone-800">{offlineStats.rsvps}</p>
+                      <div className="rounded-lg border border-accent/10/50 bg-accent/5/30 p-2 text-center">
+                        <p className="text-lg font-semibold text-foreground/80">{offlineStats.rsvps}</p>
                         <p className="text-xs text-muted-foreground">RSVPs</p>
                       </div>
-                      <div className="rounded-lg border border-amber-100/50 bg-accent/5/30 p-2 text-center">
-                        <p className="text-lg font-semibold text-stone-800">{offlineStats.checkIns}</p>
+                      <div className="rounded-lg border border-accent/10/50 bg-accent/5/30 p-2 text-center">
+                        <p className="text-lg font-semibold text-foreground/80">{offlineStats.checkIns}</p>
                         <p className="text-xs text-muted-foreground">Check-ins</p>
                       </div>
                     </div>
@@ -448,11 +448,11 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
       </Card>
 
       {/* Firebase Config Notice */}
-      <Card className="border-blue-100/50 bg-primary/5/30">
+      <Card className="border-primary/10/50 bg-primary/5/30">
         <CardContent className="flex items-start gap-3 p-4">
           <AlertCircle className="mt-0.5 h-4 w-4 text-primary" />
           <div className="space-y-1">
-            <p className="text-sm font-medium text-blue-800">Firebase Configuration</p>
+            <p className="text-sm font-medium text-primary">Firebase Configuration</p>
             <p className="text-xs text-primary">
               Make sure Firebase environment variables are set:
               <code className="ml-1 rounded bg-primary/10 px-1 py-0.5 text-xs">

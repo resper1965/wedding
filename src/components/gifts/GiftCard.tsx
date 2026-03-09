@@ -35,10 +35,10 @@ interface GiftCardProps {
 }
 
 const categoryColors: Record<string, string> = {
-  'Cozinha': 'bg-accent/10 text-amber-800 border-accent/20',
+  'Cozinha': 'bg-accent/10 text-accent border-accent/20',
   'Quarto': 'bg-destructive/10 text-rose-800 border-destructive/20',
   'Sala': 'bg-sage-100 text-sage-800 border-sage-200',
-  'Eletrodomésticos': 'bg-primary/10 text-blue-800 border-primary/20',
+  'Eletrodomésticos': 'bg-primary/10 text-primary border-primary/20',
   'Decoração': 'bg-cyan-100 text-cyan-800 border-cyan-200',
   'Cama, Mesa e Banho': 'bg-pink-100 text-pink-800 border-pink-200',
 }
@@ -81,7 +81,7 @@ export function GiftCard({
         )
       case 'reserved':
         return (
-          <Badge className="bg-accent/10 text-amber-800 border border-accent/20 hover:bg-accent/10">
+          <Badge className="bg-accent/10 text-accent border border-accent/20 hover:bg-accent/10">
             <Clock className="w-3 h-3 mr-1" />
             Reservado
           </Badge>
@@ -120,7 +120,7 @@ export function GiftCard({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Gift className="w-16 h-16 text-amber-300" />
+              <Gift className="w-16 h-16 text-accent/50" />
             </div>
           )}
 
@@ -161,7 +161,7 @@ export function GiftCard({
           {/* Name */}
           <h3 className={cn(
             "font-serif text-lg font-semibold line-clamp-2",
-            gift.status === 'available' ? "text-stone-800" : "text-muted-foreground"
+            gift.status === 'available' ? "text-foreground/80" : "text-muted-foreground"
           )}>
             {gift.name}
           </h3>
@@ -182,9 +182,9 @@ export function GiftCard({
 
           {/* Reserved by info */}
           {gift.status === 'reserved' && gift.reservedByName && (
-            <div className="flex items-center gap-2 p-2 bg-accent/5 rounded-lg border border-amber-100">
+            <div className="flex items-center gap-2 p-2 bg-accent/5 rounded-lg border border-accent/10">
               <User className="w-4 h-4 text-accent" />
-              <span className="text-sm text-amber-800">
+              <span className="text-sm text-accent">
                 Reservado por <strong>{gift.reservedByName}</strong>
               </span>
             </div>

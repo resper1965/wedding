@@ -236,7 +236,7 @@ export default function EventsPage() {
                             {/* Venue */}
                             {event.venue && (
                               <div className="flex items-start gap-3 text-muted-foreground">
-                                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
+                                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent/70" />
                                 <div>
                                   <p className="text-sm font-medium">{event.venue}</p>
                                   {event.address && (
@@ -249,7 +249,7 @@ export default function EventsPage() {
                             {/* Dress Code */}
                             {event.dressCode && (
                               <div className="flex items-center gap-3 text-muted-foreground">
-                                <Shirt className="h-4 w-4 text-amber-400" />
+                                <Shirt className="h-4 w-4 text-accent/70" />
                                 <span className="text-sm">
                                   <span className="font-medium">Dress code:</span> {event.dressCode}
                                 </span>

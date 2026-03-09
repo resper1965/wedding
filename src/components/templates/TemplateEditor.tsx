@@ -172,7 +172,7 @@ export function TemplateEditor({
               <ChevronLeft className="mr-1 h-4 w-4" />
               Voltar
             </Button>
-            <h2 className="text-lg font-semibold text-stone-800">
+            <h2 className="text-lg font-semibold text-foreground/80">
               {template ? 'Editar Template' : 'Novo Template'}
             </h2>
           </div>
@@ -190,7 +190,7 @@ export function TemplateEditor({
               size="sm"
               onClick={handleSave}
               disabled={isSaving || isLoading || !name.trim() || !content.trim()}
-              className="bg-amber-600 hover:bg-amber-700"
+              className="bg-accent hover:bg-amber-700"
             >
               <Save className="mr-2 h-4 w-4" />
               {isSaving ? 'Salvando...' : 'Salvar'}
@@ -199,7 +199,7 @@ export function TemplateEditor({
         </div>
 
         {/* Main Editor */}
-        <Card className="border-amber-100">
+        <Card className="border-accent/10">
           <CardContent className="p-4 space-y-4">
             {/* Name and Type */}
             <div className="grid gap-4 sm:grid-cols-2">
@@ -286,7 +286,7 @@ export function TemplateEditor({
                   <Badge 
                     key={v.id} 
                     variant="secondary"
-                    className="bg-accent/10 text-accent hover:bg-amber-200"
+                    className="bg-accent/10 text-accent hover:bg-accent/15"
                   >
                     {v.value} - {v.label}
                   </Badge>
@@ -300,9 +300,9 @@ export function TemplateEditor({
       {/* Right Sidebar - Variables & Preview */}
       <div className="w-full space-y-4 lg:w-80">
         {/* Variables Panel */}
-        <Card className="border-amber-100">
+        <Card className="border-accent/10">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base text-stone-800">
+            <CardTitle className="flex items-center gap-2 text-base text-foreground/80">
               <Variable className="h-4 w-4 text-accent" />
               Variáveis Disponíveis
             </CardTitle>
@@ -314,7 +314,7 @@ export function TemplateEditor({
                   <button
                     key={variable.id}
                     onClick={() => insertVariable(variable)}
-                    className="w-full rounded-lg border border-amber-100 p-2.5 text-left transition-all hover:border-accent/30 hover:bg-accent/5 group"
+                    className="w-full rounded-lg border border-accent/10 p-2.5 text-left transition-all hover:border-accent/30 hover:bg-accent/5 group"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-sm text-accent">{variable.value}</span>
@@ -332,10 +332,10 @@ export function TemplateEditor({
         </Card>
 
         {/* Preview Panel */}
-        <Card className="border-amber-100">
+        <Card className="border-accent/10">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-base text-stone-800">
+              <CardTitle className="flex items-center gap-2 text-base text-foreground/80">
                 <Eye className="h-4 w-4 text-accent" />
                 Pré-visualização
               </CardTitle>
@@ -359,19 +359,19 @@ export function TemplateEditor({
           </CardHeader>
           <CardContent className="p-0">
             <div 
-              className={`mx-4 mb-4 rounded-lg border border-amber-100 bg-card overflow-hidden ${
+              className={`mx-4 mb-4 rounded-lg border border-accent/10 bg-card overflow-hidden ${
                 previewMode === 'mobile' ? 'max-w-[280px] mx-auto' : ''
               }`}
             >
               {/* Preview Header */}
-              <div className="flex items-center gap-2 px-3 py-2 bg-accent/5 border-b border-amber-100">
+              <div className="flex items-center gap-2 px-3 py-2 bg-accent/5 border-b border-accent/10">
                 {getTypeIcon(type)}
                 <span className="text-xs font-medium text-muted-foreground">
                   {type === 'email' ? 'Email' : type === 'whatsapp' ? 'WhatsApp' : 'SMS'}
                 </span>
                 {type === 'email' && subject && (
                   <>
-                    <Separator orientation="vertical" className="h-4 bg-amber-200" />
+                    <Separator orientation="vertical" className="h-4 bg-accent/15" />
                     <span className="text-xs text-muted-foreground truncate flex-1">
                       {generatePreview(subject)}
                     </span>
@@ -396,7 +396,7 @@ export function TemplateEditor({
         </Card>
 
         {/* Quick Tips */}
-        <Card className="border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50">
+        <Card className="border-accent/10 bg-gradient-to-br from-amber-50 to-orange-50">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
               <Sparkles className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />

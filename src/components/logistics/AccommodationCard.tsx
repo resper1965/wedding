@@ -38,7 +38,7 @@ const typeLabels: Record<string, string> = {
 }
 
 const typeColors: Record<string, string> = {
-  hotel: 'bg-accent/10 text-amber-800 border-accent/20',
+  hotel: 'bg-accent/10 text-accent border-accent/20',
   pousada: 'bg-destructive/10 text-rose-800 border-destructive/20',
   airbnb: 'bg-terracotta-100 text-terracotta-800 border-terracotta-200',
   hostel: 'bg-sage-100 text-sage-800 border-sage-200'
@@ -59,7 +59,7 @@ export function AccommodationCard({
   const [imageError, setImageError] = useState(false)
 
   const typeLabel = typeLabels[accommodation.type] || accommodation.type
-  const typeColor = typeColors[accommodation.type] || 'bg-muted text-stone-800 border-border'
+  const typeColor = typeColors[accommodation.type] || 'bg-muted text-foreground/80 border-border'
   const priceLabel = accommodation.priceRange ? priceLabels[accommodation.priceRange] : null
 
   return (
@@ -82,7 +82,7 @@ export function AccommodationCard({
             />
             {accommodation.recommended && (
               <div className="absolute top-3 right-3">
-                <Badge className="bg-amber-500 text-white border-0 gap-1">
+                <Badge className="bg-accent text-white border-0 gap-1">
                   <Star className="w-3 h-3 fill-current" />
                   Recomendado
                 </Badge>
@@ -94,7 +94,7 @@ export function AccommodationCard({
             <span className="text-6xl opacity-50">🏨</span>
             {accommodation.recommended && (
               <div className="absolute top-3 right-3">
-                <Badge className="bg-amber-500 text-white border-0 gap-1">
+                <Badge className="bg-accent text-white border-0 gap-1">
                   <Star className="w-3 h-3 fill-current" />
                   Recomendado
                 </Badge>
@@ -107,7 +107,7 @@ export function AccommodationCard({
           {/* Header */}
           <div className="flex items-start justify-between gap-2 mb-2">
             <div>
-              <h3 className="font-semibold text-lg text-stone-800">{accommodation.name}</h3>
+              <h3 className="font-semibold text-lg text-foreground/80">{accommodation.name}</h3>
               <Badge variant="outline" className={`${typeColor} mt-1`}>
                 {typeLabel}
               </Badge>
@@ -145,7 +145,7 @@ export function AccommodationCard({
           {/* Special Rate */}
           {accommodation.specialRate && (
             <div className="mt-3 p-3 bg-accent/5 border border-accent/20 rounded-lg">
-              <div className="flex items-center gap-2 text-amber-800">
+              <div className="flex items-center gap-2 text-accent">
                 <Tag className="w-4 h-4" />
                 <span className="font-medium text-sm">{accommodation.specialRate}</span>
               </div>
@@ -175,7 +175,7 @@ export function AccommodationCard({
           {accommodation.website && (
             <Button
               size="sm"
-              className="gap-1.5 bg-amber-600 hover:bg-amber-700 text-white"
+              className="gap-1.5 bg-accent hover:bg-amber-700 text-white"
               asChild
             >
               <a href={accommodation.website} target="_blank" rel="noopener noreferrer">

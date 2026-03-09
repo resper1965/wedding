@@ -175,7 +175,7 @@ export default function ReceptionPage() {
           </div>
         ) : filteredGuests.length === 0 ? (
           <div className="py-12 text-center">
-            <User className="mx-auto h-8 w-8 text-stone-300" />
+            <User className="mx-auto h-8 w-8 text-muted-foreground/50" />
             <p className="mt-2 text-sm text-muted-foreground">
               {searchQuery ? 'Nenhum convidado encontrado' : 'Nenhum convidado confirmado'}
             </p>
