@@ -327,10 +327,10 @@ export function SettingsManager() {
       >
         <div className="mb-6 flex items-center gap-3">
           <div className="rounded-full bg-gradient-to-br from-emerald-100 to-emerald-100 p-2">
-            <Heart className="h-5 w-5 text-orange-500" fill="currentColor" />
+            <Heart className="h-5 w-5 text-accent" fill="currentColor" />
           </div>
           <div>
-            <h2 className="text-xl font-medium text-stone-800">Dados do Casamento</h2>
+            <h2 className="text-xl font-medium text-foreground/80">Dados do Casamento</h2>
             <p className="text-sm text-muted-foreground">Configure as informações principais</p>
           </div>
         </div>
@@ -400,8 +400,8 @@ export function SettingsManager() {
               placeholder="Agradecemos sua presença neste dia especial!"
             />
           </div>
-          <div className="md:col-span-2 mt-4 pt-4 border-t border-emerald-100/50">
-            <h3 className="text-sm font-semibold text-stone-800 mb-3">Acesso Exclusivo (Noivos)</h3>
+          <div className="md:col-span-2 mt-4 pt-4 border-t border-primary/10/50">
+            <h3 className="text-sm font-semibold text-foreground/80 mb-3">Acesso Exclusivo (Noivos)</h3>
             <Label className="text-muted-foreground">E-mail dos Noivos (Para conceder acesso ao Painel)</Label>
             <Input
               type="email"
@@ -445,7 +445,7 @@ export function SettingsManager() {
               <Link2 className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-medium text-stone-800">Acesso aos Noivos / Convidados</h2>
+              <h2 className="text-xl font-medium text-foreground/80">Acesso aos Noivos / Convidados</h2>
               <p className="text-sm text-muted-foreground">Compartilhe este link da sua landing page do Casamento</p>
             </div>
           </div>
@@ -460,7 +460,7 @@ export function SettingsManager() {
                 navigator.clipboard.writeText(`https://wedding.louise.com.br/info?tenantId=${wedding.id}`)
                 toast.success('Link copiado!')
               }}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0 w-full sm:w-auto"
+              className="bg-primary hover:bg-primary text-white shrink-0 w-full sm:w-auto"
             >
               Copiar Link
             </Button>
@@ -490,7 +490,7 @@ export function SettingsManager() {
               <Calendar className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-medium text-stone-800">Eventos</h2>
+              <h2 className="text-xl font-medium text-foreground/80">Eventos</h2>
               <p className="text-sm text-muted-foreground">Cerimônia, recepção e outros momentos</p>
             </div>
           </div>
@@ -507,7 +507,7 @@ export function SettingsManager() {
         <div className="space-y-3">
           {events.length === 0 ? (
             <div className="rounded-xl border border-dashed border-primary/30/50 bg-card/50 p-8 text-center">
-              <Calendar className="mx-auto h-8 w-8 text-emerald-300" />
+              <Calendar className="mx-auto h-8 w-8 text-primary/50" />
               <p className="mt-2 text-sm text-muted-foreground">Nenhum evento cadastrado</p>
               <p className="text-xs text-muted-foreground">Adicione cerimônia, recepção, etc.</p>
             </div>
@@ -518,14 +518,14 @@ export function SettingsManager() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-center justify-between rounded-xl border border-emerald-100/50 bg-card/80 p-4"
+                className="flex items-center justify-between rounded-xl border border-primary/10/50 bg-card/80 p-4"
               >
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 text-sm font-medium text-primary">
                     {event.order + 1}
                   </div>
                   <div>
-                    <h3 className="font-medium text-stone-800">{event.name}</h3>
+                    <h3 className="font-medium text-foreground/80">{event.name}</h3>
                     <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                       {event.startTime && (
                         <span className="flex items-center gap-1">
@@ -642,7 +642,7 @@ export function SettingsManager() {
             <Button variant="outline" onClick={() => setIsEventDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveEvent} className="bg-amber-500 hover:bg-amber-600">
+            <Button onClick={handleSaveEvent} className="bg-accent hover:bg-accent">
               {editingEvent ? 'Salvar' : 'Criar Evento'}
             </Button>
           </DialogFooter>
@@ -663,7 +663,7 @@ export function SettingsManager() {
                 <Bell className="h-5 w-5 text-destructive" />
               </div>
               <div>
-                <h2 className="text-xl font-medium text-stone-800">Lembretes Automáticos</h2>
+                <h2 className="text-xl font-medium text-foreground/80">Lembretes Automáticos</h2>
                 <p className="text-sm text-muted-foreground">Configure os lembretes para convidados pendentes</p>
               </div>
             </div>
@@ -686,7 +686,7 @@ export function SettingsManager() {
                 <CalendarClock className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-medium text-stone-800">Agendador de Mensagens</h2>
+                <h2 className="text-xl font-medium text-foreground/80">Agendador de Mensagens</h2>
                 <p className="text-sm text-muted-foreground">Programe envios de mensagens para os convidados</p>
               </div>
             </div>
@@ -709,7 +709,7 @@ export function SettingsManager() {
                 <Download className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-medium text-stone-800">Exportar Dossiê IA (Obsidian Vault)</h2>
+                <h2 className="text-xl font-medium text-foreground/80">Exportar Dossiê IA (Obsidian Vault)</h2>
                 <p className="text-sm text-muted-foreground max-w-2xl mt-1">Gere um pacote ZIP contendo toda a memória relacional deste evento em arquivos Markdown limpos. Ideal para backup perpétuo offline ou ingestão em Agentes de IA via RAG com cruzamento dinâmico.</p>
               </div>
             </div>
@@ -717,7 +717,7 @@ export function SettingsManager() {
               <Button
                 onClick={handleExportObsidian}
                 disabled={isExporting}
-                className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto soft-shadow"
+                className="bg-primary hover:bg-primary w-full sm:w-auto soft-shadow"
               >
                 <Download className="w-4 h-4 mr-2" />
                 {isExporting ? 'Processando Grafo...' : 'Exportar Grafo de Conhecimento (.zip)'}
@@ -772,20 +772,20 @@ export function SettingsManager() {
                 <AlertTriangle className="h-5 w-5 text-destructive" />
               </div>
               <div>
-                <h2 className="text-xl font-medium text-red-800">Zona de Perigo</h2>
+                <h2 className="text-xl font-medium text-destructive">Zona de Perigo</h2>
                 <p className="text-sm text-destructive/80">Ações destrutivas e irreversíveis</p>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card/50 p-5 rounded-xl border border-red-100">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card/50 p-5 rounded-xl border border-destructive/10">
               <div>
-                <h3 className="font-semibold text-stone-800">Excluir Evento</h3>
+                <h3 className="font-semibold text-foreground/80">Excluir Evento</h3>
                 <p className="text-sm text-muted-foreground max-w-2xl mt-1">Ao excluir este casamento, todos os dados, convidados, confirmações, mensagens de IA e configurações serão apagados instantaneamente da plataforma Marryflow e não há como reverter.</p>
               </div>
               <Button
                 onClick={handleDeleteWedding}
                 disabled={isDeleting}
                 variant="destructive"
-                className="shrink-0 w-full sm:w-auto bg-red-600 hover:bg-red-700"
+                className="shrink-0 w-full sm:w-auto bg-destructive hover:bg-red-700"
               >
                 {isDeleting ? 'Excluindo Evento...' : 'Excluir Este Evento'}
               </Button>

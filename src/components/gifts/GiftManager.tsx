@@ -261,9 +261,9 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
 
       {/* Add/Edit Dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent className="sm:max-w-lg bg-card border-amber-100 max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-lg bg-card border-accent/10 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-amber-800">
+            <DialogTitle className="flex items-center gap-2 text-accent">
               <Gift className="w-5 h-5" />
               {editingGift ? 'Editar Presente' : 'Adicionar Presente'}
             </DialogTitle>
@@ -452,7 +452,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent className="bg-card">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-stone-800">
+            <AlertDialogTitle className="text-foreground/80">
               Excluir presente
             </AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground">

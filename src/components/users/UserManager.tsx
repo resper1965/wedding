@@ -80,7 +80,7 @@ export function UserManager() {
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-stone-300" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground/50" />
       </div>
     )
   }
@@ -89,7 +89,7 @@ export function UserManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-stone-800 uppercase tracking-tight">Gestão de Usuários</h2>
+          <h2 className="text-xl font-semibold text-foreground/80 uppercase tracking-tight">Gestão de Usuários</h2>
           <p className="text-sm text-muted-foreground">{profiles.length} usuários cadastrados</p>
         </div>
         <Users className="h-6 w-6 text-muted-foreground" />
@@ -110,7 +110,7 @@ export function UserManager() {
                   <Mail className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="font-medium text-stone-800 truncate">{profile.email}</p>
+                  <p className="font-medium text-foreground/80 truncate">{profile.email}</p>
                   <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" /> {fmtDate(profile.created_at)}
@@ -158,7 +158,7 @@ export function UserManager() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 text-xs text-primary hover:text-primary hover:bg-primary/5 border-emerald-100"
+                    className="h-8 text-xs text-primary hover:text-primary hover:bg-primary/5 border-primary/10"
                     onClick={() => handleUpdate(profile.id, { is_approved: true })}
                     disabled={updatingId === profile.id}
                   >

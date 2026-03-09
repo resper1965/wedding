@@ -50,14 +50,14 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-9.5zm-2 4.5H2V20h16v5zm-1 5H3v-3h14v3zM20 0H0v14h20V0zm-2 12H2V2h16v10zm16 10h-2v-2h2v-2h-16v14h16v-10zm-2 8h-12v-6h12v6zm2-22h-16v14h16V8zm-2 12h-12V10h12v10z'/%3E%3C/g%3E%3C/svg%3E")` }}
         />
         <div className="relative z-10">
-          <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-amber-300">Save the Date</p>
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-accent/50">Save the Date</p>
           <div className="my-4 flex items-center justify-center gap-3">
             <span className="text-3xl font-light text-white">{wedding.partner1Name}</span>
             <Heart className="h-5 w-5 text-rose-400" fill="currentColor" />
             <span className="text-3xl font-light text-white">{wedding.partner2Name}</span>
           </div>
           <div className="my-4 h-px w-full bg-amber-300/30" />
-          <p className="text-sm capitalize text-stone-300">{dayOfWeek}</p>
+          <p className="text-sm capitalize text-muted-foreground/50">{dayOfWeek}</p>
           <p className="mt-1 text-xl font-semibold text-white">{formattedDate}</p>
           {wedding.venue && (
             <div className="mt-3 flex items-center justify-center gap-1.5 text-muted-foreground">
@@ -74,14 +74,14 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
   if (style === 'modern') {
     return (
       <div className="overflow-hidden rounded-2xl bg-card shadow-2xl">
-        <div className="bg-amber-500 px-8 py-6 text-center">
+        <div className="bg-accent px-8 py-6 text-center">
           <p className="text-xs font-bold uppercase tracking-[0.4em] text-amber-100">Save the Date</p>
         </div>
         <div className="px-8 py-6 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
-            <span className="text-3xl font-bold text-stone-800">{wedding.partner1Name}</span>
-            <span className="text-2xl text-amber-400">&</span>
-            <span className="text-3xl font-bold text-stone-800">{wedding.partner2Name}</span>
+            <span className="text-3xl font-bold text-foreground/80">{wedding.partner1Name}</span>
+            <span className="text-2xl text-accent/70">&</span>
+            <span className="text-3xl font-bold text-foreground/80">{wedding.partner2Name}</span>
           </div>
           <div className="inline-flex items-center gap-3 rounded-full bg-muted px-4 py-2">
             <Calendar className="h-4 w-4 text-accent" />
@@ -106,7 +106,7 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50 p-8 text-center shadow-2xl">
       {/* Decorative circles */}
       <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-rose-200/30" />
-      <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-amber-200/30" />
+      <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-accent/15/30" />
       <div className="relative z-10">
         <div className="mb-3 flex justify-center gap-1">
           {[...Array(5)].map((_, i) => (
@@ -214,7 +214,7 @@ export function SaveTheDateManager() {
           <CalendarHeart className="h-5 w-5 text-rose-500" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-stone-800">Save the Date</h2>
+          <h2 className="text-xl font-semibold text-foreground/80">Save the Date</h2>
           <p className="text-sm text-muted-foreground">Crie e envie o aviso de data para seus convidados</p>
         </div>
       </div>
@@ -223,7 +223,7 @@ export function SaveTheDateManager() {
         {/* Left: Configuration */}
         <div className="space-y-4">
           {/* Style selector */}
-          <div className="rounded-xl border border-stone-100 bg-card p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
               <Palette className="h-4 w-4 text-muted-foreground" />
               <h3 className="text-sm font-semibold text-muted-foreground">Estilo do Card</h3>
@@ -248,7 +248,7 @@ export function SaveTheDateManager() {
           </div>
 
           {/* Channel selector */}
-          <div className="rounded-xl border border-stone-100 bg-card p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
               <Send className="h-4 w-4 text-muted-foreground" />
               <h3 className="text-sm font-semibold text-muted-foreground">Canal de Envio</h3>
@@ -276,7 +276,7 @@ export function SaveTheDateManager() {
           </div>
 
           {/* Target group */}
-          <div className="rounded-xl border border-stone-100 bg-card p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
               <Users className="h-4 w-4 text-muted-foreground" />
               <h3 className="text-sm font-semibold text-muted-foreground">Destinatários</h3>
@@ -304,7 +304,7 @@ export function SaveTheDateManager() {
           </div>
 
           {/* Custom message (optional) */}
-          <div className="rounded-xl border border-stone-100 bg-card p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-muted-foreground" />
               <h3 className="text-sm font-semibold text-muted-foreground">Mensagem personalizada</h3>
@@ -370,7 +370,7 @@ export function SaveTheDateManager() {
           </AnimatePresence>
 
           {/* Wedding info summary */}
-          <div className="rounded-xl border border-stone-100 bg-card p-4">
+          <div className="rounded-xl border border-border bg-card p-4">
             <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Dados do Evento
             </h4>

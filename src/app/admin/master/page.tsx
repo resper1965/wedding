@@ -7,8 +7,7 @@ import { ShieldAlert, Users, CreditCard, Trash2, UserPlus, RefreshCcw, Activity,
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { tenantFetch } from '@/lib/tenant-fetch'
-import { useTenant } from '@/hooks/useTenant'
+import { getAccessToken } from '@/lib/supabase'
 import { useAuth } from '@/components/auth/SessionProvider'
 import Link from 'next/link'
 
@@ -22,7 +21,6 @@ interface AdminUser {
 }
 
 export default function SuperAdminDashboard() {
-  const { tenantId } = useTenant()
     const [users, setUsers] = useState<AdminUser[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isProcessing, setIsProcessing] = useState<string | null>(null)
@@ -40,7 +38,7 @@ export default function SuperAdminDashboard() {
     const fetchUsers = async () => {
         setIsLoading(true)
         try {
-            const res = await tenantFetch('/api/admin/users', tenantId)
+            const res = await fetch('/api/admin/users', { headers: { Authorization: `Bearer ${await getAccessToken()}` } })
             if (res.status === 401 || res.status === 403) {
                 toast.error('Acesso Negado. Você não é um Super Admin.')
                 router.push('/projects')
@@ -71,7 +69,7 @@ export default function SuperAdminDashboard() {
 
         setIsProcessing(userId)
         try {
-            const res = await tenantFetch('/api/admin/users', tenantId, {
+            const res = await fetch('/api/admin/users', { headers: { Authorization: `Bearer ${await getAccessToken()}`, 'Content-Type': 'application/json' },
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, max_weddings: newMax })
@@ -119,7 +117,7 @@ export default function SuperAdminDashboard() {
 
         setIsSeeding(true)
         try {
-            const res = await tenantFetch('/api/admin/seed', tenantId, { method: 'POST' })
+            const res = await fetch('/api/admin/seed', { headers: { Authorization: `Bearer ${await getAccessToken()}`, 'Content-Type': 'application/json' }, method: 'POST' })
             const data = await res.json()
             if (data.success) {
                 toast.success('Ambiente de demonstração resetado com sucesso!')
@@ -140,7 +138,7 @@ export default function SuperAdminDashboard() {
 
         setIsPurging(true)
         try {
-            const res = await tenantFetch('/api/admin/purge', tenantId, { method: 'POST' })
+            const res = await fetch('/api/admin/purge', { headers: { Authorization: `Bearer ${await getAccessToken()}`, 'Content-Type': 'application/json' }, method: 'POST' })
             const data = await res.json()
             if (data.success) {
                 toast.success(data.message || 'Limpeza concluída!')

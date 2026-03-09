@@ -212,7 +212,7 @@ export function VendorManager() {
           <VendorForm form={form} setForm={setForm} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} className="bg-stone-800 hover:bg-stone-700">Adicionar</Button>
+            <Button onClick={handleSave} className="bg-stone-800 hover:bg-muted-foreground">Adicionar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

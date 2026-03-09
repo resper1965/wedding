@@ -48,10 +48,10 @@ interface Gift {
 }
 
 const STORES = [
-  { id: 'Amazon', label: 'Amazon', color: 'bg-orange-500/10 text-orange-500', emoji: '📦' },
+  { id: 'Amazon', label: 'Amazon', color: 'bg-accent/10 text-accent', emoji: '📦' },
   { id: 'Tok&Stok', label: 'Tok&Stok', color: 'bg-destructive/10 text-destructive', emoji: '🛋️' },
   { id: 'Magazine Luiza', label: 'Magalu', color: 'bg-primary/10 text-primary', emoji: '🛒' },
-  { id: 'Casas Bahia', label: 'Casas Bahia', color: 'bg-yellow-500/10 text-yellow-500', emoji: '🏠' },
+  { id: 'Casas Bahia', label: 'Casas Bahia', color: 'bg-accent/10 text-accent', emoji: '🏠' },
   { id: 'Americanas', label: 'Americanas', color: 'bg-destructive/10 text-destructive', emoji: '🇧🇷' },
   { id: 'Havan', label: 'Havan', color: 'bg-primary/10 text-primary', emoji: '🟢' },
   { id: 'Etna', label: 'Etna', color: 'bg-primary/10 text-primary', emoji: '🏺' },
@@ -275,7 +275,7 @@ export function GiftManagerEnhanced() {
           />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-40 border-emerald-100">
+          <SelectTrigger className="w-full sm:w-40 border-primary/10">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
@@ -284,7 +284,7 @@ export function GiftManagerEnhanced() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-40 border-emerald-100">
+          <SelectTrigger className="w-full sm:w-40 border-primary/10">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -299,7 +299,7 @@ export function GiftManagerEnhanced() {
       {/* Gift grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary/70" />
         </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-border p-12 text-center bg-card/20 backdrop-blur-sm soft-shadow">

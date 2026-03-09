@@ -113,7 +113,7 @@ export default function HospedagemPage() {
           >
             <div className="flex items-center gap-2 mb-4">
               <Cloud className="w-5 h-5 text-accent" />
-              <h2 className="text-lg font-semibold text-stone-800">Previsão do Tempo</h2>
+              <h2 className="text-lg font-semibold text-foreground/80">Previsão do Tempo</h2>
             </div>
             <WeatherWidget />
           </motion.div>
@@ -178,7 +178,7 @@ export default function HospedagemPage() {
             <div className="grid md:grid-cols-2 gap-4">
               <Card className="border-border/40 bg-card/40 backdrop-blur-md rounded-2xl hover:bg-card/60 transition-all">
                 <CardContent className="p-6">
-                  <h3 className="font-semibold text-stone-800 mb-2">🎯 Reserve com Antecedência</h3>
+                  <h3 className="font-semibold text-foreground/80 mb-2">🎯 Reserve com Antecedência</h3>
                   <p className="text-sm text-muted-foreground/70 italic">
                     Recomendamos reservar sua hospedagem pelo menos 2 semanas antes do casamento
                     para garantir disponibilidade e melhores preços.
@@ -188,7 +188,7 @@ export default function HospedagemPage() {
 
               <Card className="border-border/40 bg-card/40 backdrop-blur-md rounded-2xl hover:bg-card/60 transition-all">
                 <CardContent className="p-6">
-                  <h3 className="font-semibold text-stone-800 mb-2">📱 Use o Código de Desconto</h3>
+                  <h3 className="font-semibold text-foreground/80 mb-2">📱 Use o Código de Desconto</h3>
                   <p className="text-sm text-muted-foreground/70 italic">
                     Algumas hospedagens oferecem desconto exclusivo para convidados.
                     Não esqueça de mencionar o código na reserva!
@@ -198,7 +198,7 @@ export default function HospedagemPage() {
 
               <Card className="border-border/40 bg-card/40 backdrop-blur-md rounded-2xl hover:bg-card/60 transition-all">
                 <CardContent className="p-6">
-                  <h3 className="font-semibold text-stone-800 mb-2">🚗 Estacionamento</h3>
+                  <h3 className="font-semibold text-foreground/80 mb-2">🚗 Estacionamento</h3>
                   <p className="text-sm text-muted-foreground/70 italic">
                     O local possui estacionamento, mas recomendamos chegar cedo
                     para garantir sua vaga. Táxi e Uber também são boas opções.
@@ -208,7 +208,7 @@ export default function HospedagemPage() {
 
               <Card className="border-border/40 bg-card/40 backdrop-blur-md rounded-2xl hover:bg-card/60 transition-all">
                 <CardContent className="p-6">
-                  <h3 className="font-semibold text-stone-800 mb-2">👗 Dress Code</h3>
+                  <h3 className="font-semibold text-foreground/80 mb-2">👗 Dress Code</h3>
                   <p className="text-sm text-muted-foreground/70 italic">
                     O casamento será ao ar livre. Recomendamos sapatos confortáveis
                     e um casaquinho para a noite.

@@ -193,7 +193,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
 
   if (isLoading) {
     return (
-      <Card className="border-amber-100/50">
+      <Card className="border-accent/10/50">
         <CardContent className="flex items-center justify-center py-8">
           <Loader2 className="h-6 w-6 animate-spin text-accent" />
         </CardContent>
@@ -204,12 +204,12 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
   return (
     <div className="space-y-6">
       {/* Configuration Card */}
-      <Card className="border-amber-100/50">
+      <Card className="border-accent/10/50">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Bell className="h-5 w-5 text-accent" />
-              <CardTitle className="text-lg font-medium text-stone-800">
+              <CardTitle className="text-lg font-medium text-foreground/80">
                 Lembretes Automáticos
               </CardTitle>
             </div>
@@ -232,7 +232,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
         <CardContent className="space-y-6">
           {/* Stats Summary */}
           {stats && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-accent/10">
               <div className="text-center">
                 <p className="text-2xl font-bold text-accent">{stats.daysUntilWedding}</p>
                 <p className="text-xs text-muted-foreground">dias para o casamento</p>
@@ -255,7 +255,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                   </>
                 ) : (
                   <>
-                    <p className="text-2xl text-stone-300">—</p>
+                    <p className="text-2xl text-muted-foreground/50">—</p>
                     <p className="text-xs text-muted-foreground">sem lembretes</p>
                   </>
                 )}
@@ -370,11 +370,11 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
       </Card>
 
       {/* Upcoming Reminders Card */}
-      <Card className="border-amber-100/50">
+      <Card className="border-accent/10/50">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-accent" />
-            <CardTitle className="text-lg font-medium text-stone-800">
+            <CardTitle className="text-lg font-medium text-foreground/80">
               Próximos Lembretes
             </CardTitle>
           </div>
@@ -400,7 +400,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
 
           {upcoming.length === 0 ? (
             <div className="text-center py-6 text-muted-foreground">
-              <BellOff className="h-10 w-10 mx-auto mb-2 text-stone-300" />
+              <BellOff className="h-10 w-10 mx-auto mb-2 text-muted-foreground/50" />
               <p>Nenhum lembrete programado</p>
               {stats && stats.pendingGuests === 0 && (
                 <p className="text-sm text-primary mt-1">
@@ -463,7 +463,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
           )}
 
           {/* Manual Send Section */}
-          <div className="mt-4 pt-4 border-t border-stone-100">
+          <div className="mt-4 pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground mb-3">
               Envio manual de lembretes:
             </p>
@@ -516,7 +516,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
       </Card>
 
       {/* Info Card */}
-      <Card className="border-blue-100 bg-primary/5/50">
+      <Card className="border-primary/10 bg-primary/5/50">
         <CardContent className="py-4">
           <div className="flex items-start gap-3">
             <AlertCircle className="h-5 w-5 text-primary mt-0.5" />

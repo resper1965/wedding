@@ -290,7 +290,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
         </div>
         <Button
           onClick={() => { fetchGuests(); setMassSheetOpen(true) }}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+          className="bg-primary hover:bg-primary text-white"
         >
           <Users className="mr-2 h-4 w-4" /> Envio em Massa
         </Button>
@@ -335,7 +335,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-emerald-100 bg-card p-6 soft-shadow"
+            className="rounded-2xl border border-primary/10 bg-card p-6 soft-shadow"
           >
             <h3 className="mb-5 text-sm font-semibold uppercase tracking-wider text-foreground/80">
               Canais Configurados
@@ -357,7 +357,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
                         {channel.enabled ? 'Ativo' : 'Não configurado'}
                       </p>
                     </div>
-                    <Badge variant={channel.enabled ? 'default' : 'secondary'} className="text-[10px] uppercase font-bold tracking-wide bg-emerald-600">
+                    <Badge variant={channel.enabled ? 'default' : 'secondary'} className="text-[10px] uppercase font-bold tracking-wide bg-primary">
                       {channel.enabled ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </div>
@@ -372,7 +372,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="rounded-2xl border border-orange-100 bg-accent/5 p-6 soft-shadow"
+              className="rounded-2xl border border-accent/10 bg-accent/5 p-6 soft-shadow"
             >
               <p className="text-sm font-semibold text-accent">Pendentes de Resposta</p>
               <p className="mt-2 text-4xl font-bold tracking-tight text-accent">{stats.totalPending}</p>
@@ -383,7 +383,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              className="rounded-2xl border border-emerald-100 bg-primary/5 p-6 soft-shadow"
+              className="rounded-2xl border border-primary/10 bg-primary/5 p-6 soft-shadow"
             >
               <p className="text-sm font-semibold text-primary">Convites Enviados</p>
               <p className="mt-2 text-4xl font-bold tracking-tight text-primary">{stats.totalSent}</p>
@@ -399,7 +399,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
           >
             <Button
               onClick={onSendReminders}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white soft-shadow py-6 rounded-xl text-md"
+              className="w-full bg-primary hover:bg-primary text-white soft-shadow py-6 rounded-xl text-md"
               disabled={stats.totalPending === 0}
             >
               <Bell className="mr-2 h-5 w-5" />
@@ -424,7 +424,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
             <div>
               <label className="text-sm font-medium text-foreground/70">Destinatários</label>
               <Select value={massFilter} onValueChange={setMassFilter}>
-                <SelectTrigger className="mt-1 border-emerald-100">
+                <SelectTrigger className="mt-1 border-primary/10">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -445,7 +445,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
                 value={massTemplate?.id ?? ''}
                 onValueChange={id => setMassTemplate(templates.find(t => t.id === id) ?? null)}
               >
-                <SelectTrigger className="mt-1 border-emerald-100">
+                <SelectTrigger className="mt-1 border-primary/10">
                   <SelectValue placeholder="Selecionar template..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -458,14 +458,14 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
 
             {/* Preview */}
             {previewMessage && (
-              <div className="rounded-xl bg-primary/5 border border-emerald-100 p-4">
+              <div className="rounded-xl bg-primary/5 border border-primary/10 p-4">
                 <p className="mb-2 text-[10px] font-bold text-foreground/80 uppercase tracking-wider">Preview da Mensagem</p>
                 <p className="whitespace-pre-wrap text-sm font-medium text-foreground leading-relaxed">{previewMessage}</p>
               </div>
             )}
 
             {/* Warning */}
-            <div className="rounded-xl bg-accent/5 border border-orange-100 p-4 text-xs font-medium text-orange-800 flex gap-2">
+            <div className="rounded-xl bg-accent/5 border border-accent/10 p-4 text-xs font-medium text-orange-800 flex gap-2">
               <ExternalLink className="h-4 w-4 shrink-0 mt-0.5" />
               <span>Cada convidado abrirá uma janela WhatsApp Web. Certifique-se de liberar popups no navegador.</span>
             </div>
@@ -474,7 +474,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
             <Button
               onClick={handleMassSend}
               disabled={!massTemplate || massTargets.length === 0}
-              className="w-full bg-emerald-600 hover:bg-emerald-700"
+              className="w-full bg-primary hover:bg-primary"
             >
               <Send className="mr-2 h-4 w-4" />
               Enviar para {massTargets.length} convidados

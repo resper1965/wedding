@@ -125,14 +125,14 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100 bg-gradient-to-r from-amber-50 to-orange-50">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-gradient-to-r from-amber-50 to-orange-50">
               <div className="flex items-center gap-3">
                 <Badge className={`${getTypeColor(template.type)} border-0`}>
                   {getTypeIcon(template.type)}
                   <span className="ml-1.5 capitalize">{template.type}</span>
                 </Badge>
                 <div>
-                  <h2 className="font-semibold text-stone-800">{template.name}</h2>
+                  <h2 className="font-semibold text-foreground/80">{template.name}</h2>
                   <p className="text-xs text-muted-foreground">Pré-visualização do template</p>
                 </div>
               </div>
@@ -233,7 +233,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                       <div className="space-y-3">
                         <div className="flex justify-end">
                           <div className="bg-[#dcf8c6] rounded-2xl rounded-tr-sm px-4 py-2 max-w-[85%] shadow-sm">
-                            <p className="text-sm text-stone-800 whitespace-pre-wrap">
+                            <p className="text-sm text-foreground/80 whitespace-pre-wrap">
                               {generatePreview(template.content)}
                             </p>
                             <div className="flex items-center justify-end gap-1 mt-1">
@@ -251,7 +251,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                             <MessageCircle className="h-4 w-4 text-muted-foreground" />
                             <span className="text-sm font-medium text-muted-foreground">Mensagem</span>
                           </div>
-                          <p className="text-sm text-stone-800 whitespace-pre-wrap">
+                          <p className="text-sm text-foreground/80 whitespace-pre-wrap">
                             {generatePreview(template.content)}
                           </p>
                         </div>
@@ -269,7 +269,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                         <div className="text-center space-y-3">
                           <div className="flex items-center justify-center gap-2">
                             <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
-                            <span className="text-lg font-medium text-stone-800">
+                            <span className="text-lg font-medium text-foreground/80">
                               {SAMPLE_DATA['{parceiro1}']} & {SAMPLE_DATA['{parceiro2}']}
                             </span>
                             <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
@@ -292,8 +292,8 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
               </div>
 
               {/* Sidebar - Variables */}
-              <div className="lg:w-72 border-t lg:border-t-0 lg:border-l border-stone-100 bg-muted p-6">
-                <h3 className="font-medium text-stone-800 mb-4">Variáveis Utilizadas</h3>
+              <div className="lg:w-72 border-t lg:border-t-0 lg:border-l border-border bg-muted p-6">
+                <h3 className="font-medium text-foreground/80 mb-4">Variáveis Utilizadas</h3>
                 
                 {parseVariables(template.variables).length > 0 ? (
                   <div className="space-y-2">

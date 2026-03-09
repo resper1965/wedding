@@ -225,7 +225,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
           {isValidating && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm rounded-2xl">
               <div className="flex flex-col items-center gap-2">
-                <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
+                <Loader2 className="h-8 w-8 animate-spin text-accent/70" />
                 <span className="text-sm font-semibold tracking-wide uppercase text-white">Validando...</span>
               </div>
             </div>
@@ -243,7 +243,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
             className="absolute bottom-24 left-4 right-4"
           >
             <div className="flex items-center gap-3 rounded-2xl border border-accent/20 bg-accent/5 p-4 soft-shadow">
-              <AlertCircle className="h-5 w-5 shrink-0 text-orange-500" />
+              <AlertCircle className="h-5 w-5 shrink-0 text-accent" />
               <div>
                 <p className="text-sm font-bold text-orange-800">Erro de Câmera</p>
                 <p className="text-xs font-medium text-accent/80">{cameraError}</p>

@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Plus, AlertCircle, Heart, Trash2 } from 'lucide-react'
 import { useAuth } from '@/components/auth/SessionProvider'
-import { tenantFetch } from '@/lib/tenant-fetch'
-import { useTenant } from '@/hooks/useTenant'
+import { getAccessToken } from '@/lib/supabase'
 
 type WeddingProject = {
     id: string
@@ -17,7 +16,6 @@ type WeddingProject = {
 }
 
 export default function ProjectsDashboard() {
-  const { tenantId } = useTenant()
     const { user, loading } = useAuth()
     const router = useRouter()
     const [projects, setProjects] = useState<WeddingProject[]>([])
@@ -28,6 +26,11 @@ export default function ProjectsDashboard() {
     const [showLimitModal, setShowLimitModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
+    const authHeaders = async () => {
+        const token = await getAccessToken()
+        return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+    }
+
     useEffect(() => {
         if (!loading && !user) {
             router.push('/login')
@@ -36,15 +39,17 @@ export default function ProjectsDashboard() {
 
     useEffect(() => {
         if (user) {
-            tenantFetch('/api/wedding', tenantId)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.data) {
-                        // In our updated API, it returns an array of weddings
-                        setProjects(Array.isArray(data.data) ? data.data : [data.data])
-                    }
-                })
-                .finally(() => setIsFetching(false))
+            (async () => {
+                const headers = await authHeaders()
+                fetch('/api/wedding', { headers })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.data) {
+                            setProjects(Array.isArray(data.data) ? data.data : [data.data])
+                        }
+                    })
+                    .finally(() => setIsFetching(false))
+            })()
         }
     }, [user])
 
@@ -54,8 +59,10 @@ export default function ProjectsDashboard() {
         setErrorMessage('')
 
         try {
-            const res = await tenantFetch('/api/wedding', tenantId, {
+            const headers = await authHeaders()
+            const res = await fetch('/api/wedding', {
                 method: 'POST',
+                headers,
                 body: JSON.stringify({
                     partner1Name: 'Novo',
                     partner2Name: 'Casamento',
@@ -88,9 +95,11 @@ export default function ProjectsDashboard() {
         }
 
         try {
-            const res = await tenantFetch('/api/wedding', tenantId, {
+            const headers = await authHeaders()
+            const res = await fetch('/api/wedding', {
                 method: 'DELETE',
                 headers: {
+                    ...headers,
                     'x-tenant-id': projectId
                 }
             })
@@ -141,14 +150,14 @@ export default function ProjectsDashboard() {
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-destructive/5 border border-red-100 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-sm"
+                        className="bg-destructive/5 border border-destructive/10 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-sm"
                     >
                         <AlertCircle className="w-6 h-6 text-destructive shrink-0 mt-0.5" />
                         <div>
                             <h3 className="text-lg font-semibold text-red-900">Ação Bloqueada</h3>
                             <p className="text-destructive mt-1">{errorMessage}</p>
                             <div className="mt-5 flex gap-3">
-                                <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer" className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                                <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer" className="bg-destructive hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
                                     Falar com Suporte (Upsell)
                                 </a>
                                 <button onClick={() => setShowLimitModal(false)} className="text-destructive hover:bg-destructive/10 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
@@ -182,7 +191,7 @@ export default function ProjectsDashboard() {
                                             e.stopPropagation()
                                             handleDeleteProject(project.id)
                                         }}
-                                        className="p-1 text-red-400 hover:text-destructive hover:bg-destructive/5 rounded-md transition-colors"
+                                        className="p-1 text-destructive/70 hover:text-destructive hover:bg-destructive/5 rounded-md transition-colors"
                                         title="Apagar Projeto"
                                     >
                                         <Trash2 className="w-4 h-4" />

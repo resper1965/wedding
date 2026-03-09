@@ -229,7 +229,7 @@ export function AccommodationList({ showAdmin = false }: AccommodationListProps)
         {showAdmin && (
           <Button
             onClick={() => handleOpenDialog()}
-            className="gap-2 bg-amber-600 hover:bg-amber-700"
+            className="gap-2 bg-accent hover:bg-amber-700"
           >
             <Plus className="w-4 h-4" />
             Adicionar Hospedagem
@@ -399,7 +399,7 @@ export function AccommodationList({ showAdmin = false }: AccommodationListProps)
             </div>
 
             <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg space-y-3">
-              <h4 className="font-medium text-amber-800">Taxa Especial para Convidados</h4>
+              <h4 className="font-medium text-accent">Taxa Especial para Convidados</h4>
               <div className="grid gap-2">
                 <Label htmlFor="specialRate">Descrição da Oferta</Label>
                 <Input
@@ -439,7 +439,7 @@ export function AccommodationList({ showAdmin = false }: AccommodationListProps)
             <Button
               onClick={handleSave}
               disabled={!formData.name || !formData.address || saving}
-              className="bg-amber-600 hover:bg-amber-700"
+              className="bg-accent hover:bg-amber-700"
             >
               {saving ? (
                 <>

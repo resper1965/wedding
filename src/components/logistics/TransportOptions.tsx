@@ -185,12 +185,12 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-stone-800">Transporte</h3>
+        <h3 className="text-lg font-semibold text-foreground/80">Transporte</h3>
         {showAdmin && (
           <Button
             onClick={() => handleOpenDialog()}
             size="sm"
-            className="gap-2 bg-amber-600 hover:bg-amber-700"
+            className="gap-2 bg-accent hover:bg-amber-700"
           >
             <Plus className="w-4 h-4" />
             Adicionar
@@ -240,7 +240,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
                         <div className="flex items-start justify-between">
                           <div>
                             <div className="flex items-center gap-2">
-                              <h4 className="font-semibold text-stone-800">{transport.title}</h4>
+                              <h4 className="font-semibold text-foreground/80">{transport.title}</h4>
                               <Badge variant="outline" className="text-xs border-border">
                                 {typeLabel}
                               </Badge>
@@ -397,7 +397,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
             <Button
               onClick={handleSave}
               disabled={!formData.title || !formData.description || saving}
-              className="bg-amber-600 hover:bg-amber-700"
+              className="bg-accent hover:bg-amber-700"
             >
               {saving ? (
                 <>
