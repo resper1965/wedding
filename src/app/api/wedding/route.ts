@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const tenantId = request.headers.get('x-tenant-id')
 
     // Se estivermos buscando um tenant específico via header (ex: RSVP, Porteiro)
-    if (tenantId) {
+    if (tenantId && tenantId !== 'null' && tenantId !== 'undefined') {
       const { data: wedding, error } = await db.from('Wedding')
         .select('*')
         .eq('id', tenantId)
