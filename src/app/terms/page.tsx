@@ -1,4 +1,6 @@
 import { Metadata } from 'next'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
     title: 'Termos de Serviço | MarryFlow',
@@ -15,6 +17,14 @@ export default function TermsPage() {
             </div>
 
             <div className="container mx-auto max-w-4xl relative z-10">
+                <Link
+                    href="/dashboard"
+                    className="inline-flex items-center gap-2 mb-12 px-6 py-3 rounded-2xl bg-card/40 backdrop-blur-xl border border-border/40 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/20 hover:scale-105 transition-all group"
+                >
+                    <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                    Voltar ao Painel
+                </Link>
+
                 <h1 className="text-5xl md:text-7xl font-serif font-bold mb-16 text-foreground tracking-tight">Termos de <span className="text-primary italic font-light">Serviço</span></h1>
 
                 <div className="prose prose-stone dark:prose-invert max-w-none space-y-8 font-sans">
