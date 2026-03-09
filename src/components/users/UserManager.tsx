@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 interface Profile {
   id: string
@@ -30,13 +31,14 @@ const ROLE_COLORS = {
 }
 
 export function UserManager() {
+  const { tenantId } = useTenant()
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
 
   const fetchProfiles = useCallback(async () => {
     try {
-      const r = await authFetch('/api/users')
+      const r = await tenantFetch('/api/users', tenantId)
       const data = await r.json()
       if (data.success) {
         setProfiles(data.data)
@@ -55,7 +57,7 @@ export function UserManager() {
   const handleUpdate = async (id: string, updates: Partial<Profile>) => {
     setUpdatingId(id)
     try {
-      const r = await authFetch('/api/users', {
+      const r = await tenantFetch('/api/users', tenantId, {
         method: 'PATCH',
         body: JSON.stringify({ id, ...updates })
       })

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion } from 'framer-motion'
 import { Save, Heart, Calendar, MapPin, Clock, Plus, Trash2, Edit, Bell, CalendarClock, Link2, AlertTriangle, ExternalLink, Download, ShieldCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -53,6 +54,7 @@ interface GroupData {
 }
 
 export function SettingsManager() {
+  const { tenantId } = useTenant()
   const [wedding, setWedding] = useState<WeddingData | null>(null)
   const [events, setEvents] = useState<EventData[]>([])
   const [groups, setGroups] = useState<GroupData[]>([])
@@ -97,8 +99,8 @@ export function SettingsManager() {
       try {
         const [weddingRes, eventsRes, groupsRes] = await Promise.all([
           fetch('/api/wedding'),
-          authFetch('/api/events'),
-          authFetch('/api/groups')
+          tenantFetch('/api/events', tenantId),
+          tenantFetch('/api/groups', tenantId)
         ])
 
         const weddingData = await weddingRes.json()
@@ -225,7 +227,7 @@ export function SettingsManager() {
         toast.success(editingEvent ? 'Evento atualizado!' : 'Evento criado!')
         setIsEventDialogOpen(false)
         // Refresh events
-        const eventsRes = await authFetch('/api/events')
+        const eventsRes = await tenantFetch('/api/events', tenantId)
         const eventsData = await eventsRes.json()
         if (eventsData.success) {
           setEvents(eventsData.data)
@@ -266,7 +268,7 @@ export function SettingsManager() {
 
     setIsDeleting(true)
     try {
-      const response = await authFetch('/api/wedding', {
+      const response = await tenantFetch('/api/wedding', tenantId, {
         method: 'DELETE'
       })
 
@@ -286,7 +288,7 @@ export function SettingsManager() {
     if (!wedding) return
     setIsExporting(true)
     try {
-      const response = await authFetch('/api/wedding/export')
+      const response = await tenantFetch('/api/wedding/export', tenantId)
       if (!response.ok) throw new Error('Falha na exportação')
 
       const blob = await response.blob()

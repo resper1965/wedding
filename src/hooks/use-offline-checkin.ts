@@ -13,7 +13,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getSupabase } from '@/lib/supabase'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { getOfflineDb, OfflineDatabase, OfflineCheckIn } from '@/services/offline/offline-db'
 
 // ============================================================================
@@ -87,6 +88,7 @@ function useOnlineStatus(): boolean {
 // ============================================================================
 
 export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineCheckInOptions) {
+  const { tenantId } = useTenant()
   const [guests, setGuests] = useState<Guest[]>([])
   const [checkIns, setCheckIns] = useState<Map<string, CheckInRecord>>(new Map())
   const [isLoading, setIsLoading] = useState(true)
@@ -214,7 +216,7 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
 
   const loadGuestsFromAPI = async () => {
     try {
-      const res = await authFetch(`/api/guests?weddingId=${weddingId}`)
+      const res = await tenantFetch(`/api/guests?weddingId=${weddingId}`, tenantId)
       if (res.ok) {
         const data = await res.json()
         const apiGuests: Guest[] = (data.guests || data || [])
@@ -241,7 +243,7 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
 
   const loadCheckInsFromAPI = async () => {
     try {
-      const res = await authFetch(`/api/checkin?weddingId=${weddingId}&eventId=${eventId}`)
+      const res = await tenantFetch(`/api/checkin?weddingId=${weddingId}&eventId=${eventId}`, tenantId)
       if (res.ok) {
         const data = await res.json()
         const checkInMap = new Map<string, CheckInRecord>()
@@ -308,7 +310,7 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
     
     for (const checkIn of pendingCheckIns) {
       try {
-        const res = await authFetch('/api/checkin', {
+        const res = await tenantFetch('/api/checkin', tenantId, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -363,7 +365,7 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
     // Try to save via API if online
     if (isOnline) {
       try {
-        await authFetch('/api/checkin', {
+        await tenantFetch('/api/checkin', tenantId, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -416,7 +418,7 @@ export function useOfflineCheckIn({ weddingId, eventId, staffId }: UseOfflineChe
     // Update via API if online
     if (isOnline) {
       try {
-        await authFetch(`/api/checkin/${checkIn.id}`, {
+        await tenantFetch(`/api/checkin/${checkIn.id}`, tenantId, {
           method: 'DELETE',
         })
       } catch (error) {

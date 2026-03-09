@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion } from 'framer-motion'
 import { RefreshCw, Utensils, Calendar, MessageSquare, CheckCircle } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -73,13 +74,14 @@ interface AnalyticsData {
 }
 
 export function AnalyticsDashboard() {
+  const { tenantId } = useTenant()
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await authFetch('/api/analytics')
+      const response = await tenantFetch('/api/analytics', tenantId)
       const result = await response.json()
 
       if (result.success) {

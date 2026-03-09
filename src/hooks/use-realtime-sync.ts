@@ -12,7 +12,8 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { getSupabase } from '@/lib/supabase'
 import {
   getOfflineDb,
@@ -88,6 +89,7 @@ function useOnlineStatus(): boolean {
 // ============================================================================
 
 export default function useFirestoreSync(config: FirestoreSyncConfig) {
+  const { tenantId } = useTenant()
   const { weddingId, autoSync = true, enableRealtime = true } = config
 
   // State
@@ -208,7 +210,7 @@ export default function useFirestoreSync(config: FirestoreSyncConfig) {
 
   const loadCheckInsFromAPI = useCallback(async () => {
     try {
-      const res = await authFetch(`/api/checkin?weddingId=${weddingId}`)
+      const res = await tenantFetch(`/api/checkin?weddingId=${weddingId}`, tenantId)
       if (res.ok) {
         const data = await res.json()
         if (data.checkIns) {
@@ -228,7 +230,7 @@ export default function useFirestoreSync(config: FirestoreSyncConfig) {
     setSyncState(prev => ({ ...prev, isSyncing: true }))
 
     try {
-      const res = await authFetch('/api/sync', {
+      const res = await tenantFetch('/api/sync', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ weddingId }),
@@ -268,7 +270,7 @@ export default function useFirestoreSync(config: FirestoreSyncConfig) {
     eventId: string
   ): Promise<boolean> => {
     try {
-      const res = await authFetch('/api/checkin', {
+      const res = await tenantFetch('/api/checkin', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ guestId, invitationId, eventId, weddingId }),

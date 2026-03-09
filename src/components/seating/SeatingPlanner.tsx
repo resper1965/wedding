@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus, Users, Check, AlertCircle, RefreshCw, Trash2, Edit2,
@@ -50,6 +51,7 @@ interface SeatingData {
 }
 
 export function SeatingPlanner() {
+  const { tenantId } = useTenant()
   const { toast } = useToast()
   const [data, setData] = useState<SeatingData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -64,7 +66,7 @@ export function SeatingPlanner() {
   const fetchData = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await authFetch('/api/tables')
+      const response = await tenantFetch('/api/tables', tenantId)
       const result = await response.json()
       if (result.success) {
         setData(result.data)
@@ -87,7 +89,7 @@ export function SeatingPlanner() {
 
   const createTable = async () => {
     try {
-      const response = await authFetch('/api/tables', {
+      const response = await tenantFetch('/api/tables', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -142,7 +144,7 @@ export function SeatingPlanner() {
 
   const assignGroup = async (groupId: string, tableId: string | null) => {
     try {
-      const response = await authFetch('/api/groups/assign', {
+      const response = await tenantFetch('/api/groups/assign', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ groupId, tableId })

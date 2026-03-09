@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion } from 'framer-motion'
 import { 
   Car, 
@@ -73,6 +74,7 @@ interface TransportOptionsProps {
 }
 
 export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
+  const { tenantId } = useTenant()
   const [transports, setTransports] = useState<Transport[]>([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -92,7 +94,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
   const fetchTransports = async () => {
     setLoading(true)
     try {
-      const response = await authFetch('/api/transport')
+      const response = await tenantFetch('/api/transport', tenantId)
       const result = await response.json()
       if (result.success) {
         setTransports(result.data)

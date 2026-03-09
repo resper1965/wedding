@@ -32,7 +32,8 @@ import { ThemeToggle } from '@/components/ui-custom/ThemeToggle'
 import { QRScanner, QRScanResult } from '@/components/checkin/QRScanner'
 import { GuestSearch, GuestSearchResult } from '@/components/checkin/GuestSearch'
 import { CheckInCard, CheckInCardProps } from '@/components/checkin/CheckInCard'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 
 // ============================================================================
@@ -90,7 +91,7 @@ export default function PorteiroPage() {
 
   // Fetch wedding name
   useEffect(() => {
-    publicFetch('/api/wedding')
+    tenantFetch('/api/wedding')
       .then(r => r.json())
       .then(data => {
         if (data.success) {
@@ -106,7 +107,7 @@ export default function PorteiroPage() {
 
   const fetchStats = useCallback(async () => {
     try {
-      const res = await publicFetch('/api/checkin/stats')
+      const res = await tenantFetch('/api/checkin/stats')
       if (res.ok) {
         const data = await res.json()
         setStats({
@@ -127,7 +128,7 @@ export default function PorteiroPage() {
   const fetchGuestList = useCallback(async () => {
     setIsLoadingList(true)
     try {
-      const res = await publicFetch('/api/checkin/guests')
+      const res = await tenantFetch('/api/checkin/guests')
       if (res.ok) {
         const data = await res.json()
         setGuestList(data.guests || [])
@@ -186,7 +187,7 @@ export default function PorteiroPage() {
 
   const handleCheckIn = async (invitationId: string) => {
     try {
-      const res = await publicFetch('/api/checkin', {
+      const res = await tenantFetch('/api/checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ invitationId }),
@@ -205,7 +206,7 @@ export default function PorteiroPage() {
 
   const handleCheckInFromList = async (guestId: string, guestName: string) => {
     try {
-      const res = await publicFetch(`/api/checkin`, {
+      const res = await tenantFetch(`/api/checkin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ guestId }),

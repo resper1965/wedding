@@ -7,7 +7,8 @@ import { ShieldAlert, Users, CreditCard, Trash2, UserPlus, RefreshCcw, Activity,
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { useAuth } from '@/components/auth/SessionProvider'
 import Link from 'next/link'
 
@@ -21,6 +22,7 @@ interface AdminUser {
 }
 
 export default function SuperAdminDashboard() {
+  const { tenantId } = useTenant()
     const [users, setUsers] = useState<AdminUser[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isProcessing, setIsProcessing] = useState<string | null>(null)
@@ -38,7 +40,7 @@ export default function SuperAdminDashboard() {
     const fetchUsers = async () => {
         setIsLoading(true)
         try {
-            const res = await authFetch('/api/admin/users')
+            const res = await tenantFetch('/api/admin/users', tenantId)
             if (res.status === 401 || res.status === 403) {
                 toast.error('Acesso Negado. Você não é um Super Admin.')
                 router.push('/projects')
@@ -69,7 +71,7 @@ export default function SuperAdminDashboard() {
 
         setIsProcessing(userId)
         try {
-            const res = await authFetch('/api/admin/users', {
+            const res = await tenantFetch('/api/admin/users', tenantId, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, max_weddings: newMax })
@@ -96,7 +98,7 @@ export default function SuperAdminDashboard() {
 
         setIsProcessing(userId)
         try {
-            const res = await authFetch(`/api/admin/users?userId=${userId}`, {
+            const res = await tenantFetch(`/api/admin/users?userId=${userId}`, tenantId, {
                 method: 'DELETE'
             })
             const data = await res.json()
@@ -117,7 +119,7 @@ export default function SuperAdminDashboard() {
 
         setIsSeeding(true)
         try {
-            const res = await authFetch('/api/admin/seed', { method: 'POST' })
+            const res = await tenantFetch('/api/admin/seed', tenantId, { method: 'POST' })
             const data = await res.json()
             if (data.success) {
                 toast.success('Ambiente de demonstração resetado com sucesso!')
@@ -138,7 +140,7 @@ export default function SuperAdminDashboard() {
 
         setIsPurging(true)
         try {
-            const res = await authFetch('/api/admin/purge', { method: 'POST' })
+            const res = await tenantFetch('/api/admin/purge', tenantId, { method: 'POST' })
             const data = await res.json()
             if (data.success) {
                 toast.success(data.message || 'Limpeza concluída!')

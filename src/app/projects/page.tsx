@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Plus, AlertCircle, Heart, Trash2 } from 'lucide-react'
 import { useAuth } from '@/components/auth/SessionProvider'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 type WeddingProject = {
     id: string
@@ -16,6 +17,7 @@ type WeddingProject = {
 }
 
 export default function ProjectsDashboard() {
+  const { tenantId } = useTenant()
     const { user, loading } = useAuth()
     const router = useRouter()
     const [projects, setProjects] = useState<WeddingProject[]>([])
@@ -34,7 +36,7 @@ export default function ProjectsDashboard() {
 
     useEffect(() => {
         if (user) {
-            authFetch('/api/wedding')
+            tenantFetch('/api/wedding', tenantId)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.data) {
@@ -52,7 +54,7 @@ export default function ProjectsDashboard() {
         setErrorMessage('')
 
         try {
-            const res = await authFetch('/api/wedding', {
+            const res = await tenantFetch('/api/wedding', tenantId, {
                 method: 'POST',
                 body: JSON.stringify({
                     partner1Name: 'Novo',
@@ -86,7 +88,7 @@ export default function ProjectsDashboard() {
         }
 
         try {
-            const res = await authFetch('/api/wedding', {
+            const res = await tenantFetch('/api/wedding', tenantId, {
                 method: 'DELETE',
                 headers: {
                     'x-tenant-id': projectId
@@ -205,7 +207,7 @@ export default function ProjectsDashboard() {
                             </div>
 
                             <button
-                                onClick={() => router.push(`/dashboard?tenantId=${project.id}`)}
+                                onClick={() => router.push(`/evento/${project.id}/dashboard`)}
                                 className="w-full text-center bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground font-accent font-bold uppercase tracking-widest py-3.5 rounded-2xl transition-all duration-300 text-[10px] shadow-sm active:scale-95"
                             >
                                 Acessar Painel

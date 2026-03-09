@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -138,6 +139,7 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
 }
 
 export function SaveTheDateManager() {
+  const { tenantId } = useTenant()
   const [wedding, setWedding] = useState<WeddingInfo | null>(null)
   const [selectedStyle, setSelectedStyle] = useState<CardStyle>('romantic')
   const [sendChannel, setSendChannel] = useState<SendChannel>('whatsapp')
@@ -150,8 +152,8 @@ export function SaveTheDateManager() {
 
   useEffect(() => {
     Promise.all([
-      authFetch('/api/wedding').then(r => r.json()),
-      authFetch('/api/guests').then(r => r.json()),
+      tenantFetch('/api/wedding', tenantId).then(r => r.json()),
+      tenantFetch('/api/guests', tenantId).then(r => r.json()),
     ]).then(([weddingData, guestsData]) => {
       if (weddingData.success) setWedding(weddingData.data)
       if (guestsData.success) {
@@ -168,7 +170,7 @@ export function SaveTheDateManager() {
     if (!wedding) return
     setIsSending(true)
     try {
-      const response = await authFetch('/api/save-the-date/send', {
+      const response = await tenantFetch('/api/save-the-date/send', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

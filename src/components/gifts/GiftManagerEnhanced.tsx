@@ -27,7 +27,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { cn } from '@/lib/utils'
 
 interface Gift {
@@ -80,6 +81,7 @@ const emptyForm = {
 }
 
 export function GiftManagerEnhanced() {
+  const { tenantId } = useTenant()
   const [gifts, setGifts] = useState<Gift[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)

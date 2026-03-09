@@ -13,7 +13,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 import {
   Select,
@@ -86,8 +87,8 @@ export default function RSVPPage() {
     const fetchData = async () => {
       try {
         const [weddingRes, eventsRes] = await Promise.all([
-          publicFetch('/api/wedding'),
-          publicFetch('/api/events')
+          tenantFetch('/api/wedding'),
+          tenantFetch('/api/events')
         ])
 
         const weddingData = await weddingRes.json()
@@ -131,7 +132,7 @@ export default function RSVPPage() {
   const searchByInvite = useCallback(async (inviteCode: string) => {
     setIsSearching(true)
     try {
-      const response = await publicFetch(`/api/invite/${inviteCode}`)
+      const response = await tenantFetch(`/api/invite/${inviteCode}`)
       const data = await response.json()
       if (data.success && data.guest) {
         handleSelectGuest(data.guest)
@@ -157,7 +158,7 @@ export default function RSVPPage() {
 
     setIsSearching(true)
     try {
-      const response = await publicFetch(`/api/guests?search=${encodeURIComponent(searchQuery)}`)
+      const response = await tenantFetch(`/api/guests?search=${encodeURIComponent(searchQuery)}`)
       const data: SearchResponse = await response.json()
       if (data.success && data.data) {
         setSearchResults(data.data)
@@ -181,7 +182,7 @@ export default function RSVPPage() {
 
     setIsSubmitting(true)
     try {
-      const response = await publicFetch('/api/rsvp', {
+      const response = await tenantFetch('/api/rsvp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
