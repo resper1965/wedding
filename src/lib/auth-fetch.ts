@@ -32,7 +32,7 @@ export async function authFetch(
     }
 
     if (!tenantId) {
-      tenantId = localStorage.getItem('tenantId') || 'wedding-1'
+      tenantId = localStorage.getItem('tenantId') || null
     }
 
     if (tenantId && tenantId !== 'dashboard' && tenantId !== 'projects' && tenantId !== 'login') {

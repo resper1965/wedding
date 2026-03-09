@@ -33,11 +33,19 @@ export async function verifyTenantAccess(
         }
     }
 
+    // Super Admin Bypass: Admin has access to EVERYTHING
+    const { data: profile } = await db.from('Profile').select('is_super_admin').eq('id', uid).single()
+    if (profile?.is_super_admin) {
+        // If tenantId is provided and valid, return that. Otherwise, find first available.
+        if (tenantId && tenantId.length > 20) {
+            return { hasAccess: true, role: 'owner', weddingId: tenantId }
+        }
+    }
+
     let effectiveTenantId = tenantId;
 
-    // Fallback: If tenantId is missing, invalid, or the default 'wedding-1'
-    // we try to find the first wedding this user owns or is a couple of.
-    if (!effectiveTenantId || effectiveTenantId === 'wedding-1' || effectiveTenantId.length < 10) {
+    // Fallback: If tenantId is missing or invalid
+    if (!effectiveTenantId || effectiveTenantId.length < 10) {
         const { data: firstWedding } = await db.from('Wedding')
             .select('id')
             .or(`owner_id.eq.${uid}${email ? `,couple_email.ilike.${email}` : ''}`)
@@ -46,7 +54,13 @@ export async function verifyTenantAccess(
 
         if (firstWedding) {
             effectiveTenantId = firstWedding.id;
-        } else {
+        } else if (profile?.is_super_admin) {
+            // Admin with no owned weddings still needs a wedding context for some APIs
+            const { data: anyWedding } = await db.from('Wedding').select('id').limit(1).maybeSingle()
+            if (anyWedding) effectiveTenantId = anyWedding.id;
+        }
+
+        if (!effectiveTenantId) {
             return {
                 hasAccess: false,
                 role: 'none',
