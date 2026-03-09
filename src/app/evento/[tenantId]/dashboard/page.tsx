@@ -41,6 +41,8 @@ const GiftManagerEnhanced = dynamic(() => import('@/components/gifts/GiftManager
 const AIAgentPanel = dynamic(() => import('@/components/ai-agent/AIAgentPanel').then(mod => mod.AIAgentPanel), { ssr: false })
 const InteractivityDashboard = dynamic(() => import('@/components/dashboard/InteractivityDashboard').then(mod => mod.InteractivityDashboard), { ssr: false })
 const MySiteManager = dynamic(() => import('@/components/my-site/MySiteManager'), { ssr: false })
+import { OnboardingProgress, useOnboardingSteps } from '@/components/onboarding/OnboardingProgress'
+import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard'
 import Link from 'next/link'
 
 // Types
@@ -93,6 +95,7 @@ export function MarryflowPlatform() {
   const router = useRouter()
   const { tenantId } = useTenant()
   const activeTab = searchParams.get('tab') || 'dashboard'
+  const [showOnboarding, setShowOnboarding] = useState(searchParams.get('onboarding') === 'true')
 
   const setActiveTab = (tab: string) => {
     const tabItem = tabs.find(t => t.id === tab)
@@ -219,8 +222,30 @@ export function MarryflowPlatform() {
     )
   }
 
+  const onboardingSteps = useOnboardingSteps(dashboardData)
+
+  const handleOnboardingSave = async (data: Record<string, unknown>) => {
+    await tenantFetch('/api/wedding', tenantId, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
   return (
     <div className="flex min-h-screen bg-background">
+      {/* Onboarding Wizard */}
+      {showOnboarding && (
+        <OnboardingWizard
+          weddingId={tenantId}
+          onComplete={() => {
+            setShowOnboarding(false)
+            router.replace(`/evento/${tenantId}/dashboard`, { scroll: false })
+            fetchDashboardData()
+          }}
+          onSaveStep={handleOnboardingSave}
+        />
+      )}
+
       {/* Sidebar — desktop */}
       <SidebarNav
         activeTab={activeTab}
@@ -290,6 +315,10 @@ export function MarryflowPlatform() {
                       weddingDate={dashboardData.weddingDate}
                       daysUntilWedding={dashboardData.daysUntilWedding}
                       venue={dashboardData.venue}
+                    />
+                    <OnboardingProgress
+                      steps={onboardingSteps}
+                      onNavigate={setActiveTab}
                     />
                     <StatsOverview
                       stats={{

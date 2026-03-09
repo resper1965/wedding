@@ -80,7 +80,8 @@ export default function ProjectsDashboard() {
                     alert('Erro ao criar projeto.')
                 }
             } else {
-                setProjects(prev => [...prev, data.data])
+                // Redirect to dashboard with onboarding wizard
+                router.push(`/evento/${data.data.id}/dashboard?onboarding=true`)
             }
         } catch (err) {
             console.error(err)
