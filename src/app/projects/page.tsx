@@ -57,7 +57,7 @@ export default function ProjectsDashboard() {
                 method: 'POST',
                 body: JSON.stringify({
                     partner1Name: 'Novo',
-                    partner2Name: 'Evento',
+                    partner2Name: 'Casamento',
                     weddingDate: new Date().toISOString()
                 })
             })
