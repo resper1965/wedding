@@ -94,7 +94,11 @@ export default function PorteiroPage() {
       .then(r => r.json())
       .then(data => {
         if (data.success) {
-          setWeddingName(`${data.data.partner1Name} & ${data.data.partner2Name}`)
+          // Handle both single object (new API implementation) or first element of array (old)
+          const wedding = Array.isArray(data.data) ? data.data[0] : data.data;
+          if (wedding) {
+            setWeddingName(`${wedding.partner1Name} & ${wedding.partner2Name}`)
+          }
         }
       })
       .catch(() => { })
@@ -201,7 +205,7 @@ export default function PorteiroPage() {
 
   const handleCheckInFromList = async (guestId: string, guestName: string) => {
     try {
-      const res = await fetch(`/api/checkin`, {
+      const res = await publicFetch(`/api/checkin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ guestId }),

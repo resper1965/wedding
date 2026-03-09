@@ -6,6 +6,20 @@ import { verifySupabaseToken } from '@/lib/auth'
 export async function GET(request: NextRequest) {
   try {
     const auth = await verifySupabaseToken(request)
+    const tenantId = request.headers.get('x-tenant-id')
+
+    // Se estivermos buscando um tenant específico via header (ex: RSVP, Porteiro)
+    if (tenantId) {
+      const { data: wedding, error } = await db.from('Wedding')
+        .select('*')
+        .eq('id', tenantId)
+        .maybeSingle()
+
+      if (error) throw error
+      if (!wedding) return NextResponse.json({ success: false, error: 'Casamento não encontrado' }, { status: 404 })
+
+      return NextResponse.json({ success: true, data: wedding })
+    }
 
     // Se não estiver logado, não revelamos a lista de casamentos do banco
     if (!auth.authorized || !auth.uid) {
