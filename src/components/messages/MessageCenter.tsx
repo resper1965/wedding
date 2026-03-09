@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion } from 'framer-motion'
 import { Send, Mail, MessageCircle, Bell, Loader2, Users, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -48,6 +49,7 @@ interface GuestWithPhone {
 }
 
 export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
+  const { tenantId } = useTenant()
   const [templates, setTemplates] = useState<Template[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
@@ -80,7 +82,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
   // Fetch templates
   const fetchTemplates = useCallback(async () => {
     try {
-      const response = await authFetch('/api/templates')
+      const response = await tenantFetch('/api/templates', tenantId)
       const data = await response.json()
       if (data.success) setTemplates(data.data)
     } catch (error) {
@@ -92,7 +94,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
 
   const fetchGuests = useCallback(async () => {
     try {
-      const res = await authFetch('/api/guests')
+      const res = await tenantFetch('/api/guests', tenantId)
       const data = await res.json()
       if (data.success) setGuests(data.data)
     } catch { /* silent */ }
@@ -169,7 +171,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
   // Duplicate template
   const handleDuplicate = async (template: Template) => {
     try {
-      const response = await authFetch('/api/templates', {
+      const response = await tenantFetch('/api/templates', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -233,7 +235,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
   // Save as new template
   const handleSaveAsNew = async (data: { name: string; type: string; subject: string; content: string; variables: string }) => {
     try {
-      const response = await authFetch('/api/templates', {
+      const response = await tenantFetch('/api/templates', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

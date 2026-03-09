@@ -6,7 +6,8 @@ import { Heart, Sparkles, MapPin, Calendar, Gem } from 'lucide-react'
 import { format } from 'date-fns'
 import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 
 interface WeddingData {
@@ -65,7 +66,7 @@ export default function HistoriaPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await publicFetch('/api/wedding')
+        const response = await tenantFetch('/api/wedding')
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)

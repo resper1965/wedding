@@ -9,7 +9,8 @@ import { WeatherWidget } from '@/components/weather/WeatherWidget'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 
 export default function HospedagemPage() {
@@ -25,7 +26,7 @@ export default function HospedagemPage() {
 
     async function loadWedding() {
       try {
-        const response = await publicFetch('/api/wedding')
+        const response = await tenantFetch('/api/wedding')
         const result = await response.json()
         if (mounted && result.success) {
           setWedding(result.data)

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   MessageSquare,
@@ -60,6 +61,7 @@ interface GeneratedQR {
 // ============================================================================
 
 export function ConciergeDashboard() {
+  const { tenantId } = useTenant()
   const [activeTab, setActiveTab] = useState<'overview' | 'conversations' | 'qrcode' | 'media' | 'settings'>('overview')
   const [stats, setStats] = useState<ConciergeStats | null>(null)
   const [conversations, setConversations] = useState<Conversation[]>([])
@@ -86,14 +88,14 @@ export function ConciergeDashboard() {
     setIsLoading(true)
     try {
       // Fetch stats
-      const statsRes = await authFetch('/api/concierge/stats')
+      const statsRes = await tenantFetch('/api/concierge/stats', tenantId)
       if (statsRes.ok) {
         const data = await statsRes.json()
         setStats(data)
       }
 
       // Fetch conversations
-      const convRes = await authFetch('/api/concierge/conversations')
+      const convRes = await tenantFetch('/api/concierge/conversations', tenantId)
       if (convRes.ok) {
         const data = await convRes.json()
         setConversations(data.conversations || [])
@@ -112,7 +114,7 @@ export function ConciergeDashboard() {
     }
 
     try {
-      const res = await authFetch('/api/concierge/qrcode', {
+      const res = await tenantFetch('/api/concierge/qrcode', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ familyName: qrFamilyName })
@@ -138,7 +140,7 @@ export function ConciergeDashboard() {
     }
 
     try {
-      const res = await authFetch('/api/concierge/media', {
+      const res = await tenantFetch('/api/concierge/media', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ familyName: mediaFamilyName })
@@ -164,7 +166,7 @@ export function ConciergeDashboard() {
     }
 
     try {
-      const res = await authFetch('/api/concierge/send', {
+      const res = await tenantFetch('/api/concierge/send', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: testPhone, message: testMessage })

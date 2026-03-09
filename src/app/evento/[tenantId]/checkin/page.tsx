@@ -28,7 +28,8 @@ import { toast } from 'sonner'
 import { QRScanner, QRScanResult } from '@/components/checkin/QRScanner'
 import { GuestSearch, GuestSearchResult } from '@/components/checkin/GuestSearch'
 import { CheckInCard, CheckInCardProps } from '@/components/checkin/CheckInCard'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 
 // ============================================================================
@@ -73,7 +74,7 @@ export default function CheckInPage() {
   const fetchStats = useCallback(async () => {
     try {
       // Get all confirmed guests and invitations for stats
-      const response = await publicFetch('/api/dashboard/stats')
+      const response = await tenantFetch('/api/dashboard/stats')
       if (response.ok) {
         const data = await response.json()
         setStats({
@@ -147,7 +148,7 @@ export default function CheckInPage() {
   // Handle check-in
   const handleCheckIn = useCallback(async (invitationId: string) => {
     try {
-      const response = await publicFetch('/api/checkin', {
+      const response = await tenantFetch('/api/checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ invitationId })

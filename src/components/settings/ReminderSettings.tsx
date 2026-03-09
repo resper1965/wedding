@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Bell,
@@ -69,6 +70,7 @@ interface ReminderSettingsProps {
 // ============================================================================
 
 export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
+  const { tenantId } = useTenant()
   const [config, setConfig] = useState<ReminderConfig | null>(null)
   const [stats, setStats] = useState<ReminderStats | null>(null)
   const [upcoming, setUpcoming] = useState<UpcomingReminder[]>([])
@@ -122,7 +124,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
     setIsSaving(true)
 
     try {
-      const response = await authFetch('/api/reminders', {
+      const response = await tenantFetch('/api/reminders', tenantId, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -154,7 +156,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
     setLastResult(null)
 
     try {
-      const response = await authFetch('/api/reminders', {
+      const response = await tenantFetch('/api/reminders', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

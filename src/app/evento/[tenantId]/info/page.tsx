@@ -9,7 +9,8 @@ import {
 import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { Button } from '@/components/ui/button'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 import {
   Accordion,
@@ -80,7 +81,7 @@ export default function InfoPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await publicFetch('/api/wedding')
+        const response = await tenantFetch('/api/wedding')
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)

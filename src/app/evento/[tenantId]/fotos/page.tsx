@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, Camera, X, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react'
 import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 
 interface WeddingData {
@@ -50,7 +51,7 @@ export default function FotosPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await publicFetch('/api/wedding')
+        const response = await tenantFetch('/api/wedding')
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Calendar,
@@ -79,6 +80,7 @@ interface MessageSchedulerProps {
 // ============================================================================
 
 export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
+  const { tenantId } = useTenant()
   const [messages, setMessages] = useState<ScheduledMessage[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -226,7 +228,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
         }
       } else {
         // Create new message
-        const response = await authFetch('/api/scheduler', {
+        const response = await tenantFetch('/api/scheduler', tenantId, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

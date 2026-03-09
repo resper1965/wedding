@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, Heart, Bot, Grid3X3 } from 'lucide-react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
 import { useAuth } from '@/components/auth/SessionProvider'
-import { getTenantId, tenantHref } from '@/hooks/useTenant'
+import { useTenant } from '@/hooks/useTenant'
 
 import dynamic from 'next/dynamic'
 
@@ -90,19 +90,17 @@ interface Group {
 export function MarryflowPlatform() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { tenantId } = useTenant()
   const activeTab = searchParams.get('tab') || 'dashboard'
 
   const setActiveTab = (tab: string) => {
     const tabItem = tabs.find(t => t.id === tab)
     if (tabItem?.href) {
-      router.push(tenantHref(tabItem.href))
+      router.push(tabItem.href)
       return
     }
     const params = new URLSearchParams(searchParams.toString())
     params.set('tab', tab)
-    // Always preserve tenantId
-    const tid = getTenantId()
-    if (tid) params.set('tenantId', tid)
     router.push(`?${params.toString()}`, { scroll: false })
   }
 
@@ -116,7 +114,7 @@ export function MarryflowPlatform() {
   // Fetch dashboard data
   const fetchDashboardData = useCallback(async () => {
     try {
-      const response = await authFetch('/api/dashboard/stats')
+      const response = await tenantFetch('/api/dashboard/stats', tenantId)
       const data = await response.json()
 
       if (data.success) {
@@ -130,7 +128,7 @@ export function MarryflowPlatform() {
   // Fetch guests
   const fetchGuests = useCallback(async () => {
     try {
-      const response = await authFetch('/api/guests')
+      const response = await tenantFetch('/api/guests', tenantId)
       const data = await response.json()
 
       if (data.success) {
@@ -144,7 +142,7 @@ export function MarryflowPlatform() {
   // Fetch groups
   const fetchGroups = useCallback(async () => {
     try {
-      const response = await authFetch('/api/groups')
+      const response = await tenantFetch('/api/groups', tenantId)
       const data = await response.json()
 
       if (data.success) {

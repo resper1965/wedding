@@ -11,7 +11,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Cloud,
@@ -69,6 +70,7 @@ interface RealtimeSyncSettingsProps {
 // ============================================================================
 
 export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
+  const { tenantId } = useTenant()
   // State
   const [isEnabled, setIsEnabled] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
@@ -133,7 +135,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
   const handleToggleSync = async (enabled: boolean) => {
     setIsLoading(true)
     try {
-      const response = await authFetch('/api/sync', {
+      const response = await tenantFetch('/api/sync', tenantId, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ weddingId, enabled })
@@ -157,7 +159,7 @@ export function RealtimeSyncSettings({ weddingId }: RealtimeSyncSettingsProps) {
   const handleManualSync = async () => {
     setIsSyncing(true)
     try {
-      const response = await authFetch('/api/sync', {
+      const response = await tenantFetch('/api/sync', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

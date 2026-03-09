@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus, Search, MoreHorizontal,
@@ -96,6 +97,7 @@ const emptyForm = {
 
 
 export function GuestManager({ guests: initialGuests, groups, onRefresh }: GuestManagerProps) {
+  const { tenantId } = useTenant()
   const [guests, setGuests] = useState(initialGuests)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
@@ -130,7 +132,7 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
     }
 
     try {
-      const response = await authFetch('/api/guests', {
+      const response = await tenantFetch('/api/guests', tenantId, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

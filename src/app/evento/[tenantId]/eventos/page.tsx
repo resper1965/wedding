@@ -12,7 +12,8 @@ import {
 import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { Button } from '@/components/ui/button'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 
 interface EventData {
@@ -49,8 +50,8 @@ export default function EventsPage() {
     const fetchData = async () => {
       try {
         const [eventsRes, weddingRes] = await Promise.all([
-          publicFetch('/api/events'),
-          publicFetch('/api/wedding')
+          tenantFetch('/api/events'),
+          tenantFetch('/api/wedding')
         ])
 
         const eventsData = await eventsRes.json()

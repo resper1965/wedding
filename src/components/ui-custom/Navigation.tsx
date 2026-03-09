@@ -13,7 +13,6 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/components/auth/SessionProvider'
 import { BrandLogo } from './BrandLogo'
-import { tenantHref } from '@/hooks/useTenant'
 
 interface Tab {
   id: string
@@ -162,7 +161,7 @@ export function SidebarNav({
           )
 
           if (tab.href) {
-            return <Link key={tab.id} href={tenantHref(tab.href)} className={cls}>{inner}</Link>
+            return <Link key={tab.id} href={tab.href} className={cls}>{inner}</Link>
           }
 
           return (
@@ -266,7 +265,7 @@ export function BottomNav({ activeTab, onTabChange }: Pick<NavigationProps, 'act
                   return (
                     <Link
                       key={tab.id}
-                      href={tenantHref(tab.href)}
+                      href={tab.href}
                       onClick={() => setMoreOpen(false)}
                       className={cn(
                         'flex flex-col items-center gap-1.5 rounded-xl px-1 py-3 text-[10px] font-medium transition-colors',

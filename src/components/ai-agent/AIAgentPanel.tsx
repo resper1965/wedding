@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { authFetch } from '@/lib/auth-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 import {
   Bot, Send, Sparkles, MessageCircle, PenLine,
   CalendarHeart, Users, DollarSign, Loader2, Copy, Check,
@@ -90,7 +91,7 @@ const AGENT_MODES: {
   ]
 
 async function callAIAgent(mode: AgentMode, message: string, history: Message[]): Promise<string> {
-  const res = await authFetch('/api/ai-agent/chat', {
+  const res = await tenantFetch('/api/ai-agent/chat', tenantId, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -105,6 +106,7 @@ async function callAIAgent(mode: AgentMode, message: string, history: Message[])
 }
 
 export function AIAgentPanel() {
+  const { tenantId } = useTenant()
   const [activeMode, setActiveMode] = useState<AgentMode>('concierge')
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')

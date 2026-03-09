@@ -9,7 +9,8 @@ import Link from 'next/link'
 import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { CountdownTimer } from '@/components/public/CountdownTimer'
-import { publicFetch } from '@/lib/public-fetch'
+import { tenantFetch } from '@/lib/tenant-fetch'
+import { useTenant } from '@/hooks/useTenant'
 
 
 interface WeddingData {
@@ -22,13 +23,14 @@ interface WeddingData {
 }
 
 export default function PublicWeddingPage() {
+  const { tenantId } = useTenant()
   const [wedding, setWedding] = useState<WeddingData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await publicFetch('/api/wedding')
+        const response = await tenantFetch('/api/wedding', tenantId, { public: true })
         const data = await response.json()
         if (data.success) {
           setWedding(data.data)
@@ -40,7 +42,7 @@ export default function PublicWeddingPage() {
     }
 
     fetchData()
-  }, [])
+  }, [tenantId])
 
   if (isLoading) {
     return (
@@ -170,7 +172,7 @@ export default function PublicWeddingPage() {
               transition={{ duration: 0.6, delay: 0.6 }}
             >
               <Link
-                href="/casamento/rsvp"
+                href="rsvp"
                 className="group inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-medium text-white shadow-lg shadow-accent/20 transition-all hover:opacity-90 hover:shadow-xl"
               >
                 <span>Confirmar Presença</span>
@@ -208,7 +210,7 @@ export default function PublicWeddingPage() {
               viewport={{ once: true }}
               transition={{ delay: 0 }}
             >
-              <Link href="/casamento/historia" className="group block">
+              <Link href="historia" className="group block">
                 <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm transition-all hover:border-primary/30 hover:bg-card/60 hover:shadow-md backdrop-blur-sm">
                   <h3 className="mb-2 text-lg font-medium text-foreground font-serif">Nossa História</h3>
                   <p className="text-sm text-muted-foreground/60">
@@ -224,7 +226,7 @@ export default function PublicWeddingPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
             >
-              <Link href="/casamento/eventos" className="group block">
+              <Link href="eventos" className="group block">
                 <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm transition-all hover:border-primary/30 hover:bg-card/60 hover:shadow-md backdrop-blur-sm">
                   <h3 className="mb-2 text-lg font-medium text-foreground font-serif">Eventos</h3>
                   <p className="text-sm text-muted-foreground/60">
@@ -241,7 +243,7 @@ export default function PublicWeddingPage() {
               transition={{ delay: 0.2 }}
               className="sm:col-span-2 lg:col-span-1"
             >
-              <Link href="/casamento/padrinhos" className="group block">
+              <Link href="padrinhos" className="group block">
                 <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm transition-all hover:border-primary/30 hover:bg-card/60 hover:shadow-md backdrop-blur-sm">
                   <h3 className="mb-2 text-lg font-medium text-foreground font-serif">Padrinhos</h3>
                   <p className="text-sm text-muted-foreground/60">
