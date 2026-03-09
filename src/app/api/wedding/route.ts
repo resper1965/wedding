@@ -26,14 +26,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Não autorizado' }, { status: 401 })
     }
 
-    // Return weddings where the user is the owner OR the registered couple email
-    let query = db.from('Wedding')
-      .select('*')
+    // Fetch user profile to check admin status
+    const { data: profile } = await db.from('Profile').select('is_super_admin').eq('id', auth.uid).single()
+    const isSuperAdmin = profile?.is_super_admin === true
 
-    if (auth.email) {
-      query = query.or(`owner_id.eq.${auth.uid},couple_email.ilike.${auth.email}`)
-    } else {
-      query = query.eq('owner_id', auth.uid)
+    // Return weddings where the user is the owner OR the registered couple email
+    // IF Super Admin, return EVERYTHING if no specific tenantId
+    let query = db.from('Wedding').select('*')
+
+    if (!isSuperAdmin) {
+      if (auth.email) {
+        query = query.or(`owner_id.eq.${auth.uid},couple_email.ilike.${auth.email}`)
+      } else {
+        query = query.eq('owner_id', auth.uid)
+      }
     }
 
     const { data: weddings, error } = await query
@@ -164,10 +170,17 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'ID do casamento não fornecido' }, { status: 400 })
     }
 
-    const { error } = await db.from('Wedding')
-      .delete()
-      .eq('id', tenantId)
-      .eq('owner_id', auth.uid)
+    // Check admin status for deletion
+    const { data: profile } = await db.from('Profile').select('is_super_admin').eq('id', auth.uid).single()
+    const isSuperAdmin = profile?.is_super_admin === true
+
+    let deleteQuery = db.from('Wedding').delete().eq('id', tenantId)
+
+    if (!isSuperAdmin) {
+      deleteQuery = deleteQuery.eq('owner_id', auth.uid)
+    }
+
+    const { error } = await deleteQuery
 
     if (error) throw error
     return NextResponse.json({ success: true })
