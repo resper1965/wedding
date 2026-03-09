@@ -40,6 +40,7 @@ const SaveTheDateManager = dynamic(() => import('@/components/save-the-date/Save
 const GiftManagerEnhanced = dynamic(() => import('@/components/gifts/GiftManagerEnhanced').then(mod => mod.GiftManagerEnhanced), { ssr: false })
 const AIAgentPanel = dynamic(() => import('@/components/ai-agent/AIAgentPanel').then(mod => mod.AIAgentPanel), { ssr: false })
 const InteractivityDashboard = dynamic(() => import('@/components/dashboard/InteractivityDashboard').then(mod => mod.InteractivityDashboard), { ssr: false })
+const MySiteManager = dynamic(() => import('@/components/my-site/MySiteManager'), { ssr: false })
 import Link from 'next/link'
 
 // Types
@@ -300,6 +301,12 @@ export function MarryflowPlatform() {
                     />
                     <RecentActivity activities={dashboardData.recentActivity} />
                   </div>
+                </PageTransition>
+              )}
+
+              {activeTab === 'my-site' && (
+                <PageTransition key="my-site">
+                  <MySiteManager />
                 </PageTransition>
               )}
 

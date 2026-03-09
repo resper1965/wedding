@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, MessageSquare, Settings,
   BarChart3, Grid3X3, HelpCircle, ChevronLeft, ChevronRight,
   Heart, DollarSign, Briefcase, ClipboardList, Shield, Gift,
-  MoreHorizontal, CalendarHeart, Bot, X, Zap, ChevronUp, ScanLine
+  MoreHorizontal, CalendarHeart, Bot, X, Zap, ChevronUp, ScanLine, Globe
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -26,6 +26,7 @@ interface Tab {
 export const tabs: Tab[] = [
   // Core
   { id: 'dashboard', label: 'Painel', icon: LayoutDashboard, groupStart: 'Evento' },
+  { id: 'my-site', label: 'Meu Site', icon: Globe },
   { id: 'guests', label: 'Convidados', icon: Users },
   { id: 'seating', label: 'Mesas', icon: Grid3X3 },
   // Communication
