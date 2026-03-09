@@ -20,28 +20,29 @@ interface Tab {
   icon: React.ElementType
   href?: string
   adminOnly?: boolean
+  groupStart?: string
 }
 
 export const tabs: Tab[] = [
-  // Core — always first
-  { id: 'dashboard', label: 'Painel', icon: LayoutDashboard },
+  // Core
+  { id: 'dashboard', label: 'Painel', icon: LayoutDashboard, groupStart: 'Evento' },
   { id: 'guests', label: 'Convidados', icon: Users },
   { id: 'seating', label: 'Mesas', icon: Grid3X3 },
   // Communication
-  { id: 'messages', label: 'Mensagens', icon: MessageSquare },
+  { id: 'messages', label: 'Mensagens', icon: MessageSquare, groupStart: 'Comunicação' },
   { id: 'save-the-date', label: 'Avisos', icon: CalendarHeart },
   { id: 'ai-agent', label: 'Gabi AI', icon: Bot },
   // Planning
-  { id: 'checklist', label: 'Checklist', icon: ClipboardList },
+  { id: 'checklist', label: 'Checklist', icon: ClipboardList, groupStart: 'Planejamento' },
   { id: 'budget', label: 'Orçamento', icon: DollarSign },
   { id: 'vendors', label: 'Fornecedores', icon: Briefcase },
   { id: 'gifts', label: 'Presentes', icon: Gift },
-  // Operations
-  { id: 'porteiro', label: 'Recepção', icon: ScanLine },
+  // Day-of
+  { id: 'porteiro', label: 'Recepção', icon: ScanLine, groupStart: 'Dia do Evento' },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   { id: 'war-room', label: 'War Room', icon: Zap },
   // Admin
-  { id: 'settings', label: 'Configurações', icon: Settings },
+  { id: 'settings', label: 'Configurações', icon: Settings, groupStart: 'Ajustes' },
   { id: 'users', label: 'Usuários', icon: Shield, adminOnly: true },
   { id: 'help', label: 'Ajuda', icon: HelpCircle, href: '/ajuda' },
 ]
@@ -116,14 +117,23 @@ export function SidebarNav({
         )}
       </div>
 
-      {/* Nav items */}
-      <nav className="flex flex-1 flex-col gap-1.5 p-4 pt-6 overflow-y-auto custom-scrollbar">
+      <nav className="flex flex-1 flex-col gap-1 p-4 pt-4 overflow-y-auto custom-scrollbar">
         {displayTabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
 
+          const groupLabel = tab.groupStart && !collapsed ? (
+            <div key={`group-${tab.id}`} className="mt-4 mb-1 first:mt-0 px-4">
+              <span className="text-[9px] font-accent font-bold uppercase tracking-[0.3em] text-foreground/20">
+                {tab.groupStart}
+              </span>
+            </div>
+          ) : tab.groupStart && collapsed ? (
+            <div key={`sep-${tab.id}`} className="h-px bg-primary/5 mx-3 my-2" />
+          ) : null
+
           const cls = cn(
-            'relative flex items-center gap-3 rounded-2xl px-4 py-3 text-[11px] font-accent font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer group',
+            'relative flex items-center gap-3 rounded-2xl px-4 py-2.5 text-[11px] font-accent font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer group',
             isActive
               ? 'bg-foreground text-background shadow-lg scale-[1.02]'
               : 'text-muted-foreground/40 hover:bg-primary/5 hover:text-primary',
@@ -144,20 +154,23 @@ export function SidebarNav({
             </>
           )
 
-          if (tab.href) {
-            return <Link key={tab.id} href={tab.href} className={cls}>{inner}</Link>
-          }
+          const element = tab.href
+            ? <Link key={tab.id} href={tab.href} className={cls}>{inner}</Link>
+            : <button key={tab.id} className={cls} onClick={() => onTabChange(tab.id)}>{inner}</button>
 
-          return (
-            <button key={tab.id} className={cls} onClick={() => onTabChange(tab.id)}>
-              {inner}
-            </button>
-          )
+          return groupLabel ? [groupLabel, element] : element
         })}
       </nav>
 
-      {/* Collapse toggle */}
-      <div className="border-t border-primary/5 p-4">
+      {/* Footer: collapse + legal links */}
+      <div className="border-t border-primary/5 p-4 space-y-2">
+        {!collapsed && (
+          <div className="flex justify-center gap-3 text-[9px] text-foreground/20">
+            <Link href="/privacy" className="hover:text-foreground/40 transition-colors">Privacidade</Link>
+            <span>·</span>
+            <Link href="/terms" className="hover:text-foreground/40 transition-colors">Termos</Link>
+          </div>
+        )}
         <button
           onClick={() => onCollapsedChange?.(!collapsed)}
           className="flex w-full items-center justify-center rounded-2xl p-3 text-muted-foreground/30 hover:bg-primary/5 hover:text-primary transition-all duration-300 shadow-inner group"
