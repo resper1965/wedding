@@ -25,6 +25,7 @@ export default function SuperAdminDashboard() {
     const [isLoading, setIsLoading] = useState(true)
     const [isProcessing, setIsProcessing] = useState<string | null>(null)
     const [isSeeding, setIsSeeding] = useState(false)
+    const [isPurging, setIsPurging] = useState(false)
     const { user: authUser, loading: authLoading } = useAuth()
     const router = useRouter()
 
@@ -128,6 +129,27 @@ export default function SuperAdminDashboard() {
             toast.error('Falha na comunicação com o servidor de infraestrutura')
         } finally {
             setIsSeeding(false)
+        }
+    }
+
+    const handlePurgeTestData = async () => {
+        const confirmPurge = confirm('Deseja realmente limpar TODOS os casamentos com nome "Novo & Evento"? Esta ação é irreversível.')
+        if (!confirmPurge) return
+
+        setIsPurging(true)
+        try {
+            const res = await authFetch('/api/admin/purge', { method: 'POST' })
+            const data = await res.json()
+            if (data.success) {
+                toast.success(data.message || 'Limpeza concluída!')
+                fetchUsers() // Refresh stats
+            } else {
+                toast.error(data.error || 'Erro ao processar limpeza')
+            }
+        } catch {
+            toast.error('Falha na comunicação com o servidor de infraestrutura')
+        } finally {
+            setIsPurging(false)
         }
     }
 
@@ -235,9 +257,14 @@ export default function SuperAdminDashboard() {
                                     <FlaskConical className={`w-4 h-4 mr-2 ${isSeeding ? 'animate-spin' : ''}`} />
                                     {isSeeding ? 'Gerando Demo...' : 'Resetar Casamento Demo'}
                                 </Button>
-                                <Button variant="outline" className="text-muted-foreground border-border" disabled>
-                                    <Wrench className="w-4 h-4 mr-2" />
-                                    Limpar Cache Global
+                                <Button
+                                    onClick={handlePurgeTestData}
+                                    disabled={isPurging}
+                                    variant="outline"
+                                    className="text-error border-error/20 hover:bg-error/5"
+                                >
+                                    <Trash2 className={`w-4 h-4 mr-2 ${isPurging ? 'animate-spin' : ''}`} />
+                                    {isPurging ? 'Limpando...' : 'Limpar Dados de Teste'}
                                 </Button>
                             </div>
                         </div>
