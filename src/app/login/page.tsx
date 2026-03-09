@@ -41,28 +41,9 @@ export default function LoginPage() {
     try {
       await signIn(email, password)
 
-      // Check for super admin locally (sync) or via DB (quick check)
-      const SUPER_ADMINS = ['resper@bekaa.eu', 'resper@gmail.com', 'resper@ness.com.br']
-      const isHardcoded = SUPER_ADMINS.includes(email.toLowerCase())
-
-      if (isHardcoded) {
-        router.push('/admin/master')
-        return
-      }
-
-      // Fallback: check profile specifically for super admin flag
-      const supabase = getSupabase()
-      const { data: profile } = await supabase
-        .from('Profile')
-        .select('is_super_admin')
-        .eq('email', email.toLowerCase())
-        .maybeSingle()
-
-      if (profile?.is_super_admin) {
-        router.push('/admin/master')
-      } else {
-        router.push('/projects')
-      }
+      // All users go to projects page after login
+      // Super admins can access master panel from sidebar
+      router.push('/projects')
     } catch (err: unknown) {
       console.error('Login error:', err)
       setError('Email ou senha incorretos.')

@@ -84,9 +84,12 @@ export async function verifySupabaseToken(
     }
 
     // Check profile for approval and role
-    const { data: profile } = await db.from('Profile').select('role, is_approved').eq('id', user.id).maybeSingle()
+    const { data: profile } = await db.from('Profile').select('role, is_approved, is_super_admin').eq('id', user.id).maybeSingle()
 
-    if (!profile || !profile.is_approved) {
+    // Super admins always have access, even if is_approved is not set
+    const isSuperAdmin = profile?.is_super_admin === true
+
+    if (!isSuperAdmin && (!profile || !profile.is_approved)) {
       return {
         authorized: false,
         uid: user.id,
