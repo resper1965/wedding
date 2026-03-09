@@ -133,19 +133,21 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { partner1Name, partner2Name, weddingDate, venue, venueAddress, replyByDate, messageFooter, couple_email } = body
+    const { partner1Name, partner2Name, weddingDate, venue, venueAddress, replyByDate, messageFooter, couple_email, site_pages } = body
 
-    const { data: updated, error } = await db.from('Wedding').update({
-      partner1Name,
-      partner2Name,
-      weddingDate: new Date(weddingDate).toISOString(),
-      venue: venue || null,
-      venueAddress: venueAddress || null,
-      replyByDate: replyByDate ? new Date(replyByDate).toISOString() : null,
-      messageFooter: messageFooter || null,
-      couple_email: couple_email !== undefined ? (couple_email ? couple_email.toLowerCase() : null) : undefined,
-      updatedAt: new Date().toISOString(),
-    })
+    // Build update object dynamically (only include provided fields)
+    const updateData: Record<string, unknown> = { updatedAt: new Date().toISOString() }
+    if (partner1Name !== undefined) updateData.partner1Name = partner1Name
+    if (partner2Name !== undefined) updateData.partner2Name = partner2Name
+    if (weddingDate !== undefined) updateData.weddingDate = new Date(weddingDate).toISOString()
+    if (venue !== undefined) updateData.venue = venue || null
+    if (venueAddress !== undefined) updateData.venueAddress = venueAddress || null
+    if (replyByDate !== undefined) updateData.replyByDate = replyByDate ? new Date(replyByDate).toISOString() : null
+    if (messageFooter !== undefined) updateData.messageFooter = messageFooter || null
+    if (couple_email !== undefined) updateData.couple_email = couple_email ? couple_email.toLowerCase() : null
+    if (site_pages !== undefined) updateData.site_pages = site_pages
+
+    const { data: updated, error } = await db.from('Wedding').update(updateData)
       .eq('id', tenantId)
       .eq('owner_id', auth.uid) // Segurança extra: só edita se for dono
       .select().single()
