@@ -131,7 +131,7 @@ export default function RSVPPage() {
   const searchByInvite = useCallback(async (inviteCode: string) => {
     setIsSearching(true)
     try {
-      const response = await fetch(`/api/invite/${inviteCode}`)
+      const response = await publicFetch(`/api/invite/${inviteCode}`)
       const data = await response.json()
       if (data.success && data.guest) {
         handleSelectGuest(data.guest)
@@ -157,7 +157,7 @@ export default function RSVPPage() {
 
     setIsSearching(true)
     try {
-      const response = await fetch(`/api/guests?search=${encodeURIComponent(searchQuery)}`)
+      const response = await publicFetch(`/api/guests?search=${encodeURIComponent(searchQuery)}`)
       const data: SearchResponse = await response.json()
       if (data.success && data.data) {
         setSearchResults(data.data)
