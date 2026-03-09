@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Heart, Sparkles, MapPin, Calendar, Gem } from 'lucide-react'
 import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { publicFetch } from '@/lib/public-fetch'
@@ -82,10 +81,10 @@ export default function HistoriaPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-emerald-300 border-t-emerald-600" />
-          <p className="mt-4 text-sm text-emerald-500 font-medium">Carregando nossa história...</p>
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary" />
+          <p className="mt-4 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Carregando...</p>
         </div>
       </div>
     )
@@ -94,141 +93,123 @@ export default function HistoriaPage() {
   const weddingYear = wedding ? format(new Date(wedding.weddingDate), 'yyyy') : '2025'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-background text-foreground">
       <MasterHeader type="wedding"
         partner1Name={wedding?.partner1Name}
         partner2Name={wedding?.partner2Name}
       />
 
-      {/* Hero Section */}
       <section className="relative overflow-hidden py-24 sm:py-32">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-emerald-100/50 to-emerald-100/40 blur-[80px]" />
-          <div className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-emerald-100/40 to-emerald-100/30 blur-[80px]" />
+          <div className="absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[100px]" />
+          <div className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[100px]" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
             <div className="mb-6 flex items-center justify-center gap-4">
-              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-emerald-300" />
-              <Heart className="h-6 w-6 text-emerald-400" strokeWidth={1.5} />
-              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-emerald-300" />
+              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/30" />
+              <Heart className="h-6 w-6 text-primary" strokeWidth={1.5} />
+              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-primary/30" />
             </div>
-            <h1 className="mb-6 font-serif text-5xl md:text-7xl text-emerald-950 tracking-tight">
+            <h1 className="mb-6 font-serif text-6xl md:text-8xl text-foreground font-bold tracking-tight">
               Nossa História
             </h1>
-            <p className="text-lg text-emerald-700/80 max-w-2xl mx-auto font-light">
+            <p className="text-lg text-muted-foreground/60 max-w-2xl mx-auto font-medium italic">
               Uma jornada de amor que começou há alguns anos e continua para sempre
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Story Timeline */}
-      <section className="pb-24 px-4">
-        <div className="mx-auto max-w-4xl">
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-4 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-emerald-200 to-transparent sm:left-1/2 sm:-ml-[1px]" />
+      <section className="pb-24 px-4 overflow-hidden">
+        <div className="mx-auto max-w-4xl relative">
+          {/* Vertical Line */}
+          <div className="absolute left-8 top-0 h-full w-px bg-gradient-to-b from-transparent via-border to-transparent sm:left-1/2" />
 
-            {/* Timeline Items */}
-            <div className="space-y-16">
-              {storyTimeline.map((item, index) => {
-                const Icon = item.icon
-                const isLeft = index % 2 === 0
+          <div className="space-y-24">
+            {storyTimeline.map((item, index) => {
+              const Icon = item.icon
+              const isLeft = index % 2 === 0
 
-                return (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.7, delay: 0.1 }}
-                    className={`relative flex items-center ${isLeft ? 'sm:justify-start' : 'sm:justify-end'
-                      }`}
-                  >
-                    {/* Timeline Dot */}
-                    <div className="absolute left-4 z-10 flex h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full border-4 border-emerald-50 bg-white text-emerald-500 shadow-sm sm:left-1/2 transition-transform hover:scale-110 duration-300">
-                      <Icon className="h-5 w-5" strokeWidth={1.5} />
-                    </div>
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8 }}
+                  className={`relative flex flex-col sm:flex-row items-center ${isLeft ? 'sm:flex-row-reverse' : ''}`}
+                >
+                  {/* Dot */}
+                  <div className="absolute left-8 sm:left-1/2 z-20 h-4 w-4 -translate-x-1/2 rounded-full border-4 border-background bg-primary shadow-[0_0_15px_rgba(var(--primary),0.5)] transition-transform hover:scale-150 duration-500" />
 
-                    {/* Content Card */}
-                    <div className={`w-full pl-16 sm:pl-0 ${isLeft ? 'sm:pr-[55%]' : 'sm:pl-[55%]'}`}>
-                      <div className="overflow-hidden rounded-2xl bg-white/60 backdrop-blur-xl border border-white/40 soft-shadow transition-all hover:soft-shadow-hover duration-300">
-                        {/* Image Placeholder */}
-                        <div className="aspect-[16/10] w-full bg-gradient-to-br from-emerald-100/50 to-emerald-50/50 relative group">
-                          <div className="absolute inset-0 bg-teal-900/0 group-hover:bg-teal-900/5 transition-colors duration-300" />
-                          <div className="flex h-full items-center justify-center">
-                            <div className="text-center opacity-70 group-hover:opacity-100 transition-opacity">
-                              <Icon className="mx-auto h-10 w-10 text-emerald-300" strokeWidth={1} />
-                              <p className="mt-3 text-xs tracking-widest uppercase text-emerald-400 font-medium">Foto Opcional</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-8">
-                          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100/50 px-3 py-1.5 text-xs font-semibold text-emerald-700 tracking-wide">
-                            <Calendar className="h-3.5 w-3.5" />
-                            {item.year}
-                          </div>
-                          <h3 className="mb-3 text-2xl font-serif text-emerald-950">
-                            {item.title}
-                          </h3>
-                          <p className="text-[15px] leading-relaxed text-teal-900/70">
-                            {item.description}
-                          </p>
+                  {/* Card */}
+                  <div className={`w-full pl-20 sm:pl-0 sm:w-1/2 ${isLeft ? 'sm:pr-16' : 'sm:pl-16'}`}>
+                    <div className="overflow-hidden rounded-[2.5rem] border border-border/40 bg-card/40 backdrop-blur-xl p-1 shadow-2xl transition-all duration-500 hover:bg-card/60 group">
+                      <div className="aspect-[16/10] overflow-hidden rounded-[2rem] bg-muted/20 relative">
+                        <div className="absolute inset-0 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                          <Icon className="h-12 w-12 text-primary/20" />
                         </div>
                       </div>
+                      <div className="p-10">
+                        <div className="mb-6 inline-flex items-center gap-3 rounded-full bg-primary/10 px-6 py-2 text-[10px] font-accent font-bold uppercase tracking-widest text-primary">
+                          <Calendar className="h-3.5 w-3.5" />
+                          {item.year}
+                        </div>
+                        <h3 className="mb-4 text-3xl font-serif font-bold text-foreground">
+                          {item.title}
+                        </h3>
+                        <p className="text-[15px] leading-relaxed text-muted-foreground/60 italic font-medium">
+                          {item.description}
+                        </p>
+                      </div>
                     </div>
-                  </motion.div>
-                )
-              })}
-            </div>
+                  </div>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
 
-      {/* Quote Section */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-4 bg-primary/[0.02]">
+        <div className="mx-auto max-w-4xl text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex flex-col sm:flex-row items-center gap-8 rounded-[3rem] border border-border/40 bg-card/40 backdrop-blur-md px-12 py-8 shadow-2xl"
+          >
+            <span className="text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/40">E agora, em</span>
+            <span className="text-6xl md:text-8xl font-serif font-bold text-primary">{weddingYear}</span>
+            <span className="text-[10px] font-accent font-bold uppercase tracking-[0.3em] text-muted-foreground/40">nos casamos!</span>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-32 px-4">
         <div className="mx-auto max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-[2.5rem] border border-emerald-100 bg-white/50 backdrop-blur-sm p-12 text-center relative overflow-hidden soft-shadow"
+            className="rounded-[4rem] border border-border/40 bg-card/40 backdrop-blur-md p-16 sm:p-24 text-center relative overflow-hidden shadow-2xl"
           >
-            <div className="absolute -top-10 -left-10 text-emerald-100/50 transform -rotate-12">
-              <Heart className="w-32 h-32" fill="currentColor" />
+            <div className="absolute -top-12 -left-12 text-primary/5 transform -rotate-12">
+              <Heart className="w-64 h-64" fill="currentColor" />
             </div>
-
-            <Heart className="mx-auto mb-8 h-10 w-10 text-emerald-400 relative z-10" fill="currentColor" />
-            <blockquote className="text-2xl md:text-3xl font-serif italic text-teal-900 relative z-10 leading-relaxed">
-              "O amor não se vê com os olhos, mas com o coração."
+            <Heart className="mx-auto mb-12 h-12 w-12 text-primary relative z-10" fill="currentColor" />
+            <blockquote className="text-3xl md:text-5xl font-serif italic text-foreground font-light relative z-10 leading-relaxed">
+              &ldquo;O amor não se vê com os olhos, mas com o coração.&rdquo;
             </blockquote>
-            <p className="mt-6 text-sm tracking-widest uppercase text-emerald-500 font-medium relative z-10">
+            <p className="mt-12 text-[10px] font-accent font-bold uppercase tracking-[0.4em] text-primary relative z-10 opacity-60">
               — William Shakespeare
             </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Wedding Year Banner */}
-      <section className="py-16 px-4 mb-10">
-        <div className="mx-auto max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-6 rounded-full border border-emerald-100 bg-white px-10 py-5 soft-shadow-hover"
-          >
-            <span className="text-lg text-emerald-600/70 uppercase tracking-widest text-sm font-medium">E agora, em</span>
-            <span className="text-4xl font-serif text-teal-900">{weddingYear}</span>
-            <span className="text-lg text-emerald-600/70 uppercase tracking-widest text-sm font-medium">nos casamos!</span>
           </motion.div>
         </div>
       </section>

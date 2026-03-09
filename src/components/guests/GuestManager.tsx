@@ -69,7 +69,7 @@ const CATEGORIES = ['Família', 'Amigos', 'Colegas']
 const WHO_INVITES = ['Titular 1', 'Titular 2', 'Casal']
 
 const statusConfig = {
-  pending: { label: 'Pendente', color: 'bg-primary/5 text-muted-foreground/60', icon: Clock },
+  pending: { label: 'Pendente', color: 'bg-muted text-muted-foreground', icon: Clock },
   sent: { label: 'Enviado', color: 'bg-info/10 text-info', icon: Send },
   viewed: { label: 'Visualizado', color: 'bg-primary/10 text-primary', icon: Mail },
   responded: { label: 'Respondido', color: 'bg-primary/20 text-primary', icon: Check },
@@ -77,9 +77,9 @@ const statusConfig = {
 }
 
 const rsvpStatusConfig = {
-  pending: { label: 'Pendente', color: 'bg-primary/5 text-muted-foreground/60' },
+  pending: { label: 'Pendente', color: 'bg-muted text-muted-foreground' },
   confirmed: { label: 'Confirmado', color: 'bg-primary/10 text-primary' },
-  declined: { label: 'Recusado', color: 'bg-error/10 text-error' },
+  declined: { label: 'Recusado', color: 'bg-destructive/10 text-destructive' },
   maybe: { label: 'Talvez', color: 'bg-warning/10 text-warning' }
 }
 
@@ -414,11 +414,11 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
             placeholder="Buscar por nome, email ou whatsapp..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-11 rounded-2xl border-primary/10 bg-white/50 focus:bg-white focus:border-primary/30 transition-all font-sans text-sm"
+            className="pl-11 rounded-2xl border-border bg-card/40 focus:bg-card focus:border-primary/30 transition-all font-sans text-sm"
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="rounded-2xl border-primary/10 bg-white/50 focus:border-primary/30 transition-all font-accent font-bold uppercase tracking-widest text-[10px]">
+          <SelectTrigger className="rounded-2xl border-border bg-card/40 focus:border-primary/30 transition-all font-accent font-bold uppercase tracking-widest text-[10px]">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-primary/10">
@@ -429,7 +429,7 @@ export function GuestManager({ guests: initialGuests, groups, onRefresh }: Guest
           </SelectContent>
         </Select>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="rounded-2xl border-primary/10 bg-white/50 focus:border-primary/30 transition-all font-accent font-bold uppercase tracking-widest text-[10px]">
+          <SelectTrigger className="rounded-2xl border-border bg-card/40 focus:border-primary/30 transition-all font-accent font-bold uppercase tracking-widest text-[10px]">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-primary/10">

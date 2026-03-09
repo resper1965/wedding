@@ -93,7 +93,7 @@ export default function MarketingLandingPage() {
                         className="mt-24 grid sm:grid-cols-3 gap-8 text-left"
                     >
                         {features.map((feat, idx) => (
-                            <div key={idx} className="p-8 rounded-[2rem] border border-border bg-white/60 backdrop-blur-xl hover:bg-white/80 transition-all soft-shadow hover:soft-shadow-hover">
+                            <div key={idx} className="p-8 rounded-[2rem] border border-border bg-muted/60 backdrop-blur-xl hover:bg-muted/80 transition-all soft-shadow hover:soft-shadow-hover">
                                 <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center mb-6 text-primary">
                                     {feat.icon}
                                 </div>

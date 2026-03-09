@@ -14,6 +14,7 @@ const Navigation = dynamic(() => import('@/components/ui-custom/Navigation').the
 const SidebarNav = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.SidebarNav), { ssr: false })
 const BottomNav = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.BottomNav), { ssr: false })
 const PageTransition = dynamic(() => import('@/components/ui-custom/Navigation').then(mod => mod.PageTransition), { ssr: false })
+import { tabs } from '@/components/ui-custom/Navigation'
 
 const WeddingHero = dynamic(() => import('@/components/dashboard/WeddingHero').then(mod => mod.WeddingHero), { ssr: true })
 const StatsOverview = dynamic(() => import('@/components/dashboard/StatsOverview').then(mod => mod.StatsOverview), { ssr: true })
@@ -91,6 +92,11 @@ export function MarryflowPlatform() {
   const activeTab = searchParams.get('tab') || 'dashboard'
 
   const setActiveTab = (tab: string) => {
+    const tabItem = tabs.find(t => t.id === tab)
+    if (tabItem?.href) {
+      router.push(tabItem.href)
+      return
+    }
     const params = new URLSearchParams(searchParams.toString())
     params.set('tab', tab)
     router.push(`?${params.toString()}`, { scroll: false })
@@ -211,7 +217,7 @@ export function MarryflowPlatform() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[oklch(0.99_0.005_160)] dark:bg-[oklch(0.14_0.02_160)]">
+    <div className="flex min-h-screen bg-background">
       {/* Sidebar — desktop */}
       <SidebarNav
         activeTab={activeTab}
@@ -225,7 +231,7 @@ export function MarryflowPlatform() {
       {/* Right column */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-primary/5 bg-background/60 backdrop-blur-xl h-20 flex items-center">
+        <header className="sticky top-0 z-30 border-b border-border/40 bg-card/40 backdrop-blur-xl h-20 flex items-center shadow-lg">
           <div className="w-full px-8">
             <div className="flex items-center justify-between">
 
@@ -249,14 +255,14 @@ export function MarryflowPlatform() {
               <div className="flex items-center gap-4">
                 <Link
                   href="/projects"
-                  className="flex items-center gap-2 rounded-2xl border border-primary/5 bg-background px-6 py-2.5 text-[10px] font-accent font-bold uppercase tracking-widest text-primary/60 transition-all hover:bg-primary/5 hover:text-primary hover:border-primary/10 hover:scale-105 active:scale-95 shadow-sm"
+                  className="flex items-center gap-2 rounded-2xl border border-border bg-card/40 backdrop-blur-xl px-6 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-card hover:text-primary hover:border-primary/20 hover:scale-105 active:scale-95 shadow-lg"
                 >
                   <Grid3X3 className="h-4 w-4" />
                   <span className="hidden sm:inline">Meus Eventos</span>
                 </Link>
                 <Link
                   href="?tab=ai-agent"
-                  className="flex items-center gap-2 rounded-2xl border border-primary/10 bg-primary/5 px-6 py-2.5 text-[10px] font-accent font-bold uppercase tracking-widest text-primary transition-all hover:bg-primary/10 hover:border-primary/20 hover:scale-105 active:scale-95 shadow-sm"
+                  className="flex items-center gap-2 rounded-2xl border border-primary/20 bg-primary/10 px-6 py-2.5 text-[10px] font-accent font-bold uppercase tracking-widest text-primary transition-all hover:bg-primary/20 hover:border-primary/40 hover:scale-105 active:scale-95 shadow-sm backdrop-blur-md"
                 >
                   <Bot className="h-4 w-4" />
                   <span className="hidden sm:inline">Falar com Gabi AI</span>
@@ -352,7 +358,7 @@ export function MarryflowPlatform() {
                 </PageTransition>
               )}
 
-              {activeTab === 'users' && user?.role === 'admin' && (
+              {activeTab === 'users' && user?.isSuperAdmin && (
                 <PageTransition key="users">
                   <UserManager />
                 </PageTransition>

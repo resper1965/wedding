@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Heart, Users, User, Image as ImageIcon } from 'lucide-react'
+import { Heart, Users, User } from 'lucide-react'
 import { MasterHeader } from '@/components/public/MasterHeader'
 import { PublicFooter } from '@/components/public/PublicFooter'
 import { publicFetch } from '@/lib/public-fetch'
@@ -18,7 +18,6 @@ interface Groomsperson {
   name: string
   role: string
   relationship: string
-  photo?: string
 }
 
 interface Bridesmaid {
@@ -26,10 +25,8 @@ interface Bridesmaid {
   name: string
   role: string
   relationship: string
-  photo?: string
 }
 
-// Placeholder data - in production, this would come from an API
 const groomsmen: Groomsperson[] = [
   { id: '1', name: 'Pedro Silva', role: 'Padrinho', relationship: 'Irmão do Noivo' },
   { id: '2', name: 'Lucas Santos', role: 'Padrinho', relationship: 'Melhor Amigo' },
@@ -71,10 +68,10 @@ export default function PadrinhosPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-amber-300 border-t-amber-500" />
-          <p className="mt-4 text-sm text-stone-500">Carregando...</p>
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary" />
+          <p className="mt-4 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Carregando...</p>
         </div>
       </div>
     )
@@ -84,17 +81,16 @@ export default function PadrinhosPage() {
   const partner2 = wedding?.partner2Name || 'Nicolas'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+    <div className="min-h-screen bg-background text-foreground">
       <MasterHeader type="wedding"
         partner1Name={wedding?.partner1Name}
         partner2Name={wedding?.partner2Name}
       />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-12 sm:py-16">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-gradient-to-br from-rose-100/50 to-amber-100/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-gradient-to-br from-amber-100/40 to-rose-100/30 blur-3xl" />
+      <section className="relative overflow-hidden py-16 sm:py-24">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl opacity-50" />
+          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl opacity-50" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
@@ -104,38 +100,37 @@ export default function PadrinhosPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center justify-center gap-3">
-              <div className="h-px w-8 bg-gradient-to-r from-transparent to-rose-300" />
-              <Users className="h-5 w-5 text-rose-400" />
-              <div className="h-px w-8 bg-gradient-to-l from-transparent to-rose-300" />
+              <div className="h-px w-8 bg-gradient-to-r from-transparent to-primary/30" />
+              <Users className="h-5 w-5 text-primary" />
+              <div className="h-px w-8 bg-gradient-to-l from-transparent to-primary/30" />
             </div>
-            <h1 className="mb-3 text-3xl font-light text-amber-800 sm:text-4xl">
+            <h1 className="mb-3 text-4xl font-bold text-foreground sm:text-5xl font-serif">
               Padrinhos
             </h1>
-            <p className="text-stone-500">
+            <p className="text-muted-foreground/60 italic font-medium">
               As pessoas especiais que farão parte deste momento único
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Bridesmaids Section */}
-      <section className="pb-12 px-4">
+      <section className="pb-16 px-4">
         <div className="mx-auto max-w-6xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mb-8 text-center"
+            className="mb-12 text-center"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-rose-200/50 bg-rose-50/50 px-4 py-2">
-              <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
-              <span className="text-sm font-medium text-rose-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-8 py-3 shadow-lg shadow-primary/5">
+              <Heart className="h-4 w-4 text-primary" fill="currentColor" />
+              <span className="text-[10px] font-accent font-bold uppercase tracking-[0.2em] text-primary">
                 Madrinhas de {partner1}
               </span>
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
             {bridesmaids.map((bridesmaid, index) => (
               <motion.div
                 key={bridesmaid.id}
@@ -145,24 +140,22 @@ export default function PadrinhosPage() {
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 className="group"
               >
-                <div className="overflow-hidden rounded-2xl border border-rose-100/50 bg-white/60 transition-all hover:border-rose-200 hover:shadow-md">
-                  {/* Photo Placeholder */}
-                  <div className="aspect-square bg-gradient-to-br from-rose-100/50 to-amber-100/30">
+                <div className="overflow-hidden rounded-[2.5rem] border border-border/40 bg-card/40 backdrop-blur-md transition-all duration-500 hover:bg-card hover:border-primary/30 hover:shadow-2xl">
+                  <div className="aspect-square bg-muted/20 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="flex h-full items-center justify-center">
-                      <div className="text-center">
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose-200/50 transition-transform group-hover:scale-110">
-                          <User className="h-8 w-8 text-rose-400" />
-                        </div>
+                      <div className="text-center group-hover:scale-110 transition-transform duration-500">
+                        <User className="h-16 w-16 text-primary/10" />
                       </div>
                     </div>
                   </div>
-
-                  {/* Info */}
-                  <div className="p-4 text-center">
-                    <h3 className="font-medium text-stone-800">{bridesmaid.name}</h3>
-                    <p className="mt-1 text-xs text-stone-500">{bridesmaid.relationship}</p>
-                    <span className="mt-2 inline-block rounded-full bg-rose-100/50 px-2 py-0.5 text-xs text-rose-600">
-                      {bridesmaid.role}
+                  <div className="p-8 text-center uppercase tracking-widest">
+                    <h3 className="font-bold text-foreground font-serif text-lg">{bridesmaid.name}</h3>
+                    <p className="mt-2 text-[10px] font-accent font-bold text-muted-foreground/40">{bridesmaid.relationship}</p>
+                    <span className="mt-6 inline-block rounded-full bg-primary/10 p-1">
+                      <span className="block px-4 py-1.5 bg-card rounded-full text-[8px] font-bold text-primary">
+                        {bridesmaid.role}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -172,35 +165,36 @@ export default function PadrinhosPage() {
         </div>
       </section>
 
-      {/* Divider */}
-      <section className="py-8 px-4">
+      <section className="py-24 px-4 overflow-hidden">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center justify-center gap-4">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-rose-200 to-transparent" />
-            <Heart className="h-5 w-5 text-rose-300" fill="currentColor" />
-            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-amber-200 to-transparent" />
+          <div className="flex items-center justify-center gap-12">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+            <div className="relative">
+              <div className="absolute inset-0 blur-xl bg-primary/20 rounded-full" />
+              <Heart className="h-8 w-8 text-primary relative z-10" fill="currentColor" />
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-border to-transparent" />
           </div>
         </div>
       </section>
 
-      {/* Groomsmen Section */}
-      <section className="pb-16 px-4">
+      <section className="pb-24 px-4">
         <div className="mx-auto max-w-6xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mb-8 text-center"
+            className="mb-12 text-center"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/50 bg-amber-50/50 px-4 py-2">
-              <Users className="h-4 w-4 text-amber-500" />
-              <span className="text-sm font-medium text-amber-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-8 py-3 shadow-lg shadow-primary/5">
+              <Users className="h-4 w-4 text-primary" />
+              <span className="text-[10px] font-accent font-bold uppercase tracking-[0.2em] text-primary">
                 Padrinhos de {partner2}
               </span>
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
             {groomsmen.map((groomsman, index) => (
               <motion.div
                 key={groomsman.id}
@@ -210,24 +204,22 @@ export default function PadrinhosPage() {
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 className="group"
               >
-                <div className="overflow-hidden rounded-2xl border border-amber-100/50 bg-white/60 transition-all hover:border-amber-200 hover:shadow-md">
-                  {/* Photo Placeholder */}
-                  <div className="aspect-square bg-gradient-to-br from-amber-100/50 to-orange-100/30">
+                <div className="overflow-hidden rounded-[2.5rem] border border-border/40 bg-card/40 backdrop-blur-md transition-all duration-500 hover:bg-card hover:border-primary/30 hover:shadow-2xl">
+                  <div className="aspect-square bg-muted/20 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="flex h-full items-center justify-center">
-                      <div className="text-center">
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-200/50 transition-transform group-hover:scale-110">
-                          <User className="h-8 w-8 text-amber-500" />
-                        </div>
+                      <div className="text-center group-hover:scale-110 transition-transform duration-500">
+                        <User className="h-16 w-16 text-primary/10" />
                       </div>
                     </div>
                   </div>
-
-                  {/* Info */}
-                  <div className="p-4 text-center">
-                    <h3 className="font-medium text-stone-800">{groomsman.name}</h3>
-                    <p className="mt-1 text-xs text-stone-500">{groomsman.relationship}</p>
-                    <span className="mt-2 inline-block rounded-full bg-amber-100/50 px-2 py-0.5 text-xs text-amber-600">
-                      {groomsman.role}
+                  <div className="p-8 text-center uppercase tracking-widest">
+                    <h3 className="font-bold text-foreground font-serif text-lg">{groomsman.name}</h3>
+                    <p className="mt-2 text-[10px] font-accent font-bold text-muted-foreground/40">{groomsman.relationship}</p>
+                    <span className="mt-6 inline-block rounded-full bg-primary/10 p-1">
+                      <span className="block px-4 py-1.5 bg-card rounded-full text-[8px] font-bold text-primary">
+                        {groomsman.role}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -237,20 +229,22 @@ export default function PadrinhosPage() {
         </div>
       </section>
 
-      {/* Quote Section */}
-      <section className="py-12 px-4">
-        <div className="mx-auto max-w-2xl">
+      <section className="py-24 px-4">
+        <div className="mx-auto max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-rose-50/30 p-8 text-center"
+            className="rounded-[4rem] border border-border/40 bg-card/40 backdrop-blur-md p-16 sm:p-24 text-center relative overflow-hidden shadow-2xl"
           >
-            <Heart className="mx-auto mb-4 h-8 w-8 text-rose-400" fill="currentColor" />
-            <p className="text-stone-600 italic">
-              "Amigos são a família que escolhemos. Agradecemos a cada um de vocês por fazer parte da nossa história."
+            <div className="absolute -top-12 -left-12 text-primary/5 transform -rotate-12">
+              <Heart className="w-64 h-64" fill="currentColor" />
+            </div>
+            <Heart className="mx-auto mb-10 h-10 w-10 text-primary relative z-10" fill="currentColor" />
+            <p className="text-2xl md:text-4xl font-serif italic text-foreground relative z-10 leading-relaxed font-light">
+              &ldquo;Amigos são a família que escolhemos. Agradecemos a cada um de vocês por fazer parte da nossa história.&rdquo;
             </p>
-            <p className="mt-4 text-sm font-medium text-amber-700">
+            <p className="mt-12 text-[10px] font-accent font-bold uppercase tracking-[0.4em] text-primary relative z-10 opacity-60">
               — {partner1} & {partner2}
             </p>
           </motion.div>

@@ -36,11 +36,11 @@ export default function TrustCenterPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-[oklch(0.99_0.005_160)] dark:bg-[oklch(0.14_0.02_160)] flex flex-col">
-            <header className="h-20 border-b border-primary/5 bg-background/60 backdrop-blur-xl flex items-center px-8 sticky top-0 z-50">
+        <div className="min-h-screen bg-background flex flex-col">
+            <header className="h-20 border-b border-border/40 bg-card/40 backdrop-blur-md flex items-center px-8 sticky top-0 z-50">
                 <BrandLogo />
                 <div className="ml-auto flex items-center gap-4">
-                    <div className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-accent font-bold uppercase tracking-widest border border-primary/20">
+                    <div className="px-6 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-accent font-bold uppercase tracking-[0.2em] border border-primary/20 shadow-lg shadow-primary/5">
                         Certified Trust Center
                     </div>
                 </div>
@@ -48,16 +48,17 @@ export default function TrustCenterPage() {
 
             <main className="flex-1 max-w-7xl mx-auto px-4 py-16 w-full">
                 <PageTransition>
-                    <div className="text-center mb-16 space-y-4">
+                    <div className="text-center mb-24 space-y-6 relative">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            className="inline-flex h-16 w-16 rounded-3xl bg-primary/10 items-center justify-center text-primary mb-4"
+                            className="inline-flex h-20 w-20 rounded-[2rem] bg-primary/10 items-center justify-center text-primary mb-6 shadow-2xl shadow-primary/10 border border-primary/20 relative z-10"
                         >
-                            <Shield className="h-8 w-8" />
+                            <Shield className="h-10 w-10" />
                         </motion.div>
-                        <h1 className="text-5xl font-serif font-bold text-foreground tracking-tight">Centro de Confiança MarryFlow</h1>
-                        <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+                        <h1 className="text-6xl md:text-8xl font-serif font-bold text-foreground tracking-tight relative z-10">Centro de <span className="text-primary italic font-light">Confiança</span></h1>
+                        <p className="text-muted-foreground/60 max-w-2xl mx-auto text-xl font-medium italic relative z-10">
                             Nossa prioridade é a segurança do seu momento mais especial. Conheça as tecnologias e protocolos que protegem seus dados.
                         </p>
                     </div>
@@ -70,16 +71,16 @@ export default function TrustCenterPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
                             >
-                                <Card className="glass-card h-full border-primary/10 hover:border-primary/30 transition-all hover:translate-y-[-4px]">
-                                    <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-                                        <div className="h-12 w-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+                                <Card className="bg-card/40 backdrop-blur-xl h-full border-border/40 hover:border-primary/30 transition-all duration-500 hover:translate-y-[-8px] rounded-[2.5rem] soft-shadow hover:shadow-2xl group">
+                                    <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
+                                        <div className="h-14 w-14 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500">
                                             {feature.icon}
                                         </div>
-                                        <div className="text-[10px] font-accent font-bold text-primary/40 uppercase tracking-[0.2em]">
+                                        <div className="text-[10px] font-accent font-bold text-primary/40 uppercase tracking-[0.3em]">
                                             {feature.badge}
                                         </div>
-                                        <h3 className="text-xl font-serif font-bold text-foreground">{feature.title}</h3>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">
+                                        <h3 className="text-2xl font-serif font-bold text-foreground">{feature.title}</h3>
+                                        <p className="text-sm text-muted-foreground/60 leading-relaxed italic font-medium">
                                             {feature.description}
                                         </p>
                                     </CardContent>
@@ -89,44 +90,44 @@ export default function TrustCenterPage() {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                        <Card className="glass-card border-primary/10 overflow-hidden rounded-3xl">
-                            <CardHeader className="bg-primary/5 border-b border-primary/10 p-8">
-                                <CardTitle className="font-serif text-2xl">Compromisso com OWASP</CardTitle>
-                                <CardDescription className="font-accent uppercase text-[10px] tracking-widest font-bold">Resiliência Técnica</CardDescription>
+                        <Card className="bg-card/40 backdrop-blur-xl border-border/40 overflow-hidden rounded-[3rem] shadow-2xl">
+                            <CardHeader className="bg-primary/5 border-b border-border/40 p-10">
+                                <CardTitle className="font-serif text-3xl font-bold">Compromisso com OWASP</CardTitle>
+                                <CardDescription className="font-accent uppercase text-[10px] tracking-[0.3em] font-bold text-primary/60">Resiliência Técnica</CardDescription>
                             </CardHeader>
-                            <CardContent className="p-8 space-y-6">
-                                <div className="flex gap-4">
-                                    <div className="h-6 w-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-600 shrink-0 mt-1">
-                                        <CheckCircle2 className="h-4 w-4" />
+                            <CardContent className="p-10 space-y-8">
+                                <div className="flex gap-6">
+                                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-1 shadow-inner">
+                                        <CheckCircle2 className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-foreground">Sanitização Inteligente</h4>
-                                        <p className="text-sm text-muted-foreground">Proteção ativa contra injeção de scripts e manipulação de dados em todas as entradas.</p>
+                                        <h4 className="font-bold text-foreground text-lg">Sanitização Inteligente</h4>
+                                        <p className="text-muted-foreground/60 italic font-medium">Proteção ativa contra injeção de scripts e manipulação de dados em todas as entradas.</p>
                                     </div>
                                 </div>
-                                <div className="flex gap-4">
-                                    <div className="h-6 w-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-600 shrink-0 mt-1">
-                                        <CheckCircle2 className="h-4 w-4" />
+                                <div className="flex gap-6">
+                                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-1 shadow-inner">
+                                        <CheckCircle2 className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-foreground">Isolamento Multi-Tenant</h4>
-                                        <p className="text-sm text-muted-foreground">Garantia lógica de que seus dados nunca se cruzam com informações de outros usuários.</p>
+                                        <h4 className="font-bold text-foreground text-lg">Isolamento Multi-Tenant</h4>
+                                        <p className="text-muted-foreground/60 italic font-medium">Garantia lógica de que seus dados nunca se cruzam com informações de outros usuários.</p>
                                     </div>
                                 </div>
-                                <div className="flex gap-4">
-                                    <div className="h-6 w-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-600 shrink-0 mt-1">
-                                        <CheckCircle2 className="h-4 w-4" />
+                                <div className="flex gap-6">
+                                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-1 shadow-inner">
+                                        <CheckCircle2 className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-foreground">Rastreabilidade Total</h4>
-                                        <p className="text-sm text-muted-foreground">Logs permanentes para monitorar integridade e ações administrativas.</p>
+                                        <h4 className="font-bold text-foreground text-lg">Rastreabilidade Total</h4>
+                                        <p className="text-muted-foreground/60 italic font-medium">Logs permanentes para monitorar integridade e ações administrativas.</p>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
 
                         <div className="flex flex-col gap-8">
-                            <Card className="glass-card border-primary/10 rounded-3xl bg-primary/5">
+                            <Card className="glass-card border-border rounded-3xl">
                                 <CardContent className="p-8">
                                     <div className="flex items-center gap-6 mb-8">
                                         <div className="h-16 w-16 rounded-2xl bg-white/50 flex items-center justify-center text-primary shadow-inner">

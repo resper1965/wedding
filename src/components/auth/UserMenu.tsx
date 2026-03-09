@@ -44,20 +44,20 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-2xl p-0 transition-transform hover:scale-105 active:scale-95">
-          <Avatar className="h-10 w-10 rounded-2xl border border-primary/10 shadow-sm">
+          <Avatar className="h-10 w-10 rounded-2xl border border-border shadow-sm">
             <AvatarImage src={user.photoURL || ''} alt={user.displayName || ''} />
-            <AvatarFallback className="bg-primary/5 text-primary text-xs font-serif font-bold rounded-2xl">
+            <AvatarFallback className="bg-muted text-primary text-xs font-serif font-bold rounded-2xl">
               {initials}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-64 rounded-2xl border-primary/10 bg-background/80 backdrop-blur-xl p-2 shadow-2xl" align="end" forceMount>
+      <DropdownMenuContent className="w-64 rounded-2xl border-border bg-card/80 backdrop-blur-xl p-2 shadow-2xl" align="end" forceMount>
         <div className="flex flex-col space-y-1 p-3">
           <p className="text-sm font-serif font-bold text-foreground leading-none">{user.displayName}</p>
-          <p className="text-[10px] font-accent font-bold uppercase tracking-wider text-muted-foreground/40 mt-1">{user.email}</p>
+          <p className="text-[10px] font-accent font-bold uppercase tracking-wider text-muted-foreground mt-1">{user.email}</p>
         </div>
-        <DropdownMenuSeparator className="bg-primary/5 mx-2" />
+        <DropdownMenuSeparator className="bg-border mx-2" />
         <DropdownMenuItem
           onClick={signOut}
           className="text-error focus:bg-error/5 focus:text-error rounded-xl p-3 font-accent font-bold uppercase tracking-widest text-[10px] gap-2"

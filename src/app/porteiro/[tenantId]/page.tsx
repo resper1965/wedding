@@ -14,6 +14,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   QrCode, Search, Users, Check, Clock, Wifi, WifiOff,
@@ -62,6 +63,8 @@ type ActiveView = 'home' | 'qr' | 'search' | 'list'
 // ============================================================================
 
 export default function PorteiroPage() {
+  const params = useParams()
+  const tenantId = params.tenantId as string
   const [activeView, setActiveView] = useState<ActiveView>('home')
   const [isScannerActive, setIsScannerActive] = useState(false)
   const [selectedGuest, setSelectedGuest] = useState<CheckInCardProps | null>(null)
@@ -233,7 +236,7 @@ export default function PorteiroPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background selection:bg-primary/20">
       {/* Header - Executive Glass */}
-      <header className="sticky top-0 z-30 border-b border-white/10 glass-card rounded-none">
+      <header className="sticky top-0 z-30 border-b border-primary/5 bg-background/60 backdrop-blur-xl h-20 flex items-center">
         <div className="flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-4">
             <BrandLogo size="sm" link={true} withDot={true} />
@@ -247,15 +250,15 @@ export default function PorteiroPage() {
           </div>
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background/50 border border-white/5">
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
               {isOnline ? (
-                <div className="flex items-center gap-1.5 text-success">
-                  <Wifi className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Online</span>
+                <div className="flex items-center gap-2 text-primary">
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Active</span>
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-error">
-                  <WifiOff className="h-3.5 w-3.5" />
+                <div className="flex items-center gap-2 text-destructive">
+                  <div className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
                   <span className="text-[10px] font-accent font-bold uppercase tracking-widest">Offline</span>
                 </div>
               )}
@@ -278,39 +281,45 @@ export default function PorteiroPage() {
               exit={{ opacity: 0, y: -10 }}
               className="p-6 space-y-6"
             >
-              {/* Stats card - Executive Minimalist */}
-              <div className="glass-card p-6">
-                <div className="mb-6 flex items-center justify-between">
-                  <h2 className="text-xs font-serif font-bold uppercase tracking-[0.3em] text-muted-foreground/50">Status de Ocupação</h2>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl font-sans font-bold text-primary">{progressPct}%</span>
+              {/* Stats card - Executive Minimalist consistent with Dashboard */}
+              <div className="bg-card/40 backdrop-blur-xl rounded-[3rem] p-10 border border-border/40 soft-shadow">
+                <div className="mb-10 flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h2 className="text-[10px] font-accent font-bold uppercase tracking-[0.4em] text-primary/40">Métrica de Acesso</h2>
+                    <p className="text-2xl font-serif font-bold text-foreground">Fluxo de Convidados</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <p className="text-3xl font-serif font-bold text-primary">{progressPct}%</p>
+                      <p className="text-[8px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Concluído</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="text-center group">
-                    <p className="text-3xl font-serif font-light text-foreground group-hover:text-primary transition-colors">{stats.totalGuests}</p>
-                    <p className="text-[10px] font-accent font-bold text-muted-foreground/40 uppercase tracking-widest mt-1">Total</p>
+                <div className="grid grid-cols-3 gap-8 mb-10">
+                  <div className="text-center group p-4 rounded-3xl bg-primary/[0.02] border border-primary/5">
+                    <p className="text-4xl font-serif font-bold text-foreground group-hover:text-primary transition-colors">{stats.totalGuests}</p>
+                    <p className="text-[9px] font-accent font-bold text-muted-foreground/40 uppercase tracking-widest mt-2">Expectativa</p>
                   </div>
-                  <div className="text-center group">
-                    <p className="text-3xl font-serif font-light text-success group-hover:scale-110 transition-transform">{stats.checkedIn}</p>
-                    <p className="text-[10px] font-accent font-bold text-success/40 uppercase tracking-widest mt-1">Chegaram</p>
+                  <div className="text-center group p-4 rounded-3xl bg-primary/[0.04] border border-primary/10">
+                    <p className="text-4xl font-serif font-bold text-primary group-hover:scale-110 transition-transform">{stats.checkedIn}</p>
+                    <p className="text-[9px] font-accent font-bold text-primary/60 uppercase tracking-widest mt-2">Presentes</p>
                   </div>
-                  <div className="text-center group">
-                    <p className="text-3xl font-serif font-light text-info group-hover:scale-110 transition-transform">{stats.pending}</p>
-                    <p className="text-[10px] font-accent font-bold text-info/40 uppercase tracking-widest mt-1">No Aguardo</p>
+                  <div className="text-center group p-4 rounded-3xl bg-primary/[0.02] border border-primary/5">
+                    <p className="text-4xl font-serif font-bold text-foreground/40 group-hover:scale-110 transition-transform">{stats.pending}</p>
+                    <p className="text-[9px] font-accent font-bold text-muted-foreground/20 uppercase tracking-widest mt-2">No Caminho</p>
                   </div>
                 </div>
 
-                {/* Progress bar - Refined */}
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary/10">
+                {/* Progress bar - Premium style */}
+                <div className="h-2 w-full overflow-hidden rounded-full bg-primary/5 p-0.5 border border-primary/10">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPct}%` }}
-                    transition={{ duration: 1.2, ease: 'circOut' }}
-                    className="h-full rounded-full bg-primary relative"
+                    transition={{ duration: 1.5, ease: 'circOut' }}
+                    className="h-full rounded-full bg-primary relative shadow-[0_0_15px_rgba(var(--primary),0.3)]"
                   >
-                    <div className="absolute inset-0 bg-white/20 shimmer" />
+                    <div className="absolute inset-0 bg-white/10 shimmer" />
                   </motion.div>
                 </div>
               </div>
@@ -319,9 +328,9 @@ export default function PorteiroPage() {
               <div className="grid grid-cols-1 gap-4">
                 <button
                   onClick={() => { setActiveView('qr'); setIsScannerActive(true) }}
-                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:bg-card/60"
                 >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-primary text-primary-foreground shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
                     <ScanLine className="h-7 w-7" />
                   </div>
                   <div>
@@ -335,25 +344,25 @@ export default function PorteiroPage() {
 
                 <button
                   onClick={() => setActiveView('search')}
-                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:bg-card/60"
                 >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-lg shadow-secondary/20 group-hover:scale-110 transition-transform">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary shadow-sm group-hover:scale-110 transition-transform">
                     <Search className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="text-lg font-serif font-semibold text-foreground group-hover:text-secondary transition-colors">Busca Manual</p>
+                    <p className="text-lg font-serif font-semibold text-foreground group-hover:text-primary transition-colors">Busca Manual</p>
                     <p className="text-xs font-sans text-muted-foreground/60">Localizar convidado por nome</p>
                   </div>
-                  <div className="ml-auto p-2 rounded-full border border-secondary/10 group-hover:bg-secondary group-hover:text-white transition-all">
+                  <div className="ml-auto p-2 rounded-full border border-primary/5 group-hover:bg-primary group-hover:text-white transition-all">
                     <ChevronRight className="h-5 w-5" />
                   </div>
                 </button>
 
                 <button
                   onClick={() => setActiveView('list')}
-                  className="group relative flex items-center gap-5 rounded-3xl glass-card p-6 text-left transition-all magnetic-hover"
+                  className="group relative flex items-center gap-6 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-border p-6 text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:bg-card/60"
                 >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-background border border-border group-hover:bg-primary group-hover:text-white transition-all">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-background border border-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                     <List className="h-7 w-7" />
                   </div>
                   <div>
@@ -462,7 +471,7 @@ export default function PorteiroPage() {
                   placeholder="Localizar convidado ou grupo..."
                   value={listSearch}
                   onChange={e => setListSearch(e.target.value)}
-                  className="pl-12 h-12 bg-white/50 border-white/20 focus:bg-white focus:border-primary transition-all rounded-xl font-sans"
+                  className="pl-12 h-14 bg-muted/20 border-border focus:bg-card focus:border-primary transition-all rounded-2xl font-sans"
                   autoFocus
                 />
               </div>
@@ -503,7 +512,7 @@ export default function PorteiroPage() {
                         'flex items-center gap-4 rounded-2xl p-4 transition-all magnetic-hover border',
                         guest.checkedIn
                           ? 'border-success/20 bg-success/5'
-                          : 'border-white/10 glass-card'
+                          : 'glass-card'
                       )}
                     >
                       <div className={cn(
@@ -557,7 +566,7 @@ export default function PorteiroPage() {
       </main>
 
       {/* Bottom nav - Executive Glass Floating */}
-      <nav className="fixed bottom-6 left-6 right-6 z-40 flex h-16 items-center border border-white/20 glass-card rounded-[2rem] shadow-2xl shadow-black/20">
+      <nav className="fixed bottom-6 left-6 right-6 z-40 flex h-20 items-center border border-primary/5 bg-background/60 backdrop-blur-xl rounded-[2.5rem] shadow-2xl shadow-primary/5">
         {[
           { view: 'home' as ActiveView, icon: Heart, label: 'Painel' },
           { view: 'qr' as ActiveView, icon: QrCode, label: 'QR Scan' },
@@ -576,17 +585,17 @@ export default function PorteiroPage() {
               }
             }}
             className={cn(
-              'flex flex-1 flex-col items-center justify-center gap-1 transition-all duration-300',
-              activeView === item.view ? 'text-primary scale-110' : 'text-muted-foreground/40 hover:text-primary/60'
+              'flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300',
+              activeView === item.view ? 'text-primary scale-110' : 'text-primary/30 hover:text-primary/60'
             )}
           >
             <div className={cn(
-              'p-1.5 rounded-lg transition-colors',
-              activeView === item.view ? 'bg-primary/10' : ''
+              'p-2.5 rounded-2xl transition-colors',
+              activeView === item.view ? 'bg-primary/10 shadow-inner' : ''
             )}>
               <item.icon className="h-5 w-5" />
             </div>
-            <span className="text-[9px] font-accent font-bold uppercase tracking-widest">{item.label}</span>
+            <span className="text-[10px] font-accent font-bold uppercase tracking-widest leading-none">{item.label}</span>
           </button>
         ))}
       </nav>

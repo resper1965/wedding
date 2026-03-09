@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, MessageSquare, Settings,
   BarChart3, Grid3X3, HelpCircle, ChevronLeft, ChevronRight,
   Heart, DollarSign, Briefcase, ClipboardList, Shield, Gift,
-  MoreHorizontal, CalendarHeart, Bot, X, Zap, ChevronUp
+  MoreHorizontal, CalendarHeart, Bot, X, Zap, ChevronUp, ScanLine
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -36,6 +36,7 @@ export const tabs: Tab[] = [
   { id: 'checklist', label: 'Checklist', icon: ClipboardList },
   { id: 'settings', label: 'Configurações', icon: Settings },
   { id: 'war-room', label: 'War Room', icon: Zap },
+  { id: 'porteiro', label: 'Recepção', icon: ScanLine, href: '/porteiro' },
   { id: 'users', label: 'Usuários', icon: Shield, adminOnly: true },
   { id: 'help', label: 'Ajuda', icon: HelpCircle, href: '/ajuda' },
 ]
@@ -67,7 +68,7 @@ export function SidebarNav({
   onCollapsedChange,
 }: NavigationProps) {
   const { user } = useAuth()
-  const displayTabs = tabs.filter(t => !t.adminOnly || user?.role === 'admin')
+  const displayTabs = tabs.filter(t => !t.adminOnly || user?.isSuperAdmin)
 
   return (
     <aside
@@ -85,17 +86,29 @@ export function SidebarNav({
       </div>
 
       {/* Global Navigation - Back to Projects */}
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-4 space-y-2">
         <Link
           href="/projects"
           className={cn(
-            "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-[#1A302B] dark:text-[#C6D8D3] transition-all hover:bg-primary/5 group",
+            "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-foreground/60 transition-all hover:bg-primary/5 group",
             collapsed && "justify-center px-0"
           )}
         >
           <Grid3X3 className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
           {!collapsed && <span>Meus Eventos</span>}
         </Link>
+        {user?.isSuperAdmin && (
+          <Link
+            href="/admin/master"
+            className={cn(
+              "flex items-center gap-3 rounded-2xl px-4 py-3 text-[10px] font-accent font-bold uppercase tracking-widest text-primary bg-primary/10 transition-all hover:bg-primary/20 group",
+              collapsed && "justify-center px-0"
+            )}
+          >
+            <Shield className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
+            {!collapsed && <span>Painel Master</span>}
+          </Link>
+        )}
       </div>
 
       {/* Nav items */}

@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
 interface Vendor {
@@ -29,21 +30,21 @@ interface Vendor {
 const CATEGORIES = ['Fotógrafo', 'Filmagem', 'Buffet', 'DJ', 'Banda', 'Florista', 'Decoração', 'Bolo', 'Cerimonial', 'Espaço/Venue', 'Transporte', 'Cabelo & Maquiagem', 'Outro']
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  pesquisando: { label: 'Pesquisando', color: 'bg-stone-100 text-stone-600' },
-  orcado:      { label: 'Orçado',      color: 'bg-amber-100 text-amber-700' },
-  contratado:  { label: 'Contratado',  color: 'bg-blue-100 text-blue-700' },
-  pago:        { label: 'Pago',        color: 'bg-emerald-100 text-emerald-700' },
-  cancelado:   { label: 'Cancelado',   color: 'bg-red-100 text-red-600' }
+  pesquisando: { label: 'Pesquisando', color: 'bg-muted text-muted-foreground' },
+  orcado: { label: 'Orçado', color: 'bg-warning/10 text-warning' },
+  contratado: { label: 'Contratado', color: 'bg-primary/10 text-primary' },
+  pago: { label: 'Pago', color: 'bg-success/10 text-success' },
+  cancelado: { label: 'Cancelado', color: 'bg-destructive/10 text-destructive' }
 }
 
 const emptyForm = { name: '', category: '', contact: '', phone: '', email: '', website: '', value: 0, status: 'pesquisando', notes: '', contractUrl: '' }
 
-function VendorForm({ 
-  form, 
-  setForm 
-}: { 
-  form: typeof emptyForm; 
-  setForm: (data: typeof emptyForm) => void 
+function VendorForm({
+  form,
+  setForm
+}: {
+  form: typeof emptyForm;
+  setForm: (data: typeof emptyForm) => void
 }) {
   return (
     <div className="grid gap-4 py-2">
@@ -140,10 +141,10 @@ export function VendorManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-stone-800">Fornecedores</h2>
-          <p className="text-sm text-stone-500">{vendors.length} fornecedores · {fmt(totalValue)} contratados</p>
+          <h2 className="text-xl font-bold text-foreground">Fornecedores</h2>
+          <p className="text-xs font-accent font-bold uppercase tracking-widest text-muted-foreground/40 mt-1">{vendors.length} fornecedores · {fmt(totalValue)} contratados</p>
         </div>
-        <Button onClick={() => { setForm(emptyForm); setIsAddOpen(true) }} className="bg-stone-800 hover:bg-stone-700">
+        <Button onClick={() => { setForm(emptyForm); setIsAddOpen(true) }} className="bg-primary hover:bg-primary/90 text-primary-foreground soft-shadow rounded-xl px-6 font-accent font-bold uppercase tracking-widest text-[10px]">
           <Plus className="mr-2 h-4 w-4" /> Adicionar
         </Button>
       </div>
@@ -152,7 +153,7 @@ export function VendorManager() {
       <div className="flex flex-wrap gap-2">
         {[['all', 'Todos'], ...Object.entries(STATUS_CONFIG).map(([k, v]) => [k, v.label])].map(([key, label]) => (
           <button key={key} onClick={() => setStatusFilter(key)}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${statusFilter === key ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>
+            className={`rounded-full px-4 py-1.5 text-[10px] font-accent font-bold uppercase tracking-widest transition-all ${statusFilter === key ? 'bg-primary text-primary-foreground shadow-[0_0_10px_rgba(var(--primary),0.3)]' : 'bg-muted/30 text-muted-foreground hover:bg-muted/50 hover:text-foreground border border-border/50'}`}>
             {label}
           </button>
         ))}
@@ -161,10 +162,13 @@ export function VendorManager() {
       {isLoading ? (
         <div className="space-y-3">{[1, 2].map(i => <div key={i} className="h-24 rounded-xl bg-stone-100 animate-pulse" />)}</div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-stone-200 p-10 text-center">
-          <Briefcase className="mx-auto h-10 w-10 text-stone-300" />
-          <p className="mt-2 text-sm text-stone-500">Nenhum fornecedor encontrado</p>
-          <Button variant="outline" size="sm" className="mt-4" onClick={() => setIsAddOpen(true)}>
+        <div className="rounded-[2rem] border-2 border-dashed border-border p-16 text-center bg-card/10 backdrop-blur-sm">
+          <div className="bg-primary/5 h-16 w-16 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <Briefcase className="h-8 w-8 text-primary/30" />
+          </div>
+          <p className="text-lg font-bold text-foreground">Nenhum fornecedor encontrado</p>
+          <p className="mt-1 text-xs text-muted-foreground/40 mb-8">Comece a cadastrar os profissionais do seu evento.</p>
+          <Button variant="outline" size="sm" className="rounded-xl border-border text-primary hover:bg-primary/5 font-accent font-bold uppercase tracking-widest text-[10px] px-6" onClick={() => setIsAddOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Adicionar fornecedor
           </Button>
         </div>
@@ -174,27 +178,27 @@ export function VendorManager() {
             const st = STATUS_CONFIG[vendor.status] || STATUS_CONFIG.pesquisando
             return (
               <motion.div key={vendor.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
-                <div className="flex items-start justify-between gap-2">
+                className="rounded-2xl border border-border bg-card/40 backdrop-blur-xl p-6 shadow-sm group hover:bg-card transition-colors">
+                <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium text-stone-800 truncate">{vendor.name}</span>
-                      <Badge className={`text-xs ${st.color}`}>{st.label}</Badge>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="text-base font-bold text-foreground group-hover:text-primary transition-colors truncate">{vendor.name}</span>
+                      <Badge className={cn("text-[8px] font-accent font-bold uppercase tracking-widest border-none px-2 h-5", st.color)}>{st.label}</Badge>
                     </div>
-                    <p className="text-xs text-stone-500 mt-0.5">{vendor.category}</p>
+                    <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40 mt-1">{vendor.category}</p>
                   </div>
-                  <p className="shrink-0 text-sm font-semibold text-stone-700">{fmt(vendor.value)}</p>
+                  <p className="shrink-0 text-base font-bold text-foreground">{fmt(vendor.value)}</p>
                 </div>
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-stone-500">
-                  {vendor.phone && <a href={`tel:${vendor.phone}`} className="flex items-center gap-1 hover:text-stone-800"><Phone className="h-3 w-3" />{vendor.phone}</a>}
-                  {vendor.email && <a href={`mailto:${vendor.email}`} className="flex items-center gap-1 hover:text-stone-800"><Mail className="h-3 w-3" />{vendor.email}</a>}
-                  {vendor.website && <a href={vendor.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-stone-800"><Globe className="h-3 w-3" />Site</a>}
-                  {vendor.contractUrl && <a href={vendor.contractUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-500 hover:text-blue-700"><ExternalLink className="h-3 w-3" />Contrato</a>}
+                <div className="mt-4 flex flex-wrap items-center gap-4 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/30">
+                  {vendor.phone && <a href={`tel:${vendor.phone}`} className="flex items-center gap-2 hover:text-primary transition-colors"><Phone className="h-3 w-3 opacity-30" />{vendor.phone}</a>}
+                  {vendor.email && <a href={`mailto:${vendor.email}`} className="flex items-center gap-2 hover:text-primary transition-colors"><Mail className="h-3 w-3 opacity-30" />{vendor.email}</a>}
+                  {vendor.website && <a href={vendor.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors"><Globe className="h-3 w-3 opacity-30" />Site</a>}
+                  {vendor.contractUrl && <a href={vendor.contractUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:text-primary/70 transition-colors"><ExternalLink className="h-3 w-3" />Contrato</a>}
                 </div>
-                {vendor.notes && <p className="mt-2 text-xs text-stone-400 italic truncate">{vendor.notes}</p>}
-                <div className="mt-3 flex justify-end gap-1 border-t border-stone-100 pt-2">
-                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(vendor)}><Edit className="h-3.5 w-3.5" /></Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500" onClick={() => handleDelete(vendor.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
+                {vendor.notes && <p className="mt-3 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/20 italic truncate">{vendor.notes}</p>}
+                <div className="mt-4 flex justify-end gap-1 border-t border-border/40 pt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary" onClick={() => openEdit(vendor)}><Edit className="h-3.5 w-3.5" /></Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-destructive/10 hover:text-destructive" onClick={() => handleDelete(vendor.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
                 </div>
               </motion.div>
             )
@@ -218,8 +222,8 @@ export function VendorManager() {
           <DialogHeader><DialogTitle>Editar Fornecedor</DialogTitle></DialogHeader>
           <VendorForm form={form} setForm={setForm} />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingVendor(null)}>Cancelar</Button>
-            <Button onClick={handleSave} className="bg-stone-800 hover:bg-stone-700">Salvar</Button>
+            <Button variant="outline" onClick={() => setEditingVendor(null)} className="border-border text-muted-foreground hover:bg-muted/50 rounded-xl px-6 font-accent font-bold uppercase tracking-widest text-[10px]">Cancelar</Button>
+            <Button onClick={handleSave} className="bg-primary hover:bg-primary/90 text-primary-foreground soft-shadow rounded-xl px-6 font-accent font-bold uppercase tracking-widest text-[10px]">Salvar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { onAuthChange, signInWithEmail, supabaseSignOut, getAccessToken, getSupabase, type User } from '@/lib/supabase'
 
 interface AuthContextType {
-  user: (User & { role?: string; isApproved?: boolean }) | null
+  user: (User & { role?: string; isApproved?: boolean; isSuperAdmin?: boolean }) | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
@@ -24,7 +24,7 @@ export function useAuth() {
 }
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<(User & { role?: string; isApproved?: boolean }) | null>(null)
+  const [user, setUser] = useState<(User & { role?: string; isApproved?: boolean; isSuperAdmin?: boolean }) | null>(null)
   const [loading, setLoading] = useState(true)
 
   const SUPER_ADMINS = ['resper@bekaa.eu', 'resper@gmail.com', 'resper@ness.com.br']
@@ -37,21 +37,27 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         try {
           const { data: profile } = await supabase
             .from('Profile')
-            .select('role, is_approved')
+            .select('role, is_approved, is_super_admin')
             .eq('id', supabaseUser.uid)
             .maybeSingle()
 
+          const isHardcodedAdmin = SUPER_ADMINS.includes(supabaseUser.email || '')
+          const isSuperAdmin = isHardcodedAdmin || !!profile?.is_super_admin
+
           setUser({
             ...supabaseUser,
-            role: SUPER_ADMINS.includes(supabaseUser.email || '') ? 'admin' : (profile?.role || 'viewer'),
-            isApproved: SUPER_ADMINS.includes(supabaseUser.email || '') ? true : (profile?.is_approved || false)
+            role: isSuperAdmin ? 'admin' : (profile?.role || 'viewer'),
+            isApproved: isSuperAdmin ? true : (profile?.is_approved || false),
+            isSuperAdmin: isSuperAdmin
           })
         } catch (error) {
           console.error('Error fetching profile:', error)
+          const isHardcodedAdmin = SUPER_ADMINS.includes(supabaseUser.email || '')
           setUser({
             ...supabaseUser,
-            role: SUPER_ADMINS.includes(supabaseUser.email || '') ? 'admin' : 'viewer',
-            isApproved: SUPER_ADMINS.includes(supabaseUser.email || '') ? true : false
+            role: isHardcodedAdmin ? 'admin' : 'viewer',
+            isApproved: isHardcodedAdmin ? true : false,
+            isSuperAdmin: isHardcodedAdmin
           })
         }
       } else {

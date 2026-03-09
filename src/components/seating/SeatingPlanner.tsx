@@ -301,20 +301,21 @@ export function SeatingPlanner() {
         </div>
 
         {data.tables.length === 0 ? (
-          <Card className="border-dashed border-primary/20 bg-primary/5">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Grid3X3 className="h-12 w-12 text-primary/30" />
-              <p className="mt-4 text-muted-foreground">Nenhuma mesa criada</p>
-              <Button
-                onClick={() => setShowNewTableDialog(true)}
-                variant="outline"
-                className="mt-4 border-primary/20 text-primary hover:bg-primary/5"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Criar primeira mesa
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="rounded-[2rem] border-2 border-dashed border-border p-16 text-center bg-card/10 backdrop-blur-sm">
+            <div className="bg-primary/5 h-16 w-16 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <Grid3X3 className="h-10 w-10 text-primary/30" />
+            </div>
+            <p className="text-lg font-bold text-foreground">Nenhuma mesa criada</p>
+            <p className="mt-1 text-xs text-muted-foreground/40 mb-8">Comece organizando o layout do seu espaço.</p>
+            <Button
+              onClick={() => setShowNewTableDialog(true)}
+              variant="outline"
+              className="rounded-xl border-border text-primary hover:bg-primary/5 font-accent font-bold uppercase tracking-widest text-[10px] px-6"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Criar primeira mesa
+            </Button>
+          </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
@@ -328,9 +329,9 @@ export function SeatingPlanner() {
                 >
                   <Card
                     className={cn(
-                      "cursor-pointer transition-all hover:shadow-md bg-card/50",
+                      "cursor-pointer transition-all hover:bg-card bg-card/40 backdrop-blur-xl rounded-[1.5rem] soft-shadow-hover",
                       selectedGroup && table.occupiedSeats < table.capacity
-                        ? "border-success ring-2 ring-success/10"
+                        ? "border-success ring-4 ring-success/10"
                         : "border-border"
                     )}
                     onClick={() => {
@@ -537,10 +538,10 @@ export function SeatingPlanner() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowNewTableDialog(false)}>
+            <Button variant="outline" onClick={() => setShowNewTableDialog(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted/50 font-accent font-bold uppercase tracking-widest text-[10px] px-6">
               Cancelar
             </Button>
-            <Button onClick={createTable} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button onClick={createTable} className="bg-primary hover:bg-primary/90 text-primary-foreground soft-shadow rounded-xl font-accent font-bold uppercase tracking-widest text-[10px] px-6">
               Criar Mesa
             </Button>
           </DialogFooter>

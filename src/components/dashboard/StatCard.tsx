@@ -51,10 +51,10 @@ export function StatCard({ title, value, subtitle, icon: Icon, variant = 'primar
               </div>
             )}
             <div>
-              <p className="text-[10px] font-accent font-bold uppercase tracking-[0.2em] text-muted-foreground/30">{title}</p>
+              <p className="text-[10px] font-accent font-bold uppercase tracking-[0.2em] text-muted-foreground/50">{title}</p>
               <p className="text-3xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">{value}</p>
               {subtitle && (
-                <p className="mt-1 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/20 italic">{subtitle}</p>
+                <p className="mt-1 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40 italic">{subtitle}</p>
               )}
             </div>
           </div>

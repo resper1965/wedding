@@ -26,8 +26,14 @@ export async function middleware(request: NextRequest) {
     ) {
       const tenantId = pathname.split('/')[1];
 
-      // Inject the tenantId into the request headers for downstream API/Page usage
-      if (tenantId) {
+      // Only inject if tenantId is found and it's not a generic route name
+      // and only if the header isn't already set by the client
+      if (tenantId &&
+        tenantId !== 'dashboard' &&
+        tenantId !== 'projects' &&
+        tenantId !== 'login' &&
+        tenantId !== 'admin' &&
+        !request.headers.get('x-tenant-id')) {
         request.headers.set('x-tenant-id', tenantId);
       }
     }

@@ -35,12 +35,12 @@ const emptyForm: Omit<BudgetItem, 'id'> = {
   notes: null
 }
 
-function ItemForm({ 
-  form, 
-  setForm 
-}: { 
-  form: typeof emptyForm; 
-  setForm: (data: typeof emptyForm) => void 
+function ItemForm({
+  form,
+  setForm
+}: {
+  form: typeof emptyForm;
+  setForm: (data: typeof emptyForm) => void
 }) {
   return (
     <div className="grid gap-4 py-2">
@@ -159,10 +159,10 @@ export function BudgetManager() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-stone-800">Orçamento</h2>
-          <p className="text-sm text-stone-500">{items.length} itens</p>
+          <h2 className="text-xl font-bold text-foreground">Orçamento</h2>
+          <p className="text-xs font-accent font-bold uppercase tracking-widest text-muted-foreground/40 mt-1">{items.length} itens cadastrados</p>
         </div>
-        <Button onClick={() => { setForm(emptyForm); setIsAddOpen(true) }} className="bg-stone-800 hover:bg-stone-700">
+        <Button onClick={() => { setForm(emptyForm); setIsAddOpen(true) }} className="bg-primary hover:bg-primary/90 text-primary-foreground soft-shadow rounded-xl px-6 font-accent font-bold uppercase tracking-widest text-[10px]">
           <Plus className="mr-2 h-4 w-4" /> Adicionar
         </Button>
       </div>
@@ -170,27 +170,27 @@ export function BudgetManager() {
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Total Orçado', value: totalEstimated, color: 'text-stone-700' },
-          { label: 'Total Real', value: totalActual, color: totalActual > totalEstimated ? 'text-red-600' : 'text-emerald-600' },
-          { label: 'Total Pago', value: totalPaid, color: 'text-blue-600' }
+          { label: 'Total Orçado', value: totalEstimated, color: 'text-foreground' },
+          { label: 'Total Real', value: totalActual, color: totalActual > totalEstimated ? 'text-destructive' : 'text-success' },
+          { label: 'Total Pago', value: totalPaid, color: 'text-primary' }
         ].map(({ label, value, color }) => (
-          <div key={label} className="rounded-xl border border-stone-200 bg-white p-4 text-center shadow-sm">
-            <p className="text-xs text-stone-500">{label}</p>
-            <p className={`mt-1 text-lg font-semibold ${color}`}>{fmt(value)}</p>
+          <div key={label} className="rounded-2xl border border-border bg-card/40 backdrop-blur-xl p-4 text-center soft-shadow">
+            <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/60">{label}</p>
+            <p className={`mt-1 text-lg font-bold ${color}`}>{fmt(value)}</p>
           </div>
         ))}
       </div>
 
       {/* Progress bar */}
       {totalEstimated > 0 && (
-        <div className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
-          <div className="mb-2 flex justify-between text-xs text-stone-500">
+        <div className="rounded-2xl border border-border bg-card/40 backdrop-blur-xl p-4 soft-shadow">
+          <div className="mb-2 flex justify-between text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/60">
             <span>Pago vs Orçado</span>
             <span>{Math.round((totalPaid / totalEstimated) * 100)}%</span>
           </div>
-          <div className="h-2 w-full rounded-full bg-stone-100">
+          <div className="h-2 w-full rounded-full bg-muted">
             <div
-              className="h-2 rounded-full bg-emerald-500 transition-all"
+              className="h-2 rounded-full bg-primary transition-all shadow-[0_0_10px_rgba(var(--primary),0.3)]"
               style={{ width: `${Math.min(100, (totalPaid / totalEstimated) * 100)}%` }}
             />
           </div>
@@ -203,38 +203,41 @@ export function BudgetManager() {
           {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-xl bg-stone-100 animate-pulse" />)}
         </div>
       ) : Object.entries(grouped).length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-stone-200 p-10 text-center">
-          <DollarSign className="mx-auto h-10 w-10 text-stone-300" />
-          <p className="mt-2 text-sm text-stone-500">Nenhum item no orçamento ainda</p>
-          <Button variant="outline" size="sm" className="mt-4" onClick={() => setIsAddOpen(true)}>
+        <div className="rounded-[2rem] border-2 border-dashed border-border p-16 text-center bg-card/10 backdrop-blur-sm">
+          <div className="bg-primary/5 h-16 w-16 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <DollarSign className="h-8 w-8 text-primary/30" />
+          </div>
+          <p className="text-lg font-bold text-foreground">Nenhum item no orçamento ainda</p>
+          <p className="mt-1 text-xs text-muted-foreground/40 mb-8">Comece a planejar os gastos do seu evento.</p>
+          <Button variant="outline" size="sm" className="rounded-xl border-border text-primary hover:bg-primary/5 font-accent font-bold uppercase tracking-widest text-[10px] px-6" onClick={() => setIsAddOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Adicionar primeiro item
           </Button>
         </div>
       ) : (
         Object.entries(grouped).map(([category, catItems]) => (
           <motion.div key={category} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="rounded-xl border border-stone-200 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-stone-100 bg-stone-50 px-4 py-2.5">
-              <span className="text-sm font-medium text-stone-700">{category}</span>
-              <span className="ml-2 text-xs text-stone-400">
+            className="rounded-[1.5rem] border border-border bg-card/40 shadow-sm overflow-hidden">
+            <div className="border-b border-border bg-muted/30 px-6 py-3 flex items-center justify-between">
+              <span className="text-xs font-accent font-bold uppercase tracking-widest text-foreground">{category}</span>
+              <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">
                 {fmt(catItems.reduce((s, i) => s + i.estimated, 0))} orçado
               </span>
             </div>
-            <div className="divide-y divide-stone-100">
+            <div className="divide-y divide-border/40">
               {catItems.map(item => (
-                <div key={item.id} className="flex items-center gap-4 px-4 py-3 hover:bg-stone-50">
+                <div key={item.id} className="flex items-center gap-4 px-6 py-4 hover:bg-primary/[0.02] transition-colors group">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-stone-800 truncate">{item.description}</p>
-                    <div className="mt-1 flex gap-3 text-xs text-stone-500">
+                    <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{item.description}</p>
+                    <div className="mt-1 flex gap-4 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">
                       <span>Orçado: {fmt(item.estimated)}</span>
                       <span>Real: {fmt(item.actual)}</span>
                       <span>Pago: {fmt(item.paid)}</span>
                     </div>
                   </div>
-                  {item.isPaid && <Badge className="bg-emerald-100 text-emerald-700 text-xs">Pago</Badge>}
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(item)}><Edit className="h-3.5 w-3.5" /></Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => handleDelete(item.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
+                  {item.isPaid && <Badge className="bg-success/10 text-success text-[8px] font-accent font-bold uppercase tracking-widest border-none px-2 h-5">Pago</Badge>}
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary" onClick={() => openEdit(item)}><Edit className="h-3.5 w-3.5" /></Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-destructive/10 hover:text-destructive" onClick={() => handleDelete(item.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
                   </div>
                 </div>
               ))}
@@ -261,8 +264,8 @@ export function BudgetManager() {
           <DialogHeader><DialogTitle>Editar Item</DialogTitle></DialogHeader>
           <ItemForm form={form} setForm={setForm} />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingItem(null)}>Cancelar</Button>
-            <Button onClick={handleSave} className="bg-stone-800 hover:bg-stone-700">Salvar</Button>
+            <Button variant="outline" onClick={() => setEditingItem(null)} className="border-border text-muted-foreground hover:bg-muted/50 rounded-xl px-6 font-accent font-bold uppercase tracking-widest text-[10px]">Cancelar</Button>
+            <Button onClick={handleSave} className="bg-primary hover:bg-primary/90 text-primary-foreground soft-shadow rounded-xl px-6 font-accent font-bold uppercase tracking-widest text-[10px]">Salvar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

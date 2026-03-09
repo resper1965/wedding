@@ -26,7 +26,6 @@ const categories = [
   { id: 'momentos', label: 'Momentos' }
 ]
 
-// Placeholder photos - in production, these would come from an API or storage
 const photos: Photo[] = [
   { id: '1', src: '/images/wedding/photo-1.jpg', category: 'ensaio', caption: 'Momento especial' },
   { id: '2', src: '/images/wedding/photo-2.jpg', category: 'ensaio', caption: 'Nosso amor' },
@@ -65,8 +64,8 @@ export default function FotosPage() {
     fetchData()
   }, [])
 
-  const filteredPhotos = activeCategory === 'all' 
-    ? photos 
+  const filteredPhotos = activeCategory === 'all'
+    ? photos
     : photos.filter(photo => photo.category === activeCategory)
 
   const selectedIndex = selectedPhoto ? filteredPhotos.findIndex(p => p.id === selectedPhoto.id) : -1
@@ -83,7 +82,6 @@ export default function FotosPage() {
     }
   }
 
-  // Keyboard navigation for lightbox
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedPhoto) return
@@ -97,27 +95,26 @@ export default function FotosPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-amber-300 border-t-amber-500" />
-          <p className="mt-4 text-sm text-stone-500">Carregando...</p>
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary" />
+          <p className="mt-4 text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Carregando...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-orange-50/30 to-rose-50/20">
+    <div className="min-h-screen bg-background text-foreground">
       <MasterHeader type="wedding"
         partner1Name={wedding?.partner1Name}
         partner2Name={wedding?.partner2Name}
       />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-12 sm:py-16">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-gradient-to-br from-amber-100/50 to-orange-100/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-gradient-to-br from-rose-100/40 to-amber-100/30 blur-3xl" />
+      <section className="relative overflow-hidden py-12 sm:py-24">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -right-32 -top-32 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
+          <div className="absolute -bottom-32 -left-32 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
@@ -127,21 +124,20 @@ export default function FotosPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center justify-center gap-3">
-              <div className="h-px w-8 bg-gradient-to-r from-transparent to-amber-300" />
-              <Camera className="h-5 w-5 text-amber-500" />
-              <div className="h-px w-8 bg-gradient-to-l from-transparent to-amber-300" />
+              <div className="h-px w-8 bg-gradient-to-r from-transparent to-primary/30" />
+              <Camera className="h-5 w-5 text-primary" />
+              <div className="h-px w-8 bg-gradient-to-l from-transparent to-primary/30" />
             </div>
-            <h1 className="mb-3 text-3xl font-light text-amber-800 sm:text-4xl">
+            <h1 className="mb-3 text-4xl font-bold text-foreground sm:text-5xl font-serif">
               Nossas Fotos
             </h1>
-            <p className="text-stone-500">
+            <p className="text-muted-foreground/60 italic font-medium">
               Momentos especiais da nossa história de amor
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Category Filter */}
       <section className="pb-8 px-4">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap justify-center gap-2">
@@ -149,11 +145,10 @@ export default function FotosPage() {
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
-                  activeCategory === category.id
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
-                    : 'border border-amber-200/50 bg-white/60 text-stone-600 hover:border-amber-300 hover:bg-amber-50'
-                }`}
+                className={`rounded-full px-6 py-2.5 text-[10px] font-accent font-bold uppercase tracking-widest transition-all ${activeCategory === category.id
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                    : 'border border-border/40 bg-card/40 text-muted-foreground hover:border-primary/30 hover:bg-card/60'
+                  }`}
               >
                 {category.label}
               </button>
@@ -162,12 +157,11 @@ export default function FotosPage() {
         </div>
       </section>
 
-      {/* Photo Grid */}
-      <section className="pb-16 px-4">
+      <section className="pb-24 px-4">
         <div className="mx-auto max-w-6xl">
-          <motion.div 
+          <motion.div
             layout
-            className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4"
           >
             <AnimatePresence mode="popLayout">
               {filteredPhotos.map((photo, index) => (
@@ -178,30 +172,16 @@ export default function FotosPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3, delay: index * 0.03 }}
-                  className="group relative aspect-square cursor-pointer overflow-hidden rounded-xl"
+                  className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl"
                   onClick={() => setSelectedPhoto(photo)}
                 >
-                  {/* Placeholder Background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-100/50 to-rose-100/30" />
-                  
-                  {/* Placeholder Icon */}
+                  <div className="absolute inset-0 bg-muted/20" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <ImageIcon className="h-10 w-10 text-amber-300/50 transition-transform group-hover:scale-110" />
+                    <ImageIcon className="h-10 w-10 text-primary/10 transition-transform group-hover:scale-110" />
                   </div>
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                  
-                  {/* Caption */}
-                  <div className="absolute bottom-0 left-0 right-0 translate-y-full transform p-3 text-white transition-transform group-hover:translate-y-0">
-                    <p className="text-sm font-medium">{photo.caption}</p>
-                  </div>
-
-                  {/* Heart Badge */}
-                  <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
-                    <div className="rounded-full bg-white/80 p-1.5">
-                      <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
-                    </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="absolute bottom-0 left-0 right-0 translate-y-full transform p-6 text-white transition-transform duration-500 group-hover:translate-y-0">
+                    <p className="text-sm font-serif italic">{photo.caption}</p>
                   </div>
                 </motion.div>
               ))}
@@ -210,73 +190,69 @@ export default function FotosPage() {
         </div>
       </section>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 backdrop-blur-xl p-4 sm:p-8"
             onClick={() => setSelectedPhoto(null)}
           >
-            {/* Close Button */}
             <button
               onClick={() => setSelectedPhoto(null)}
-              className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+              className="absolute right-8 top-8 rounded-full bg-card border border-border/40 p-3 text-foreground transition-all hover:bg-primary hover:text-primary-foreground shadow-xl z-[110]"
             >
               <X className="h-6 w-6" />
             </button>
 
-            {/* Previous Button */}
             {selectedIndex > 0 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   goToPrevious()
                 }}
-                className="absolute left-4 rounded-full bg-white/10 p-2 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                className="absolute left-8 rounded-full bg-card border border-border/40 p-3 text-foreground transition-all hover:bg-primary hover:text-primary-foreground shadow-xl z-[110]"
               >
                 <ChevronLeft className="h-6 w-6" />
               </button>
             )}
 
-            {/* Next Button */}
             {selectedIndex < filteredPhotos.length - 1 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   goToNext()
                 }}
-                className="absolute right-4 rounded-full bg-white/10 p-2 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                className="absolute right-8 rounded-full bg-card border border-border/40 p-3 text-foreground transition-all hover:bg-primary hover:text-primary-foreground shadow-xl z-[110]"
               >
                 <ChevronRight className="h-6 w-6" />
               </button>
             )}
 
-            {/* Photo */}
             <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="relative max-h-[80vh] max-w-[90vw] overflow-hidden rounded-2xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-h-[85vh] max-w-[95vw] overflow-hidden rounded-[2.5rem] border border-border/40 bg-card shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Placeholder */}
-              <div className="aspect-video min-w-[60vw] bg-gradient-to-br from-amber-100 to-rose-100">
+              <div className="aspect-[4/5] sm:aspect-video min-w-[300px] sm:min-w-[60vw] bg-muted/10">
                 <div className="flex h-full items-center justify-center">
-                  <div className="text-center">
-                    <Camera className="mx-auto h-16 w-16 text-amber-300" />
-                    <p className="mt-4 text-amber-600">{selectedPhoto.caption}</p>
+                  <div className="text-center p-12">
+                    <div className="mb-6 flex items-center justify-center">
+                      <Camera className="h-20 w-20 text-primary/20" />
+                    </div>
+                    <p className="text-2xl font-serif italic text-foreground">{selectedPhoto.caption}</p>
+                    <div className="mt-8 inline-flex items-center gap-4 text-muted-foreground/40 text-[10px] font-accent font-bold uppercase tracking-widest">
+                      <span className="h-px w-8 bg-border" />
+                      {selectedIndex + 1} de {filteredPhotos.length}
+                      <span className="h-px w-8 bg-border" />
+                    </div>
                   </div>
                 </div>
               </div>
             </motion.div>
-
-            {/* Photo Counter */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-2 text-sm text-white/80">
-              {selectedIndex + 1} / {filteredPhotos.length}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

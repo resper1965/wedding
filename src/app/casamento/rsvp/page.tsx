@@ -260,13 +260,13 @@ export default function RSVPPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="rounded-2xl border border-green-200 bg-green-50/50 p-8 text-center"
+                className="rounded-3xl border border-success/20 bg-success/5 p-12 text-center backdrop-blur-md"
               >
-                <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
-                <h2 className="mb-2 text-2xl font-medium text-green-800">
+                <CheckCircle2 className="mx-auto mb-6 h-16 w-16 text-success" />
+                <h2 className="mb-2 text-2xl font-bold text-foreground font-serif">
                   Confirmação Enviada!
                 </h2>
-                <p className="mb-6 text-green-700">
+                <p className="mb-8 text-muted-foreground">
                   Obrigado, {selectedGuest?.firstName}! Sua presença foi confirmada com sucesso.
                 </p>
                 <Button
@@ -279,7 +279,7 @@ export default function RSVPPage() {
                     setMessage('')
                   }}
                   variant="outline"
-                  className="border-green-200 text-green-700 hover:bg-green-100"
+                  className="rounded-xl border-border text-primary hover:bg-primary/5 font-accent font-bold uppercase tracking-widest text-[10px] px-8"
                 >
                   Fazer outra confirmação
                 </Button>
@@ -291,7 +291,7 @@ export default function RSVPPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <Card className="border-border bg-white/80 backdrop-blur-sm">
+                <Card className="border-border bg-card/40 backdrop-blur-md rounded-[2rem] overflow-hidden shadow-2xl shadow-primary/5">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
@@ -321,8 +321,8 @@ export default function RSVPPage() {
                           <label
                             key={event.id}
                             className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${selectedEvents.includes(event.id)
-                              ? 'border-primary bg-primary/5'
-                              : 'border-border bg-white/50 hover:border-primary/30'
+                              ? 'border-primary bg-primary/5 shadow-inner'
+                              : 'border-border bg-muted/10 hover:border-primary/30'
                               }`}
                           >
                             <Checkbox
@@ -349,7 +349,7 @@ export default function RSVPPage() {
                         Restrições Alimentares
                       </Label>
                       <Select value={dietaryRestrictions} onValueChange={setDietaryRestrictions}>
-                        <SelectTrigger className="border-border bg-white/50">
+                        <SelectTrigger className="border-border bg-muted/20 rounded-xl h-12">
                           <SelectValue placeholder="Selecione se houver" />
                         </SelectTrigger>
                         <SelectContent>
@@ -387,7 +387,7 @@ export default function RSVPPage() {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder="Deixe uma mensagem carinhosa..."
-                        className="min-h-[100px] border-border bg-white/50"
+                        className="min-h-[100px] border-border bg-muted/20 rounded-xl px-4 py-3"
                       />
                     </div>
 
@@ -395,7 +395,7 @@ export default function RSVPPage() {
                     <Button
                       onClick={handleSubmit}
                       disabled={isSubmitting || selectedEvents.length === 0}
-                      className="w-full bg-accent text-white shadow-lg shadow-accent/20 hover:opacity-90"
+                      className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-accent font-bold uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-primary/20"
                     >
                       {isSubmitting ? (
                         <>
@@ -419,7 +419,7 @@ export default function RSVPPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <Card className="border-border bg-white/80 backdrop-blur-sm">
+                <Card className="border-border bg-card/40 backdrop-blur-md rounded-[2rem] overflow-hidden shadow-2xl shadow-primary/5">
                   <CardHeader>
                     <CardTitle className="text-primary font-serif">Encontre seu Convite</CardTitle>
                     <CardDescription>
@@ -434,7 +434,7 @@ export default function RSVPPage() {
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Digite seu nome ou código..."
-                          className="border-border bg-white/50"
+                          className="border-border bg-muted/20 rounded-xl h-12 px-5"
                           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                         />
                         <Button
@@ -488,7 +488,7 @@ export default function RSVPPage() {
 
                 {/* Info Cards */}
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-xl border border-border bg-white/50 p-4">
+                  <div className="rounded-xl border border-border bg-muted/20 p-4">
                     <div className="flex items-center gap-3">
                       <div className="rounded-lg bg-primary/10 p-2">
                         <Calendar className="h-4 w-4 text-primary" />
@@ -499,7 +499,7 @@ export default function RSVPPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="rounded-xl border border-border bg-white/50 p-4">
+                  <div className="rounded-xl border border-border bg-muted/20 p-4">
                     <div className="flex items-center gap-3">
                       <div className="rounded-lg bg-primary/10 p-2">
                         <Users className="h-4 w-4 text-primary" />

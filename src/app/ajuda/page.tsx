@@ -36,13 +36,13 @@ function HelpSection({ icon: Icon, title, children, defaultOpen = false }: HelpS
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
-    <div className="border border-stone-200 rounded-xl overflow-hidden bg-white">
+    <div className="border border-border/40 rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md transition-all hover:bg-card/60">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-stone-50 transition-colors"
+        className="w-full flex items-center gap-3 px-6 py-5 text-left hover:bg-primary/5 transition-colors"
       >
-        <Icon className="h-5 w-5 text-amber-600 shrink-0" />
-        <span className="text-base font-medium text-stone-800 flex-1">{title}</span>
+        <Icon className="h-5 w-5 text-primary shrink-0" />
+        <span className="text-base font-bold text-foreground flex-1 font-serif">{title}</span>
         <ChevronDown
           className={cn(
             'h-4 w-4 text-stone-400 transition-transform duration-200',
@@ -54,9 +54,9 @@ function HelpSection({ icon: Icon, title, children, defaultOpen = false }: HelpS
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="px-5 pb-5 text-sm text-stone-600 leading-relaxed space-y-3 border-t border-stone-100"
+          className="px-6 pb-6 text-sm text-muted-foreground/80 leading-relaxed space-y-3 border-t border-border/20"
         >
-          <div className="pt-4">{children}</div>
+          <div className="pt-6">{children}</div>
         </motion.div>
       )}
     </div>
@@ -69,19 +69,19 @@ function HelpSection({ icon: Icon, title, children, defaultOpen = false }: HelpS
 
 export default function AjudaPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/20">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+      <div className="border-b border-border/40 bg-card/40 backdrop-blur-md sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-4">
           <Link
             href="/"
-            className="p-2 -ml-2 rounded-lg hover:bg-stone-100 transition-colors"
+            className="p-2 -ml-2 rounded-xl hover:bg-primary/10 text-primary transition-colors"
           >
-            <ArrowLeft className="h-5 w-5 text-stone-600" />
+            <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-stone-800">Central de Ajuda</h1>
-            <p className="text-xs text-stone-500">Manual de uso da plataforma</p>
+            <h1 className="text-lg font-bold text-foreground font-serif">Central de Ajuda</h1>
+            <p className="text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/40">Manual de uso da plataforma</p>
           </div>
         </div>
       </div>
@@ -251,8 +251,8 @@ export default function AjudaPage() {
         </HelpSection>
 
         {/* Footer */}
-        <div className="pt-8 text-center text-xs text-stone-400">
-          <p>Louise ♥ Nicolas • Plataforma de Gestão</p>
+        <div className="pt-12 text-center text-[10px] font-accent font-bold uppercase tracking-widest text-muted-foreground/30">
+          <p>Marryflow • Plataforma de Gestão Premium</p>
         </div>
       </div>
     </div>

@@ -70,29 +70,30 @@
   }
 
   .dark {
-    --background: 0.14 0.02 160;
+    /* Premium Basalt & High-Contrast Sage (Dark) */
+    --background: 0.12 0.01 160;
     --foreground: 0.98 0.005 160;
-    --card: 0.16 0.02 160;
+    --card: 0.15 0.015 160;
     --card-foreground: 0.98 0.005 160;
-    --popover: 0.14 0.02 160;
+    --popover: 0.12 0.01 160;
     --popover-foreground: 0.98 0.005 160;
-    --primary: 0.85 0.03 160;
-    --primary-foreground: 0.15 0.03 160;
-    --secondary: 0.22 0.02 160;
+    --primary: 0.88 0.025 160;
+    --primary-foreground: 0.12 0.01 160;
+    --secondary: 0.18 0.02 160;
     --secondary-foreground: 0.98 0.005 160;
-    --muted: 0.22 0.02 160;
+    --muted: 0.18 0.02 160;
     --muted-foreground: 0.65 0.01 160;
-    --accent: 0.22 0.02 160;
+    --accent: 0.25 0.03 160;
     --accent-foreground: 0.98 0.005 160;
     --destructive: 0.3 0.06 0;
     --destructive-foreground: 0.98 0.005 160;
-    --border: 0.25 0.02 160;
-    --input: 0.25 0.02 160;
-    --ring: 0.85 0.03 160;
-    --success: 0.7 0.05 145;
-    --warning: 0.75 0.05 45;
-    --error: 0.7 0.05 0;
-    --info: 0.7 0.05 210;
+    --border: 0.22 0.02 160;
+    --input: 0.22 0.02 160;
+    --ring: 0.88 0.025 160;
+    --success: 0.75 0.04 145;
+    --warning: 0.8 0.04 45;
+    --error: 0.75 0.04 0;
+    --info: 0.75 0.04 210;
   }
 
   * {
@@ -114,12 +115,12 @@
 }
 
 @utility glass-card {
-  @apply backdrop-blur-md bg-white/70 dark:bg-black/40 border border-white/20 dark:border-white/10;
+  @apply backdrop-blur-md bg-card/70 border border-white/20 dark:border-white/5;
   box-shadow: 0 4px 20px -2px oklch(var(--primary) / 0.08), 0 0 3px oklch(var(--primary) / 0.04);
 }
 
 @utility glass {
-  @apply backdrop-blur-md bg-white/60 dark:bg-black/30 border border-white/10;
+  @apply backdrop-blur-md bg-card/60 border border-white/10;
 }
 
 @utility soft-shadow {
