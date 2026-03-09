@@ -1,7 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Shield, Lock, Eye, CheckCircle2, Globe, Database, ShieldCheck, Zap, Heart } from 'lucide-react'
+import { Shield, Lock, Eye, CheckCircle2, Globe, Database, ShieldCheck, Zap, Heart, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Navigation, PageTransition, SidebarNav, BottomNav } from '@/components/ui-custom/Navigation'
 import { AppFooter } from '@/components/layout/AppFooter'
@@ -37,7 +38,15 @@ export default function TrustCenterPage() {
 
     return (
         <div className="min-h-screen bg-background flex flex-col">
-            <header className="h-20 border-b border-border/40 bg-card/40 backdrop-blur-md flex items-center px-8 sticky top-0 z-50">
+            <header className="h-20 border-b border-border/40 bg-card/40 backdrop-blur-md flex items-center px-8 sticky top-0 z-50 gap-6">
+                <Link
+                    href="/dashboard"
+                    className="p-2 rounded-xl bg-primary/5 text-primary/40 hover:text-primary hover:bg-primary/10 transition-all group"
+                    title="Voltar ao Painel"
+                >
+                    <ArrowLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
+                </Link>
+                <div className="h-6 w-px bg-border/40" />
                 <BrandLogo />
                 <div className="ml-auto flex items-center gap-4">
                     <div className="px-6 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-accent font-bold uppercase tracking-[0.2em] border border-primary/20 shadow-lg shadow-primary/5">
