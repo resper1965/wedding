@@ -323,7 +323,7 @@ export function SettingsManager() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50/50 to-emerald-50/30 p-6"
+        className="rounded-2xl border border-primary/20/50 bg-gradient-to-br from-emerald-50/50 to-emerald-50/30 p-6"
       >
         <div className="mb-6 flex items-center gap-3">
           <div className="rounded-full bg-gradient-to-br from-emerald-100 to-emerald-100 p-2">
@@ -331,86 +331,86 @@ export function SettingsManager() {
           </div>
           <div>
             <h2 className="text-xl font-medium text-stone-800">Dados do Casamento</h2>
-            <p className="text-sm text-stone-500">Configure as informações principais</p>
+            <p className="text-sm text-muted-foreground">Configure as informações principais</p>
           </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           <div>
-            <Label className="text-stone-600">Nome (Noiva/Pessoa 1)</Label>
+            <Label className="text-muted-foreground">Nome (Noiva/Pessoa 1)</Label>
             <Input
               value={weddingForm.partner1Name}
               onChange={(e) => setWeddingForm({ ...weddingForm, partner1Name: e.target.value })}
-              className="mt-1.5 border-amber-200/60 bg-white/80 focus:border-amber-400"
+              className="mt-1.5 border-accent/20/60 bg-card/80 focus:border-amber-400"
               placeholder="Louise"
             />
           </div>
           <div>
-            <Label className="text-stone-600">Nome (Noivo/Pessoa 2)</Label>
+            <Label className="text-muted-foreground">Nome (Noivo/Pessoa 2)</Label>
             <Input
               value={weddingForm.partner2Name}
               onChange={(e) => setWeddingForm({ ...weddingForm, partner2Name: e.target.value })}
-              className="mt-1.5 border-amber-200/60 bg-white/80 focus:border-amber-400"
+              className="mt-1.5 border-accent/20/60 bg-card/80 focus:border-amber-400"
               placeholder="Nicolas"
             />
           </div>
           <div>
-            <Label className="text-stone-600">Data do Casamento *</Label>
+            <Label className="text-muted-foreground">Data do Casamento *</Label>
             <Input
               type="date"
               value={weddingForm.weddingDate}
               onChange={(e) => setWeddingForm({ ...weddingForm, weddingDate: e.target.value })}
-              className="mt-1.5 border-amber-200/60 bg-white/80 focus:border-amber-400"
+              className="mt-1.5 border-accent/20/60 bg-card/80 focus:border-amber-400"
             />
           </div>
           <div>
-            <Label className="text-stone-600">Responder até</Label>
+            <Label className="text-muted-foreground">Responder até</Label>
             <Input
               type="date"
               value={weddingForm.replyByDate}
               onChange={(e) => setWeddingForm({ ...weddingForm, replyByDate: e.target.value })}
-              className="mt-1.5 border-amber-200/60 bg-white/80 focus:border-amber-400"
+              className="mt-1.5 border-accent/20/60 bg-card/80 focus:border-amber-400"
             />
           </div>
           <div className="md:col-span-2">
-            <Label className="text-stone-600">Local Principal</Label>
+            <Label className="text-muted-foreground">Local Principal</Label>
             <Input
               value={weddingForm.venue}
               onChange={(e) => setWeddingForm({ ...weddingForm, venue: e.target.value })}
-              className="mt-1.5 border-amber-200/60 bg-white/80 focus:border-amber-400"
+              className="mt-1.5 border-accent/20/60 bg-card/80 focus:border-amber-400"
               placeholder="Espaço Jardim Secreto"
             />
           </div>
           <div className="md:col-span-2">
-            <Label className="text-stone-600">Endereço</Label>
+            <Label className="text-muted-foreground">Endereço</Label>
             <Input
               value={weddingForm.venueAddress}
               onChange={(e) => setWeddingForm({ ...weddingForm, venueAddress: e.target.value })}
-              className="mt-1.5 border-amber-200/60 bg-white/80 focus:border-amber-400"
+              className="mt-1.5 border-accent/20/60 bg-card/80 focus:border-amber-400"
               placeholder="Rua das Hortênsias, 789 - São Paulo"
             />
           </div>
           <div className="md:col-span-2">
-            <Label className="text-stone-600">Mensagem para Convidados</Label>
+            <Label className="text-muted-foreground">Mensagem para Convidados</Label>
             <Textarea
               value={weddingForm.messageFooter}
               onChange={(e) => setWeddingForm({ ...weddingForm, messageFooter: e.target.value })}
-              className="mt-1.5 border-amber-200/60 bg-white/80 focus:border-amber-400"
+              className="mt-1.5 border-accent/20/60 bg-card/80 focus:border-amber-400"
               rows={2}
               placeholder="Agradecemos sua presença neste dia especial!"
             />
           </div>
           <div className="md:col-span-2 mt-4 pt-4 border-t border-emerald-100/50">
             <h3 className="text-sm font-semibold text-stone-800 mb-3">Acesso Exclusivo (Noivos)</h3>
-            <Label className="text-stone-600">E-mail dos Noivos (Para conceder acesso ao Painel)</Label>
+            <Label className="text-muted-foreground">E-mail dos Noivos (Para conceder acesso ao Painel)</Label>
             <Input
               type="email"
               value={weddingForm.couple_email || ''}
               onChange={(e) => setWeddingForm({ ...weddingForm, couple_email: e.target.value })}
-              className="mt-1.5 border-emerald-200/60 bg-white/80 focus:border-emerald-400 font-mono text-sm"
+              className="mt-1.5 border-primary/20/60 bg-card/80 focus:border-emerald-400 font-mono text-sm"
               placeholder="casal@gmail.com"
             />
-            <p className="text-[11px] text-stone-500 mt-2">Ao salvar, este e-mail poderá acessar o painel de convidados sem excluir o evento.</p>
+            <p className="text-[11px] text-muted-foreground mt-2">Ao salvar, este e-mail poderá acessar o painel de convidados sem excluir o evento.</p>
           </div>
         </div>
 
@@ -438,22 +438,22 @@ export function SettingsManager() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="rounded-2xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50/50 to-emerald-50/30 p-6"
+          className="rounded-2xl border border-primary/20/50 bg-gradient-to-br from-emerald-50/50 to-emerald-50/30 p-6"
         >
           <div className="mb-4 flex items-center gap-3">
             <div className="rounded-full bg-gradient-to-br from-emerald-100 to-emerald-100 p-2">
-              <Link2 className="h-5 w-5 text-emerald-600" />
+              <Link2 className="h-5 w-5 text-primary" />
             </div>
             <div>
               <h2 className="text-xl font-medium text-stone-800">Acesso aos Noivos / Convidados</h2>
-              <p className="text-sm text-stone-500">Compartilhe este link da sua landing page do Casamento</p>
+              <p className="text-sm text-muted-foreground">Compartilhe este link da sua landing page do Casamento</p>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 items-center">
             <Input
               readOnly
               value={`https://wedding.louise.com.br/info?tenantId=${wedding.id}`}
-              className="bg-white/80 font-mono text-sm border-emerald-200 focus:border-emerald-400 focus-visible:ring-emerald-400"
+              className="bg-card/80 font-mono text-sm border-primary/20 focus:border-emerald-400 focus-visible:ring-emerald-400"
             />
             <Button
               onClick={() => {
@@ -466,7 +466,7 @@ export function SettingsManager() {
             </Button>
             <Button
               variant="outline"
-              className="shrink-0 w-full sm:w-auto border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+              className="shrink-0 w-full sm:w-auto border-primary/20 text-primary hover:bg-primary/5"
               onClick={() => window.open(`/info?tenantId=${wedding.id}`, '_blank')}
             >
               <ExternalLink className="h-4 w-4 mr-2" />
@@ -482,22 +482,22 @@ export function SettingsManager() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="rounded-2xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 p-6"
+        className="rounded-2xl border border-primary/20/50 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 p-6"
       >
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 p-2">
-              <Calendar className="h-5 w-5 text-emerald-600" />
+              <Calendar className="h-5 w-5 text-primary" />
             </div>
             <div>
               <h2 className="text-xl font-medium text-stone-800">Eventos</h2>
-              <p className="text-sm text-stone-500">Cerimônia, recepção e outros momentos</p>
+              <p className="text-sm text-muted-foreground">Cerimônia, recepção e outros momentos</p>
             </div>
           </div>
           <Button
             onClick={() => openEventDialog()}
             variant="outline"
-            className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+            className="border-primary/30 text-primary hover:bg-primary/5"
           >
             <Plus className="mr-2 h-4 w-4" />
             Adicionar
@@ -506,10 +506,10 @@ export function SettingsManager() {
 
         <div className="space-y-3">
           {events.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-emerald-300/50 bg-white/50 p-8 text-center">
+            <div className="rounded-xl border border-dashed border-primary/30/50 bg-card/50 p-8 text-center">
               <Calendar className="mx-auto h-8 w-8 text-emerald-300" />
-              <p className="mt-2 text-sm text-stone-500">Nenhum evento cadastrado</p>
-              <p className="text-xs text-stone-400">Adicione cerimônia, recepção, etc.</p>
+              <p className="mt-2 text-sm text-muted-foreground">Nenhum evento cadastrado</p>
+              <p className="text-xs text-muted-foreground">Adicione cerimônia, recepção, etc.</p>
             </div>
           ) : (
             events.map((event, index) => (
@@ -518,15 +518,15 @@ export function SettingsManager() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-center justify-between rounded-xl border border-emerald-100/50 bg-white/80 p-4"
+                className="flex items-center justify-between rounded-xl border border-emerald-100/50 bg-card/80 p-4"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 text-sm font-medium text-emerald-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 text-sm font-medium text-primary">
                     {event.order + 1}
                   </div>
                   <div>
                     <h3 className="font-medium text-stone-800">{event.name}</h3>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-stone-500">
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                       {event.startTime && (
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
@@ -547,7 +547,7 @@ export function SettingsManager() {
                     onClick={() => openEventDialog(event)}
                     variant="ghost"
                     size="sm"
-                    className="text-stone-500 hover:text-stone-700"
+                    className="text-muted-foreground hover:text-muted-foreground"
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -555,7 +555,7 @@ export function SettingsManager() {
                     onClick={() => handleDeleteEvent(event.id)}
                     variant="ghost"
                     size="sm"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/5"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -656,15 +656,15 @@ export function SettingsManager() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-rose-200/50 bg-gradient-to-br from-rose-50/30 to-pink-50/20 p-6"
+            className="rounded-2xl border border-destructive/20/50 bg-gradient-to-br from-rose-50/30 to-pink-50/20 p-6"
           >
             <div className="mb-4 flex items-center gap-3">
               <div className="rounded-full bg-gradient-to-br from-rose-100 to-pink-100 p-2">
-                <Bell className="h-5 w-5 text-rose-600" />
+                <Bell className="h-5 w-5 text-destructive" />
               </div>
               <div>
                 <h2 className="text-xl font-medium text-stone-800">Lembretes Automáticos</h2>
-                <p className="text-sm text-stone-500">Configure os lembretes para convidados pendentes</p>
+                <p className="text-sm text-muted-foreground">Configure os lembretes para convidados pendentes</p>
               </div>
             </div>
             <ReminderSettings weddingId={wedding.id} />
@@ -679,15 +679,15 @@ export function SettingsManager() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-50/30 to-indigo-50/20 p-6"
+            className="rounded-2xl border border-primary/20/50 bg-gradient-to-br from-blue-50/30 to-indigo-50/20 p-6"
           >
             <div className="mb-4 flex items-center gap-3">
               <div className="rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 p-2">
-                <CalendarClock className="h-5 w-5 text-blue-600" />
+                <CalendarClock className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h2 className="text-xl font-medium text-stone-800">Agendador de Mensagens</h2>
-                <p className="text-sm text-stone-500">Programe envios de mensagens para os convidados</p>
+                <p className="text-sm text-muted-foreground">Programe envios de mensagens para os convidados</p>
               </div>
             </div>
             <MessageScheduler weddingId={wedding.id} groups={groups} />
@@ -702,15 +702,15 @@ export function SettingsManager() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="rounded-2xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 p-6"
+            className="rounded-2xl border border-primary/20/50 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 p-6"
           >
             <div className="mb-4 flex items-center gap-3">
               <div className="rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 p-2">
-                <Download className="h-5 w-5 text-emerald-600" />
+                <Download className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h2 className="text-xl font-medium text-stone-800">Exportar Dossiê IA (Obsidian Vault)</h2>
-                <p className="text-sm text-stone-500 max-w-2xl mt-1">Gere um pacote ZIP contendo toda a memória relacional deste evento em arquivos Markdown limpos. Ideal para backup perpétuo offline ou ingestão em Agentes de IA via RAG com cruzamento dinâmico.</p>
+                <p className="text-sm text-muted-foreground max-w-2xl mt-1">Gere um pacote ZIP contendo toda a memória relacional deste evento em arquivos Markdown limpos. Ideal para backup perpétuo offline ou ingestão em Agentes de IA via RAG com cruzamento dinâmico.</p>
               </div>
             </div>
             <div className="pt-2">
@@ -765,21 +765,21 @@ export function SettingsManager() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="rounded-2xl border border-red-200/50 bg-red-50/30 p-6"
+            className="rounded-2xl border border-destructive/20/50 bg-destructive/5/30 p-6"
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="rounded-full bg-red-100 p-2">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div className="rounded-full bg-destructive/10 p-2">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
               </div>
               <div>
                 <h2 className="text-xl font-medium text-red-800">Zona de Perigo</h2>
-                <p className="text-sm text-red-600/80">Ações destrutivas e irreversíveis</p>
+                <p className="text-sm text-destructive/80">Ações destrutivas e irreversíveis</p>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/50 p-5 rounded-xl border border-red-100">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card/50 p-5 rounded-xl border border-red-100">
               <div>
                 <h3 className="font-semibold text-stone-800">Excluir Evento</h3>
-                <p className="text-sm text-stone-500 max-w-2xl mt-1">Ao excluir este casamento, todos os dados, convidados, confirmações, mensagens de IA e configurações serão apagados instantaneamente da plataforma Marryflow e não há como reverter.</p>
+                <p className="text-sm text-muted-foreground max-w-2xl mt-1">Ao excluir este casamento, todos os dados, convidados, confirmações, mensagens de IA e configurações serão apagados instantaneamente da plataforma Marryflow e não há como reverter.</p>
               </div>
               <Button
                 onClick={handleDeleteWedding}

@@ -25,9 +25,9 @@ const ROLE_LABELS = {
 }
 
 const ROLE_COLORS = {
-  admin: 'bg-purple-100 text-purple-700',
-  editor: 'bg-blue-100 text-blue-700',
-  viewer: 'bg-stone-100 text-stone-600'
+  admin: 'bg-purple-100 text-primary',
+  editor: 'bg-primary/10 text-primary',
+  viewer: 'bg-muted text-muted-foreground'
 }
 
 export function UserManager() {
@@ -90,9 +90,9 @@ export function UserManager() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-stone-800 uppercase tracking-tight">Gestão de Usuários</h2>
-          <p className="text-sm text-stone-500">{profiles.length} usuários cadastrados</p>
+          <p className="text-sm text-muted-foreground">{profiles.length} usuários cadastrados</p>
         </div>
-        <Users className="h-6 w-6 text-stone-400" />
+        <Users className="h-6 w-6 text-muted-foreground" />
       </div>
 
       <div className="grid gap-4">
@@ -102,16 +102,16 @@ export function UserManager() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm"
+            className="rounded-xl border border-border bg-card p-4 shadow-sm"
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-stone-100 text-stone-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
                   <Mail className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
                   <p className="font-medium text-stone-800 truncate">{profile.email}</p>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-500">
+                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" /> {fmtDate(profile.created_at)}
                     </span>
@@ -148,7 +148,7 @@ export function UserManager() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="h-8 text-xs text-destructive hover:text-destructive hover:bg-destructive/5"
                     onClick={() => handleUpdate(profile.id, { is_approved: false })}
                     disabled={updatingId === profile.id}
                   >
@@ -158,7 +158,7 @@ export function UserManager() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-100"
+                    className="h-8 text-xs text-primary hover:text-primary hover:bg-primary/5 border-emerald-100"
                     onClick={() => handleUpdate(profile.id, { is_approved: true })}
                     disabled={updatingId === profile.id}
                   >
@@ -172,7 +172,7 @@ export function UserManager() {
       </div>
 
       {profiles.length === 0 && (
-        <div className="rounded-xl border-2 border-dashed border-stone-200 p-8 text-center text-stone-400">
+        <div className="rounded-xl border-2 border-dashed border-border p-8 text-center text-muted-foreground">
           Nenhum usuário encontrado.
         </div>
       )}

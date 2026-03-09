@@ -49,12 +49,12 @@ interface Gift {
 
 const STORES = [
   { id: 'Amazon', label: 'Amazon', color: 'bg-orange-500/10 text-orange-500', emoji: '📦' },
-  { id: 'Tok&Stok', label: 'Tok&Stok', color: 'bg-red-500/10 text-red-500', emoji: '🛋️' },
-  { id: 'Magazine Luiza', label: 'Magalu', color: 'bg-blue-500/10 text-blue-500', emoji: '🛒' },
+  { id: 'Tok&Stok', label: 'Tok&Stok', color: 'bg-destructive/10 text-destructive', emoji: '🛋️' },
+  { id: 'Magazine Luiza', label: 'Magalu', color: 'bg-primary/10 text-primary', emoji: '🛒' },
   { id: 'Casas Bahia', label: 'Casas Bahia', color: 'bg-yellow-500/10 text-yellow-500', emoji: '🏠' },
-  { id: 'Americanas', label: 'Americanas', color: 'bg-red-500/10 text-red-500', emoji: '🇧🇷' },
-  { id: 'Havan', label: 'Havan', color: 'bg-green-500/10 text-green-500', emoji: '🟢' },
-  { id: 'Etna', label: 'Etna', color: 'bg-blue-500/10 text-blue-500', emoji: '🏺' },
+  { id: 'Americanas', label: 'Americanas', color: 'bg-destructive/10 text-destructive', emoji: '🇧🇷' },
+  { id: 'Havan', label: 'Havan', color: 'bg-primary/10 text-primary', emoji: '🟢' },
+  { id: 'Etna', label: 'Etna', color: 'bg-primary/10 text-primary', emoji: '🏺' },
   { id: 'Outro', label: 'Outra loja', color: 'bg-muted text-muted-foreground', emoji: '🔗' },
 ]
 
@@ -226,7 +226,7 @@ export function GiftManagerEnhanced() {
   }
 
   const getStore = (storeId: string | null) =>
-    STORES.find(s => s.id === storeId) ?? { label: storeId || 'Loja', color: 'bg-stone-100 text-stone-600', emoji: '🔗' }
+    STORES.find(s => s.id === storeId) ?? { label: storeId || 'Loja', color: 'bg-muted text-muted-foreground', emoji: '🔗' }
 
   return (
     <div className="space-y-6">

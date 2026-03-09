@@ -117,21 +117,21 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
       {/* Stats Bar */}
       <div className="flex flex-wrap gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100">
         <div className="flex items-center gap-2">
-          <Gift className="w-5 h-5 text-amber-600" />
-          <span className="text-stone-700">
+          <Gift className="w-5 h-5 text-accent" />
+          <span className="text-muted-foreground">
             <strong className="text-amber-800">{stats.total}</strong> presentes
           </span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-emerald-400" />
-          <span className="text-stone-700">
-            <strong className="text-emerald-700">{stats.available}</strong> disponíveis
+          <span className="text-muted-foreground">
+            <strong className="text-primary">{stats.available}</strong> disponíveis
           </span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-amber-400" />
-          <span className="text-stone-700">
-            <strong className="text-amber-700">{stats.reserved}</strong> reservados
+          <span className="text-muted-foreground">
+            <strong className="text-accent">{stats.reserved}</strong> reservados
           </span>
         </div>
       </div>
@@ -139,20 +139,20 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
       {/* Filters */}
       <div className="flex flex-wrap gap-4 items-center">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             id="gift-search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar presente..."
-            className="pl-10 border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+            className="pl-10 border-accent/20 focus:border-amber-400 focus:ring-amber-200"
             aria-label="Buscar presente pelo nome ou descrição"
           />
         </div>
 
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[160px] border-amber-200 focus:ring-amber-200" aria-label="Filtrar por status">
-            <Filter className="w-4 h-4 mr-2 text-stone-400" />
+          <SelectTrigger className="w-[160px] border-accent/20 focus:ring-amber-200" aria-label="Filtrar por status">
+            <Filter className="w-4 h-4 mr-2 text-muted-foreground" />
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -164,7 +164,7 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
         </Select>
 
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-[160px] border-amber-200 focus:ring-amber-200" aria-label="Filtrar por categoria">
+          <SelectTrigger className="w-[160px] border-accent/20 focus:ring-amber-200" aria-label="Filtrar por categoria">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
@@ -182,7 +182,7 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
           size="icon"
           onClick={fetchGifts}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && fetchGifts()}
-          className="border-amber-200 text-amber-700 hover:bg-amber-50"
+          className="border-accent/20 text-accent hover:bg-accent/5"
           aria-label="Atualizar lista de presentes"
         >
           <RefreshCw className="w-4 h-4" />
@@ -192,12 +192,12 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
           type="single"
           value={viewMode}
           onValueChange={(value) => value && setViewMode(value as 'grid' | 'list')}
-          className="border border-amber-200 rounded-lg"
+          className="border border-accent/20 rounded-lg"
         >
-          <ToggleGroupItem value="grid" className="px-3 data-[state=on]:bg-amber-100">
+          <ToggleGroupItem value="grid" className="px-3 data-[state=on]:bg-accent/10">
             <Grid3X3 className="w-4 h-4" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="list" className="px-3 data-[state=on]:bg-amber-100">
+          <ToggleGroupItem value="list" className="px-3 data-[state=on]:bg-accent/10">
             <List className="w-4 h-4" />
           </ToggleGroupItem>
         </ToggleGroup>
@@ -206,18 +206,18 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
       {/* Loading State */}
       {loading && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+          <Loader2 className="w-8 h-8 animate-spin text-accent" />
         </div>
       )}
 
       {/* Error State */}
       {error && !loading && (
         <div className="text-center py-12">
-          <p className="text-rose-600">{error}</p>
+          <p className="text-destructive">{error}</p>
           <Button
             variant="outline"
             onClick={fetchGifts}
-            className="mt-4 border-amber-200 text-amber-700"
+            className="mt-4 border-accent/20 text-accent"
           >
             Tentar novamente
           </Button>
@@ -228,10 +228,10 @@ export function GiftList({ isAdmin = false, onEdit, onDelete }: GiftListProps) {
       {!loading && !error && gifts.length === 0 && (
         <div className="text-center py-12">
           <Gift className="w-16 h-16 mx-auto text-amber-300 mb-4" />
-          <h3 className="text-lg font-semibold text-stone-700 mb-2">
+          <h3 className="text-lg font-semibold text-muted-foreground mb-2">
             Nenhum presente encontrado
           </h3>
-          <p className="text-stone-500">
+          <p className="text-muted-foreground">
             Tente ajustar os filtros para encontrar o que procura.
           </p>
         </div>

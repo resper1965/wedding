@@ -167,7 +167,7 @@ export function TemplateEditor({
               variant="ghost" 
               size="sm" 
               onClick={onBack}
-              className="text-stone-600"
+              className="text-muted-foreground"
             >
               <ChevronLeft className="mr-1 h-4 w-4" />
               Voltar
@@ -204,19 +204,19 @@ export function TemplateEditor({
             {/* Name and Type */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-stone-700">Nome do Template</Label>
+                <Label htmlFor="name" className="text-muted-foreground">Nome do Template</Label>
                 <Input
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ex: Convite Principal"
-                  className="border-amber-200 focus:border-amber-400"
+                  className="border-accent/20 focus:border-amber-400"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-stone-700">Tipo de Mensagem</Label>
+                <Label className="text-muted-foreground">Tipo de Mensagem</Label>
                 <Select value={type} onValueChange={(v) => setType(v as 'email' | 'whatsapp' | 'sms')}>
-                  <SelectTrigger className="border-amber-200 focus:border-amber-400">
+                  <SelectTrigger className="border-accent/20 focus:border-amber-400">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -246,13 +246,13 @@ export function TemplateEditor({
             {/* Subject (for email) */}
             {type === 'email' && (
               <div className="space-y-2">
-                <Label htmlFor="subject" className="text-stone-700">Assunto</Label>
+                <Label htmlFor="subject" className="text-muted-foreground">Assunto</Label>
                 <Input
                   id="subject"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Ex: Convite de Casamento - Louise & Nicolas"
-                  className="border-amber-200 focus:border-amber-400"
+                  className="border-accent/20 focus:border-amber-400"
                 />
               </div>
             )}
@@ -260,10 +260,10 @@ export function TemplateEditor({
             {/* Content Editor */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="content" className="text-stone-700">Conteúdo</Label>
+                <Label htmlFor="content" className="text-muted-foreground">Conteúdo</Label>
                 <div className="flex items-center gap-1">
                   {usedVariables.length > 0 && (
-                    <Badge variant="outline" className="text-xs border-amber-200 text-amber-700">
+                    <Badge variant="outline" className="text-xs border-accent/20 text-accent">
                       {usedVariables.length} variável{usedVariables.length !== 1 ? 'is' : ''}
                     </Badge>
                   )}
@@ -274,19 +274,19 @@ export function TemplateEditor({
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Digite o conteúdo do template aqui... Use variáveis como {nome}, {parceiro1}, etc."
-                className="min-h-[300px] border-amber-200 focus:border-amber-400 font-mono text-sm"
+                className="min-h-[300px] border-accent/20 focus:border-amber-400 font-mono text-sm"
               />
             </div>
 
             {/* Used Variables */}
             {usedVariables.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                <span className="text-sm text-stone-500">Variáveis usadas:</span>
+                <span className="text-sm text-muted-foreground">Variáveis usadas:</span>
                 {usedVariables.map((v) => (
                   <Badge 
                     key={v.id} 
                     variant="secondary"
-                    className="bg-amber-100 text-amber-700 hover:bg-amber-200"
+                    className="bg-accent/10 text-accent hover:bg-amber-200"
                   >
                     {v.value} - {v.label}
                   </Badge>
@@ -303,7 +303,7 @@ export function TemplateEditor({
         <Card className="border-amber-100">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base text-stone-800">
-              <Variable className="h-4 w-4 text-amber-600" />
+              <Variable className="h-4 w-4 text-accent" />
               Variáveis Disponíveis
             </CardTitle>
           </CardHeader>
@@ -314,16 +314,16 @@ export function TemplateEditor({
                   <button
                     key={variable.id}
                     onClick={() => insertVariable(variable)}
-                    className="w-full rounded-lg border border-amber-100 p-2.5 text-left transition-all hover:border-amber-300 hover:bg-amber-50 group"
+                    className="w-full rounded-lg border border-amber-100 p-2.5 text-left transition-all hover:border-accent/30 hover:bg-accent/5 group"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-sm text-amber-700">{variable.value}</span>
-                      <Badge variant="outline" className="text-xs opacity-0 group-hover:opacity-100 transition-opacity border-amber-200 text-amber-600">
+                      <span className="font-mono text-sm text-accent">{variable.value}</span>
+                      <Badge variant="outline" className="text-xs opacity-0 group-hover:opacity-100 transition-opacity border-accent/20 text-accent">
                         Inserir
                       </Badge>
                     </div>
-                    <p className="text-xs text-stone-500 mt-1">{variable.label}</p>
-                    <p className="text-xs text-stone-400 mt-0.5 italic">{variable.example}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{variable.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5 italic">{variable.example}</p>
                   </button>
                 ))}
               </div>
@@ -336,20 +336,20 @@ export function TemplateEditor({
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-base text-stone-800">
-                <Eye className="h-4 w-4 text-amber-600" />
+                <Eye className="h-4 w-4 text-accent" />
                 Pré-visualização
               </CardTitle>
-              <div className="flex items-center gap-1 bg-stone-100 rounded-lg p-0.5">
+              <div className="flex items-center gap-1 bg-muted rounded-lg p-0.5">
                 <button
                   onClick={() => setPreviewMode('desktop')}
-                  className={`p-1.5 rounded-md transition-colors ${previewMode === 'desktop' ? 'bg-white shadow-sm text-amber-600' : 'text-stone-500'}`}
+                  className={`p-1.5 rounded-md transition-colors ${previewMode === 'desktop' ? 'bg-card shadow-sm text-accent' : 'text-muted-foreground'}`}
                   title="Desktop"
                 >
                   <Monitor className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => setPreviewMode('mobile')}
-                  className={`p-1.5 rounded-md transition-colors ${previewMode === 'mobile' ? 'bg-white shadow-sm text-amber-600' : 'text-stone-500'}`}
+                  className={`p-1.5 rounded-md transition-colors ${previewMode === 'mobile' ? 'bg-card shadow-sm text-accent' : 'text-muted-foreground'}`}
                   title="Mobile"
                 >
                   <Smartphone className="h-4 w-4" />
@@ -359,20 +359,20 @@ export function TemplateEditor({
           </CardHeader>
           <CardContent className="p-0">
             <div 
-              className={`mx-4 mb-4 rounded-lg border border-amber-100 bg-white overflow-hidden ${
+              className={`mx-4 mb-4 rounded-lg border border-amber-100 bg-card overflow-hidden ${
                 previewMode === 'mobile' ? 'max-w-[280px] mx-auto' : ''
               }`}
             >
               {/* Preview Header */}
-              <div className="flex items-center gap-2 px-3 py-2 bg-amber-50 border-b border-amber-100">
+              <div className="flex items-center gap-2 px-3 py-2 bg-accent/5 border-b border-amber-100">
                 {getTypeIcon(type)}
-                <span className="text-xs font-medium text-stone-600">
+                <span className="text-xs font-medium text-muted-foreground">
                   {type === 'email' ? 'Email' : type === 'whatsapp' ? 'WhatsApp' : 'SMS'}
                 </span>
                 {type === 'email' && subject && (
                   <>
                     <Separator orientation="vertical" className="h-4 bg-amber-200" />
-                    <span className="text-xs text-stone-500 truncate flex-1">
+                    <span className="text-xs text-muted-foreground truncate flex-1">
                       {generatePreview(subject)}
                     </span>
                   </>
@@ -382,11 +382,11 @@ export function TemplateEditor({
               {/* Preview Content */}
               <div className="p-3">
                 {content ? (
-                  <div className="text-sm text-stone-700 whitespace-pre-wrap">
+                  <div className="text-sm text-muted-foreground whitespace-pre-wrap">
                     {generatePreview(content)}
                   </div>
                 ) : (
-                  <div className="text-sm text-stone-400 italic">
+                  <div className="text-sm text-muted-foreground italic">
                     Comece a digitar para ver a pré-visualização...
                   </div>
                 )}
@@ -399,10 +399,10 @@ export function TemplateEditor({
         <Card className="border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-              <div className="text-xs text-stone-600 space-y-1">
+              <Sparkles className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+              <div className="text-xs text-muted-foreground space-y-1">
                 <p className="font-medium">Dicas rápidas:</p>
-                <ul className="list-disc list-inside space-y-0.5 text-stone-500">
+                <ul className="list-disc list-inside space-y-0.5 text-muted-foreground">
                   <li>Clique em uma variável para inserir</li>
                   <li>Use {`{nome}`} para personalizar</li>
                   <li>Alterne entre Desktop/Mobile</li>

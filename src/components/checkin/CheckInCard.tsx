@@ -114,7 +114,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
       onClick={onClose}
     >
       <Card
-        className="w-full max-w-md border-border bg-white shadow-xl"
+        className="w-full max-w-md border-border bg-card shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <CardHeader className="relative border-b border-border pb-4">
@@ -145,7 +145,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                 }`}>
                 {familyName || 'Convidado'}
               </CardTitle>
-              <p className="mt-0.5 text-sm text-stone-500">
+              <p className="mt-0.5 text-sm text-muted-foreground">
                 {guests.length} convidado{guests.length !== 1 ? 's' : ''}
               </p>
             </div>
@@ -172,7 +172,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
         <CardContent className="p-4">
           {/* Table Info */}
           {data.tableNumber && (
-            <div className="mb-4 flex items-center gap-2 text-sm text-stone-600">
+            <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 text-accent" />
               <span>Mesa: <strong>{data.tableNumber}</strong></span>
             </div>
@@ -180,7 +180,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
 
           {/* Guest List */}
           <div className="space-y-2">
-            <p className="text-xs font-medium uppercase tracking-wide text-stone-400">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Convidados
             </p>
             <div className="flex flex-wrap gap-2">
@@ -195,7 +195,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
                     {guest.firstName[0]}
                   </div>
-                  <span className="text-sm font-medium text-stone-700">
+                  <span className="text-sm font-medium text-muted-foreground">
                     {guest.fullName}
                   </span>
                   {guest.category && (
@@ -263,7 +263,7 @@ export function CheckInCard({ data, onCheckIn, onClose }: CheckInCardComponentPr
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <PartyPopper className="h-8 w-8 text-primary" />
                 </div>
-                <p className="text-center text-sm text-stone-600">
+                <p className="text-center text-sm text-muted-foreground">
                   {familyName} já está no evento!
                 </p>
                 <Button

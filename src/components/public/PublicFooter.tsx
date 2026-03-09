@@ -38,7 +38,7 @@ export function PublicFooter({
                 {partner2Name}
               </span>
             </div>
-            <p className="text-sm text-stone-700">
+            <p className="text-sm text-muted-foreground">
               Agradecemos seu carinho e presença neste dia tão especial.
             </p>
           </div>
@@ -126,7 +126,7 @@ export function PublicFooter({
       </div>
 
       {/* Copyright */}
-      <div className="border-t border-border/50 bg-white/30 py-4">
+      <div className="border-t border-border/50 bg-card/30 py-4">
         <div className="mx-auto max-w-6xl px-4 text-center">
           <p className="flex items-center justify-center gap-1 text-xs text-foreground/70">
             <span>para {partner1Name} & {partner2Name} • {currentYear}</span>

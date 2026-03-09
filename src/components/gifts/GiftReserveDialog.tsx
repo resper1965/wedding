@@ -94,20 +94,20 @@ export function GiftReserveDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-white border-amber-100">
+      <DialogContent className="sm:max-w-md bg-card border-amber-100">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-amber-800">
             <Gift className="w-5 h-5" />
             Reservar Presente
           </DialogTitle>
-          <DialogDescription className="text-stone-600">
+          <DialogDescription className="text-muted-foreground">
             Confirme sua reserva para este presente especial
           </DialogDescription>
         </DialogHeader>
 
         {/* Gift Preview */}
         <div className="flex gap-4 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-100">
-          <div className="w-16 h-16 rounded-lg overflow-hidden bg-amber-100 flex-shrink-0">
+          <div className="w-16 h-16 rounded-lg overflow-hidden bg-accent/10 flex-shrink-0">
             {gift.imageUrl ? (
               <img
                 src={gift.imageUrl}
@@ -123,7 +123,7 @@ export function GiftReserveDialog({
           <div className="flex-1 min-w-0">
             <h4 className="font-semibold text-stone-800 line-clamp-2">{gift.name}</h4>
             {gift.price && (
-              <p className="text-sm text-amber-700 font-medium">
+              <p className="text-sm text-accent font-medium">
                 {formatPrice(gift.price, gift.currency)}
               </p>
             )}
@@ -132,7 +132,7 @@ export function GiftReserveDialog({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-stone-700">
+            <Label htmlFor="name" className="text-muted-foreground">
               Seu nome <span className="text-rose-500">*</span>
             </Label>
             <Input
@@ -140,21 +140,21 @@ export function GiftReserveDialog({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Digite seu nome completo"
-              className="border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+              className="border-accent/20 focus:border-amber-400 focus:ring-amber-200"
               disabled={loading}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message" className="text-stone-700">
-              Mensagem para os noivos <span className="text-stone-400">(opcional)</span>
+            <Label htmlFor="message" className="text-muted-foreground">
+              Mensagem para os noivos <span className="text-muted-foreground">(opcional)</span>
             </Label>
             <Textarea
               id="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Deixe uma mensagem carinhosa para Louise & Nicolas..."
-              className="border-amber-200 focus:border-amber-400 focus:ring-amber-200 min-h-[80px] resize-none"
+              className="border-accent/20 focus:border-amber-400 focus:ring-amber-200 min-h-[80px] resize-none"
               disabled={loading}
             />
           </div>
@@ -163,7 +163,7 @@ export function GiftReserveDialog({
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm"
+              className="p-3 bg-destructive/5 border border-destructive/20 rounded-lg text-destructive text-sm"
             >
               {error}
             </motion.div>
@@ -174,7 +174,7 @@ export function GiftReserveDialog({
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="flex-1 border-stone-200 text-stone-600 hover:bg-stone-50"
+              className="flex-1 border-border text-muted-foreground hover:bg-muted"
               disabled={loading}
             >
               Cancelar
@@ -199,7 +199,7 @@ export function GiftReserveDialog({
           </div>
         </form>
 
-        <p className="text-xs text-stone-500 text-center pt-2">
+        <p className="text-xs text-muted-foreground text-center pt-2">
           Ao reservar, você confirma sua intenção de presentear os noivos com este item.
         </p>
       </DialogContent>

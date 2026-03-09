@@ -194,9 +194,9 @@ export function AccommodationList({ showAdmin = false }: AccommodationListProps)
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-stone-500" />
+            <Filter className="w-4 h-4 text-muted-foreground" />
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-36 border-stone-200">
+              <SelectTrigger className="w-36 border-border">
                 <SelectValue placeholder="Filtrar por tipo" />
               </SelectTrigger>
               <SelectContent>
@@ -210,9 +210,9 @@ export function AccommodationList({ showAdmin = false }: AccommodationListProps)
           </div>
 
           <div className="flex items-center gap-2">
-            <ArrowUpDown className="w-4 h-4 text-stone-500" />
+            <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40 border-stone-200">
+              <SelectTrigger className="w-40 border-border">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
               <SelectContent>
@@ -240,19 +240,19 @@ export function AccommodationList({ showAdmin = false }: AccommodationListProps)
       {/* Loading State */}
       {loading && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-accent" />
         </div>
       )}
 
       {/* Empty State */}
       {!loading && accommodations.length === 0 && (
-        <div className="text-center py-12 bg-stone-50 rounded-xl border border-stone-200">
-          <p className="text-stone-500">Nenhuma hospedagem cadastrada</p>
+        <div className="text-center py-12 bg-muted rounded-xl border border-border">
+          <p className="text-muted-foreground">Nenhuma hospedagem cadastrada</p>
           {showAdmin && (
             <Button
               onClick={() => handleOpenDialog()}
               variant="outline"
-              className="mt-4 border-amber-200 text-amber-700 hover:bg-amber-50"
+              className="mt-4 border-accent/20 text-accent hover:bg-accent/5"
             >
               Adicionar primeira hospedagem
             </Button>
@@ -398,7 +398,7 @@ export function AccommodationList({ showAdmin = false }: AccommodationListProps)
               />
             </div>
 
-            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg space-y-3">
+            <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg space-y-3">
               <h4 className="font-medium text-amber-800">Taxa Especial para Convidados</h4>
               <div className="grid gap-2">
                 <Label htmlFor="specialRate">Descrição da Oferta</Label>

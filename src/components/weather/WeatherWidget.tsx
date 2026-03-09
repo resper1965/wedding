@@ -72,10 +72,10 @@ export function WeatherWidget() {
   // Loading state
   if (loading) {
     return (
-      <Card className="overflow-hidden border-amber-200 bg-gradient-to-br from-amber-50 to-rose-50">
+      <Card className="overflow-hidden border-accent/20 bg-gradient-to-br from-amber-50 to-rose-50">
         <CardContent className="p-6">
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-accent" />
           </div>
         </CardContent>
       </Card>
@@ -85,9 +85,9 @@ export function WeatherWidget() {
   // Error state
   if (error) {
     return (
-      <Card className="overflow-hidden border-rose-200 bg-rose-50">
+      <Card className="overflow-hidden border-destructive/20 bg-destructive/5">
         <CardContent className="p-6">
-          <div className="text-center text-rose-600">
+          <div className="text-center text-destructive">
             <CloudRain className="w-8 h-8 mx-auto mb-2" />
             <p>{error}</p>
           </div>
@@ -99,9 +99,9 @@ export function WeatherWidget() {
   // No weather data
   if (!weather || !weather.available) {
     return (
-      <Card className="overflow-hidden border-stone-200 bg-stone-50">
+      <Card className="overflow-hidden border-border bg-muted">
         <CardContent className="p-6">
-          <div className="text-center text-stone-500">
+          <div className="text-center text-muted-foreground">
             <Cloud className="w-8 h-8 mx-auto mb-2" />
             <p>Previsão não disponível</p>
           </div>
@@ -116,7 +116,7 @@ export function WeatherWidget() {
       return 'from-slate-100 to-blue-100 border-slate-200'
     }
     if (weather.weatherCode <= 2) {
-      return 'from-amber-50 to-orange-50 border-amber-200'
+      return 'from-amber-50 to-orange-50 border-accent/20'
     }
     return 'from-sky-50 to-slate-100 border-sky-200'
   }
@@ -132,14 +132,14 @@ export function WeatherWidget() {
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div>
-              <div className="flex items-center gap-2 text-stone-500 mb-1">
+              <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <Calendar className="w-4 h-4" />
                 <span className="text-sm font-medium">
                   {formatWeddingDate(weather.weddingDate)}
                 </span>
               </div>
               {weather.venue && (
-                <div className="flex items-center gap-2 text-stone-400">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="w-3.5 h-3.5" />
                   <span className="text-xs">{weather.venue}</span>
                 </div>
@@ -149,7 +149,7 @@ export function WeatherWidget() {
               variant={weather.isForecast ? 'default' : 'outline'}
               className={weather.isForecast
                 ? 'bg-amber-500 text-white'
-                : 'border-stone-300 text-stone-500'
+                : 'border-border text-muted-foreground'
               }
             >
               {weather.isForecast ? 'Previsão' : 'Média Histórica'}
@@ -165,7 +165,7 @@ export function WeatherWidget() {
                 <div className="text-4xl font-light text-stone-800">
                   {weather.tempMax}°
                 </div>
-                <div className="text-sm text-stone-500">
+                <div className="text-sm text-muted-foreground">
                   mín {weather.tempMin}°
                 </div>
               </div>
@@ -176,23 +176,23 @@ export function WeatherWidget() {
               <p className="text-lg font-medium text-stone-800">
                 {weather.condition}
               </p>
-              <p className="text-sm text-stone-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 {weather.message}
               </p>
             </div>
           </div>
 
           {/* Precipitation */}
-          <div className="mt-4 pt-4 border-t border-stone-200/50">
+          <div className="mt-4 pt-4 border-t border-border/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Droplets className="w-4 h-4 text-blue-500" />
-                <span className="text-sm text-stone-600">Chance de chuva</span>
+                <Droplets className="w-4 h-4 text-primary" />
+                <span className="text-sm text-muted-foreground">Chance de chuva</span>
               </div>
               <span className={`text-sm font-medium ${
                 weather.precipitationProbability > 50
-                  ? 'text-blue-600'
-                  : 'text-stone-600'
+                  ? 'text-primary'
+                  : 'text-muted-foreground'
               }`}>
                 {weather.precipitationProbability}%
               </span>
@@ -206,7 +206,7 @@ export function WeatherWidget() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className={`h-full rounded-full ${
                   weather.precipitationProbability > 50
-                    ? 'bg-blue-500'
+                    ? 'bg-primary'
                     : 'bg-blue-300'
                 }`}
               />
@@ -215,8 +215,8 @@ export function WeatherWidget() {
 
           {/* Info Message */}
           {!weather.isForecast && (
-            <div className="mt-4 p-3 bg-amber-100/50 border border-amber-200 rounded-lg">
-              <p className="text-xs text-amber-700">
+            <div className="mt-4 p-3 bg-accent/10/50 border border-accent/20 rounded-lg">
+              <p className="text-xs text-accent">
                 💡 A data do casamento está distante. Mostramos a média histórica para esta época do ano em São Paulo.
               </p>
             </div>

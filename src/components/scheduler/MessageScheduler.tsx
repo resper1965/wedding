@@ -279,11 +279,11 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
   // Get status badge
   const getStatusBadge = (status: string) => {
     const styles: Record<string, { color: string; icon: React.ReactNode }> = {
-      pending: { color: 'bg-amber-100 text-amber-700 border-amber-200', icon: <Clock className="h-3 w-3" /> },
-      processing: { color: 'bg-blue-100 text-blue-700 border-blue-200', icon: <Loader2 className="h-3 w-3 animate-spin" /> },
-      sent: { color: 'bg-green-100 text-green-700 border-green-200', icon: <CheckCircle className="h-3 w-3" /> },
-      failed: { color: 'bg-red-100 text-red-700 border-red-200', icon: <XCircle className="h-3 w-3" /> },
-      cancelled: { color: 'bg-stone-100 text-stone-500 border-stone-200', icon: <AlertCircle className="h-3 w-3" /> }
+      pending: { color: 'bg-accent/10 text-accent border-accent/20', icon: <Clock className="h-3 w-3" /> },
+      processing: { color: 'bg-primary/10 text-primary border-primary/20', icon: <Loader2 className="h-3 w-3 animate-spin" /> },
+      sent: { color: 'bg-primary/10 text-primary border-primary/20', icon: <CheckCircle className="h-3 w-3" /> },
+      failed: { color: 'bg-destructive/10 text-destructive border-destructive/20', icon: <XCircle className="h-3 w-3" /> },
+      cancelled: { color: 'bg-muted text-muted-foreground border-border', icon: <AlertCircle className="h-3 w-3" /> }
     }
 
     const style = styles[status] || styles.pending
@@ -331,7 +331,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
     <Card className="border-amber-100/50">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-lg font-medium text-stone-800">
-          <Calendar className="h-5 w-5 text-amber-600" />
+          <Calendar className="h-5 w-5 text-accent" />
           Agendador de Mensagens
         </CardTitle>
         <div className="flex items-center gap-2">
@@ -339,7 +339,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
             variant="ghost"
             size="sm"
             onClick={fetchMessages}
-            className="text-stone-500"
+            className="text-muted-foreground"
           >
             <RefreshCw className="h-4 w-4" />
           </Button>
@@ -357,13 +357,13 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
       <CardContent>
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-accent" />
           </div>
         ) : messages.length === 0 ? (
-          <div className="text-center py-8 text-stone-500">
+          <div className="text-center py-8 text-muted-foreground">
             <Calendar className="h-12 w-12 mx-auto mb-3 text-stone-300" />
             <p>Nenhuma mensagem agendada</p>
-            <p className="text-sm text-stone-400 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Clique em "Nova Mensagem" para agendar
             </p>
           </div>
@@ -377,22 +377,22 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="rounded-lg border border-stone-200 bg-white p-4 hover:border-amber-200 transition-colors"
+                    className="rounded-lg border border-border bg-card p-4 hover:border-accent/20 transition-colors"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                          <Badge variant="outline" className="bg-accent/5 text-accent border-accent/20">
                             {getTypeLabel(message.type)}
                           </Badge>
                           {getStatusBadge(message.status)}
                         </div>
 
-                        <p className="text-stone-700 font-medium mb-1 line-clamp-1">
+                        <p className="text-muted-foreground font-medium mb-1 line-clamp-1">
                           {message.template}
                         </p>
 
-                        <div className="flex items-center gap-4 text-sm text-stone-500">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Clock className="h-3.5 w-3.5" />
                             {format(new Date(message.scheduledFor), "d 'de' MMM, 'às' HH:mm", { locale: ptBR })}
@@ -404,13 +404,13 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
                         </div>
 
                         {message.status === 'sent' && (
-                          <div className="mt-2 flex items-center gap-3 text-xs text-stone-500">
-                            <span className="text-green-600">
+                          <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
+                            <span className="text-primary">
                               <CheckCircle className="h-3 w-3 inline mr-1" />
                               {message.sentCount} enviados
                             </span>
                             {message.failedCount > 0 && (
-                              <span className="text-red-600">
+                              <span className="text-destructive">
                                 <XCircle className="h-3 w-3 inline mr-1" />
                                 {message.failedCount} falharam
                               </span>
@@ -419,7 +419,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
                         )}
 
                         {message.error && (
-                          <p className="mt-2 text-xs text-red-600">
+                          <p className="mt-2 text-xs text-destructive">
                             <AlertCircle className="h-3 w-3 inline mr-1" />
                             {message.error}
                           </p>
@@ -432,7 +432,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleEdit(message)}
-                            className="text-stone-400 hover:text-stone-600"
+                            className="text-muted-foreground hover:text-muted-foreground"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -440,7 +440,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDelete(message.id)}
-                            className="text-stone-400 hover:text-red-500"
+                            className="text-muted-foreground hover:text-destructive"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -512,7 +512,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
                   <SelectItem value="declined">Recusados</SelectItem>
                   {groups.length > 0 && (
                     <>
-                      <SelectItem value="__groups__" disabled className="font-medium text-stone-400">
+                      <SelectItem value="__groups__" disabled className="font-medium text-muted-foreground">
                         ── Grupos ──
                       </SelectItem>
                       {groups.map(group => (
@@ -525,7 +525,7 @@ export function MessageScheduler({ weddingId, groups }: MessageSchedulerProps) {
                 </SelectContent>
               </Select>
               {recipientCount !== null && (
-                <p className="text-sm text-stone-500">
+                <p className="text-sm text-muted-foreground">
                   <Users className="h-3.5 w-3.5 inline mr-1" />
                   {recipientCount} destinatário(s) selecionado(s)
                 </p>

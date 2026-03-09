@@ -141,17 +141,17 @@ export default function ProjectsDashboard() {
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-red-50 border border-red-100 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-sm"
+                        className="bg-destructive/5 border border-red-100 rounded-2xl p-6 mb-8 flex gap-4 items-start shadow-sm"
                     >
-                        <AlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
+                        <AlertCircle className="w-6 h-6 text-destructive shrink-0 mt-0.5" />
                         <div>
                             <h3 className="text-lg font-semibold text-red-900">Ação Bloqueada</h3>
-                            <p className="text-red-700 mt-1">{errorMessage}</p>
+                            <p className="text-destructive mt-1">{errorMessage}</p>
                             <div className="mt-5 flex gap-3">
                                 <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer" className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
                                     Falar com Suporte (Upsell)
                                 </a>
-                                <button onClick={() => setShowLimitModal(false)} className="text-red-700 hover:bg-red-100 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
+                                <button onClick={() => setShowLimitModal(false)} className="text-destructive hover:bg-destructive/10 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
                                     Fechar
                                 </button>
                             </div>
@@ -174,7 +174,7 @@ export default function ProjectsDashboard() {
                                     <Heart className="w-6 h-6" strokeWidth={1.5} />
                                 </div>
                                 <div className="flex gap-2">
-                                    <div className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full tracking-wide">
+                                    <div className="px-2.5 py-1 bg-primary/5 text-primary text-xs font-semibold rounded-full tracking-wide">
                                         Ativo
                                     </div>
                                     <button
@@ -182,7 +182,7 @@ export default function ProjectsDashboard() {
                                             e.stopPropagation()
                                             handleDeleteProject(project.id)
                                         }}
-                                        className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                        className="p-1 text-red-400 hover:text-destructive hover:bg-destructive/5 rounded-md transition-colors"
                                         title="Apagar Projeto"
                                     >
                                         <Trash2 className="w-4 h-4" />

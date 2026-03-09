@@ -60,12 +60,12 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
           <p className="text-sm capitalize text-stone-300">{dayOfWeek}</p>
           <p className="mt-1 text-xl font-semibold text-white">{formattedDate}</p>
           {wedding.venue && (
-            <div className="mt-3 flex items-center justify-center gap-1.5 text-stone-400">
+            <div className="mt-3 flex items-center justify-center gap-1.5 text-muted-foreground">
               <MapPin className="h-3.5 w-3.5" />
               <p className="text-xs">{wedding.venue}</p>
             </div>
           )}
-          <p className="mt-4 text-xs text-stone-500">Confirmação em breve</p>
+          <p className="mt-4 text-xs text-muted-foreground">Confirmação em breve</p>
         </div>
       </div>
     )
@@ -73,7 +73,7 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
 
   if (style === 'modern') {
     return (
-      <div className="overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div className="overflow-hidden rounded-2xl bg-card shadow-2xl">
         <div className="bg-amber-500 px-8 py-6 text-center">
           <p className="text-xs font-bold uppercase tracking-[0.4em] text-amber-100">Save the Date</p>
         </div>
@@ -83,17 +83,17 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
             <span className="text-2xl text-amber-400">&</span>
             <span className="text-3xl font-bold text-stone-800">{wedding.partner2Name}</span>
           </div>
-          <div className="inline-flex items-center gap-3 rounded-full bg-stone-50 px-4 py-2">
-            <Calendar className="h-4 w-4 text-amber-500" />
-            <span className="text-sm font-medium text-stone-700">{formattedDate}</span>
+          <div className="inline-flex items-center gap-3 rounded-full bg-muted px-4 py-2">
+            <Calendar className="h-4 w-4 text-accent" />
+            <span className="text-sm font-medium text-muted-foreground">{formattedDate}</span>
           </div>
           {wedding.venue && (
             <div className="mt-3 flex items-center justify-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-stone-400" />
-              <p className="text-xs text-stone-500">{wedding.venue}</p>
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+              <p className="text-xs text-muted-foreground">{wedding.venue}</p>
             </div>
           )}
-          <p className="mt-4 text-xs font-medium uppercase tracking-wider text-stone-400">
+          <p className="mt-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Guarde essa data
           </p>
         </div>
@@ -115,24 +115,24 @@ function SaveTheDateCard({ wedding, style }: SaveTheDateCardProps) {
         </div>
         <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-rose-400">Save the Date</p>
         <div className="my-4">
-          <span className="block text-3xl font-light italic text-stone-700">{wedding.partner1Name}</span>
+          <span className="block text-3xl font-light italic text-muted-foreground">{wedding.partner1Name}</span>
           <span className="my-1 block text-lg text-rose-300">e</span>
-          <span className="block text-3xl font-light italic text-stone-700">{wedding.partner2Name}</span>
+          <span className="block text-3xl font-light italic text-muted-foreground">{wedding.partner2Name}</span>
         </div>
         <div className="my-4 flex items-center justify-center gap-3">
           <div className="h-px flex-1 bg-rose-200" />
           <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
           <div className="h-px flex-1 bg-rose-200" />
         </div>
-        <p className="text-sm capitalize text-stone-500">{dayOfWeek}</p>
-        <p className="mt-1 text-xl font-medium text-stone-700">{formattedDate}</p>
+        <p className="text-sm capitalize text-muted-foreground">{dayOfWeek}</p>
+        <p className="mt-1 text-xl font-medium text-muted-foreground">{formattedDate}</p>
         {wedding.venue && (
           <div className="mt-2 flex items-center justify-center gap-1.5 text-rose-400">
             <MapPin className="h-3 w-3" />
             <p className="text-xs">{wedding.venue}</p>
           </div>
         )}
-        <p className="mt-4 text-xs text-stone-400">O convite chegará em breve</p>
+        <p className="mt-4 text-xs text-muted-foreground">O convite chegará em breve</p>
       </div>
     </div>
   )
@@ -197,7 +197,7 @@ export function SaveTheDateManager() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-200 border-t-amber-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent/20 border-t-amber-500" />
       </div>
     )
   }
@@ -210,12 +210,12 @@ export function SaveTheDateManager() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-destructive/5">
           <CalendarHeart className="h-5 w-5 text-rose-500" />
         </div>
         <div>
           <h2 className="text-xl font-semibold text-stone-800">Save the Date</h2>
-          <p className="text-sm text-stone-500">Crie e envie o aviso de data para seus convidados</p>
+          <p className="text-sm text-muted-foreground">Crie e envie o aviso de data para seus convidados</p>
         </div>
       </div>
 
@@ -223,10 +223,10 @@ export function SaveTheDateManager() {
         {/* Left: Configuration */}
         <div className="space-y-4">
           {/* Style selector */}
-          <div className="rounded-xl border border-stone-100 bg-white p-5">
+          <div className="rounded-xl border border-stone-100 bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
-              <Palette className="h-4 w-4 text-stone-500" />
-              <h3 className="text-sm font-semibold text-stone-700">Estilo do Card</h3>
+              <Palette className="h-4 w-4 text-muted-foreground" />
+              <h3 className="text-sm font-semibold text-muted-foreground">Estilo do Card</h3>
             </div>
             <div className="grid grid-cols-3 gap-2">
               {CARD_STYLES.map(s => (
@@ -236,27 +236,27 @@ export function SaveTheDateManager() {
                   className={cn(
                     'rounded-lg border p-3 text-left transition-all',
                     selectedStyle === s.id
-                      ? 'border-amber-400 bg-amber-50 shadow-sm'
-                      : 'border-stone-200 hover:border-stone-300'
+                      ? 'border-amber-400 bg-accent/5 shadow-sm'
+                      : 'border-border hover:border-border'
                   )}
                 >
-                  <p className="text-xs font-medium text-stone-700">{s.label}</p>
-                  <p className="mt-0.5 text-[10px] text-stone-400">{s.description}</p>
+                  <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
+                  <p className="mt-0.5 text-[10px] text-muted-foreground">{s.description}</p>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Channel selector */}
-          <div className="rounded-xl border border-stone-100 bg-white p-5">
+          <div className="rounded-xl border border-stone-100 bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
-              <Send className="h-4 w-4 text-stone-500" />
-              <h3 className="text-sm font-semibold text-stone-700">Canal de Envio</h3>
+              <Send className="h-4 w-4 text-muted-foreground" />
+              <h3 className="text-sm font-semibold text-muted-foreground">Canal de Envio</h3>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { id: 'whatsapp' as SendChannel, label: 'WhatsApp', icon: MessageSquare, color: 'text-green-600' },
-                { id: 'email' as SendChannel, label: 'Email', icon: Mail, color: 'text-blue-600' },
+                { id: 'whatsapp' as SendChannel, label: 'WhatsApp', icon: MessageSquare, color: 'text-primary' },
+                { id: 'email' as SendChannel, label: 'Email', icon: Mail, color: 'text-primary' },
               ].map(ch => (
                 <button
                   key={ch.id}
@@ -264,22 +264,22 @@ export function SaveTheDateManager() {
                   className={cn(
                     'flex items-center gap-2 rounded-lg border p-3 transition-all',
                     sendChannel === ch.id
-                      ? 'border-amber-400 bg-amber-50'
-                      : 'border-stone-200 hover:border-stone-300'
+                      ? 'border-amber-400 bg-accent/5'
+                      : 'border-border hover:border-border'
                   )}
                 >
                   <ch.icon className={cn('h-4 w-4', ch.color)} />
-                  <span className="text-xs font-medium text-stone-700">{ch.label}</span>
+                  <span className="text-xs font-medium text-muted-foreground">{ch.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Target group */}
-          <div className="rounded-xl border border-stone-100 bg-white p-5">
+          <div className="rounded-xl border border-stone-100 bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
-              <Users className="h-4 w-4 text-stone-500" />
-              <h3 className="text-sm font-semibold text-stone-700">Destinatários</h3>
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <h3 className="text-sm font-semibold text-muted-foreground">Destinatários</h3>
             </div>
             <div className="space-y-2">
               {[
@@ -292,11 +292,11 @@ export function SaveTheDateManager() {
                   className={cn(
                     'flex w-full items-center justify-between rounded-lg border p-3 text-left transition-all',
                     targetGroup === tg.id
-                      ? 'border-amber-400 bg-amber-50'
-                      : 'border-stone-200 hover:border-stone-300'
+                      ? 'border-amber-400 bg-accent/5'
+                      : 'border-border hover:border-border'
                   )}
                 >
-                  <span className="text-xs font-medium text-stone-700">{tg.label}</span>
+                  <span className="text-xs font-medium text-muted-foreground">{tg.label}</span>
                   <Badge variant="secondary" className="text-[10px]">{tg.count}</Badge>
                 </button>
               ))}
@@ -304,17 +304,17 @@ export function SaveTheDateManager() {
           </div>
 
           {/* Custom message (optional) */}
-          <div className="rounded-xl border border-stone-100 bg-white p-5">
+          <div className="rounded-xl border border-stone-100 bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-stone-500" />
-              <h3 className="text-sm font-semibold text-stone-700">Mensagem personalizada</h3>
+              <Sparkles className="h-4 w-4 text-muted-foreground" />
+              <h3 className="text-sm font-semibold text-muted-foreground">Mensagem personalizada</h3>
               <Badge variant="secondary" className="text-[10px]">opcional</Badge>
             </div>
             <textarea
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
               placeholder="Adicione uma mensagem especial... (deixe em branco para usar o texto padrão)"
-              className="w-full resize-none rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700 placeholder-stone-400 focus:border-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-400 transition-colors"
+              className="w-full resize-none rounded-lg border border-border bg-card px-3 py-2 text-sm text-muted-foreground placeholder-stone-400 focus:border-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-400 transition-colors"
               rows={3}
             />
           </div>
@@ -343,7 +343,7 @@ export function SaveTheDateManager() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+              className="flex items-center gap-2 rounded-lg bg-primary/5 px-4 py-3 text-sm text-primary"
             >
               <Check className="h-4 w-4" />
               <span>Enviado com sucesso para <strong>{sentCount}</strong> convidados!</span>
@@ -354,8 +354,8 @@ export function SaveTheDateManager() {
         {/* Right: Card preview */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Eye className="h-4 w-4 text-stone-500" />
-            <h3 className="text-sm font-semibold text-stone-700">Pré-visualização</h3>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-semibold text-muted-foreground">Pré-visualização</h3>
           </div>
           <AnimatePresence mode="wait">
             <motion.div
@@ -370,27 +370,27 @@ export function SaveTheDateManager() {
           </AnimatePresence>
 
           {/* Wedding info summary */}
-          <div className="rounded-xl border border-stone-100 bg-white p-4">
-            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-stone-400">
+          <div className="rounded-xl border border-stone-100 bg-card p-4">
+            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Dados do Evento
             </h4>
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm text-stone-600">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Heart className="h-3.5 w-3.5 text-rose-400 shrink-0" fill="currentColor" />
                 <span>{wedding.partner1Name} & {wedding.partner2Name}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-stone-600">
-                <Calendar className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Calendar className="h-3.5 w-3.5 text-accent shrink-0" />
                 <span>{format(new Date(wedding.weddingDate), "dd/MM/yyyy")}</span>
               </div>
               {wedding.venue && (
-                <div className="flex items-center gap-2 text-sm text-stone-600">
-                  <MapPin className="h-3.5 w-3.5 text-stone-400 shrink-0" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                   <span>{wedding.venue}</span>
                 </div>
               )}
             </div>
-            <p className="mt-3 text-xs text-stone-400">
+            <p className="mt-3 text-xs text-muted-foreground">
               Para atualizar essas informações, acesse Configurações.
             </p>
           </div>

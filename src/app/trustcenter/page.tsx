@@ -139,7 +139,7 @@ export default function TrustCenterPage() {
                             <Card className="glass-card border-border rounded-3xl">
                                 <CardContent className="p-8">
                                     <div className="flex items-center gap-6 mb-8">
-                                        <div className="h-16 w-16 rounded-2xl bg-white/50 flex items-center justify-center text-primary shadow-inner">
+                                        <div className="h-16 w-16 rounded-2xl bg-card/50 flex items-center justify-center text-primary shadow-inner">
                                             <Zap className="h-8 w-8" />
                                         </div>
                                         <div>
@@ -173,8 +173,8 @@ export default function TrustCenterPage() {
 
                                     <div className="mt-8 pt-6 border-t border-primary/5 flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                            <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-emerald-600">All Systems Operational</span>
+                                            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                                            <span className="text-[10px] font-accent font-bold uppercase tracking-widest text-primary">All Systems Operational</span>
                                         </div>
                                         <code className="text-[9px] text-muted-foreground/40 font-mono">ID: SEC_STABLE_VERIFIED</code>
                                     </div>

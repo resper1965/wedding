@@ -210,7 +210,7 @@ export function AIAgentPanel() {
               'flex flex-col gap-2 rounded-2xl border p-4 text-left transition-all group relative overflow-hidden',
               activeMode === mode.id
                 ? 'border-primary/30 bg-primary/5 shadow-sm scale-[1.02]'
-                : 'border-primary/5 bg-white/50 hover:border-primary/20 hover:bg-primary/[0.02]'
+                : 'border-primary/5 bg-card/50 hover:border-primary/20 hover:bg-primary/[0.02]'
             )}
           >
             <div className={cn('flex h-8 w-8 items-center justify-center rounded-xl shadow-sm transition-transform group-hover:scale-110', mode.color)}>
@@ -342,7 +342,7 @@ export function AIAgentPanel() {
               onKeyDown={handleKeyDown}
               placeholder={`Mensagem para ${currentMode.label}...`}
               rows={1}
-              className="flex-1 resize-none rounded-2xl border border-primary/10 bg-white/50 px-4 py-3.5 text-[13px] font-sans text-foreground placeholder-muted-foreground/40 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all custom-scrollbar"
+              className="flex-1 resize-none rounded-2xl border border-primary/10 bg-card/50 px-4 py-3.5 text-[13px] font-sans text-foreground placeholder-muted-foreground/40 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all custom-scrollbar"
               style={{ maxHeight: '160px', overflowY: 'auto' }}
             />
             <Button

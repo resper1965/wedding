@@ -200,7 +200,7 @@ export function BudgetManager() {
       {/* Items grouped by category */}
       {isLoading ? (
         <div className="space-y-3">
-          {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-xl bg-stone-100 animate-pulse" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-xl bg-muted animate-pulse" />)}
         </div>
       ) : Object.entries(grouped).length === 0 ? (
         <div className="rounded-[2rem] border-2 border-dashed border-border p-16 text-center bg-card/10 backdrop-blur-sm">

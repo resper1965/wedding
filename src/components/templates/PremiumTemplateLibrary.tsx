@@ -90,7 +90,7 @@ export function PremiumTemplateLibrary({ onImportSuccess }: PremiumTemplateLibra
                     <Sparkles className="h-32 w-32" />
                 </div>
                 <div className="relative z-10 max-w-2xl">
-                    <Badge className="mb-4 bg-white/20 text-white border-white/10 font-accent font-bold uppercase tracking-widest px-4 py-1">
+                    <Badge className="mb-4 bg-card/20 text-white border-white/10 font-accent font-bold uppercase tracking-widest px-4 py-1">
                         Premium Library
                     </Badge>
                     <h2 className="text-4xl font-serif font-bold mb-4">Templates de Elite para o seu Casamento</h2>
@@ -109,7 +109,7 @@ export function PremiumTemplateLibrary({ onImportSuccess }: PremiumTemplateLibra
                             placeholder="Buscar estilos ou categorias..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pl-11 rounded-2xl border-primary/10 bg-white focus:border-primary/30 transition-all font-sans"
+                            className="pl-11 rounded-2xl border-primary/10 bg-card focus:border-primary/30 transition-all font-sans"
                         />
                     </div>
                     <div className="flex p-1 bg-primary/5 rounded-2xl border border-primary/5">
@@ -119,7 +119,7 @@ export function PremiumTemplateLibrary({ onImportSuccess }: PremiumTemplateLibra
                                 onClick={() => setCategory(cat)}
                                 className={cn(
                                     "px-4 py-2 rounded-xl text-[10px] font-accent font-bold uppercase tracking-widest transition-all",
-                                    category === cat ? "bg-white text-primary shadow-sm" : "text-muted-foreground/40 hover:text-primary"
+                                    category === cat ? "bg-card text-primary shadow-sm" : "text-muted-foreground/40 hover:text-primary"
                                 )}
                             >
                                 {cat === 'all' ? 'Ver Todos' : cat}
@@ -145,7 +145,7 @@ export function PremiumTemplateLibrary({ onImportSuccess }: PremiumTemplateLibra
                                 transition={{ delay: index * 0.1 }}
                                 layout
                             >
-                                <Card className="group overflow-hidden rounded-[2rem] border-primary/5 bg-white hover:border-primary/20 hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
+                                <Card className="group overflow-hidden rounded-[2rem] border-primary/5 bg-card hover:border-primary/20 hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
                                     {/* Visual Preview */}
                                     <div className={cn(
                                         "h-48 relative overflow-hidden flex items-center justify-center pt-8 px-8",
@@ -154,7 +154,7 @@ export function PremiumTemplateLibrary({ onImportSuccess }: PremiumTemplateLibra
                                         template.category === 'Boho' && "bg-gradient-to-br from-amber-50 to-orange-50",
                                     )}>
                                         {/* Simplified UI preview */}
-                                        <div className="w-full bg-white rounded-t-2xl shadow-xl p-4 border border-black/[0.03] space-y-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                                        <div className="w-full bg-card rounded-t-2xl shadow-xl p-4 border border-black/[0.03] space-y-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                                             <div className="flex gap-1">
                                                 <div className="h-1.5 w-8 bg-primary/20 rounded" />
                                                 <div className="h-1.5 w-12 bg-primary/10 rounded" />
@@ -166,7 +166,7 @@ export function PremiumTemplateLibrary({ onImportSuccess }: PremiumTemplateLibra
                                         </div>
 
                                         {/* Badge */}
-                                        <Badge className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm text-primary border-primary/10">
+                                        <Badge className="absolute top-4 right-4 bg-card/80 backdrop-blur-sm text-primary border-primary/10">
                                             {template.category}
                                         </Badge>
                                     </div>

@@ -243,7 +243,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
           <Button
             variant="outline"
             onClick={handleExportCSV}
-            className="border-amber-200 text-amber-700 hover:bg-amber-50"
+            className="border-accent/20 text-accent hover:bg-accent/5"
           >
             <Download className="w-4 h-4 mr-2" />
             Exportar CSV
@@ -261,13 +261,13 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
 
       {/* Add/Edit Dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent className="sm:max-w-lg bg-white border-amber-100 max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-lg bg-card border-amber-100 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-amber-800">
               <Gift className="w-5 h-5" />
               {editingGift ? 'Editar Presente' : 'Adicionar Presente'}
             </DialogTitle>
-            <DialogDescription className="text-stone-600">
+            <DialogDescription className="text-muted-foreground">
               {editingGift 
                 ? 'Atualize as informações do presente' 
                 : 'Preencha as informações do novo presente'}
@@ -277,7 +277,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="name" className="text-stone-700">
+                <Label htmlFor="name" className="text-muted-foreground">
                   Nome do presente <span className="text-rose-500">*</span>
                 </Label>
                 <Input
@@ -285,13 +285,13 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="Ex: Jogo de panelas"
-                  className="border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+                  className="border-accent/20 focus:border-amber-400 focus:ring-amber-200"
                   disabled={loading}
                 />
               </div>
 
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="description" className="text-stone-700">
+                <Label htmlFor="description" className="text-muted-foreground">
                   Descrição
                 </Label>
                 <Textarea
@@ -299,13 +299,13 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   placeholder="Descrição do presente..."
-                  className="border-amber-200 focus:border-amber-400 focus:ring-amber-200 min-h-[80px] resize-none"
+                  className="border-accent/20 focus:border-amber-400 focus:ring-amber-200 min-h-[80px] resize-none"
                   disabled={loading}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="imageUrl" className="text-stone-700">
+                <Label htmlFor="imageUrl" className="text-muted-foreground">
                   URL da imagem
                 </Label>
                 <Input
@@ -313,13 +313,13 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   value={form.imageUrl}
                   onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
                   placeholder="https://..."
-                  className="border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+                  className="border-accent/20 focus:border-amber-400 focus:ring-amber-200"
                   disabled={loading}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="price" className="text-stone-700">
+                <Label htmlFor="price" className="text-muted-foreground">
                   Preço (R$)
                 </Label>
                 <Input
@@ -329,13 +329,13 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   value={form.price}
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
                   placeholder="0.00"
-                  className="border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+                  className="border-accent/20 focus:border-amber-400 focus:ring-amber-200"
                   disabled={loading}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="externalUrl" className="text-stone-700">
+                <Label htmlFor="externalUrl" className="text-muted-foreground">
                   Link externo
                 </Label>
                 <Input
@@ -343,13 +343,13 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   value={form.externalUrl}
                   onChange={(e) => setForm({ ...form, externalUrl: e.target.value })}
                   placeholder="https://amazon.com.br/..."
-                  className="border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+                  className="border-accent/20 focus:border-amber-400 focus:ring-amber-200"
                   disabled={loading}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="store" className="text-stone-700">
+                <Label htmlFor="store" className="text-muted-foreground">
                   Loja
                 </Label>
                 <Select
@@ -357,7 +357,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   onValueChange={(value) => setForm({ ...form, store: value })}
                   disabled={loading}
                 >
-                  <SelectTrigger className="border-amber-200 focus:ring-amber-200">
+                  <SelectTrigger className="border-accent/20 focus:ring-amber-200">
                     <SelectValue placeholder="Selecione..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -371,7 +371,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category" className="text-stone-700">
+                <Label htmlFor="category" className="text-muted-foreground">
                   Categoria
                 </Label>
                 <Select
@@ -379,7 +379,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   onValueChange={(value) => setForm({ ...form, category: value })}
                   disabled={loading}
                 >
-                  <SelectTrigger className="border-amber-200 focus:ring-amber-200">
+                  <SelectTrigger className="border-accent/20 focus:ring-amber-200">
                     <SelectValue placeholder="Selecione..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -393,7 +393,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="priority" className="text-stone-700">
+                <Label htmlFor="priority" className="text-muted-foreground">
                   Prioridade
                 </Label>
                 <Input
@@ -402,10 +402,10 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                   value={form.priority}
                   onChange={(e) => setForm({ ...form, priority: e.target.value })}
                   placeholder="0"
-                  className="border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+                  className="border-accent/20 focus:border-amber-400 focus:ring-amber-200"
                   disabled={loading}
                 />
-                <p className="text-xs text-stone-500">Maior = mais desejado</p>
+                <p className="text-xs text-muted-foreground">Maior = mais desejado</p>
               </div>
             </div>
 
@@ -413,7 +413,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm"
+                className="p-3 bg-destructive/5 border border-destructive/20 rounded-lg text-destructive text-sm"
               >
                 {error}
               </motion.div>
@@ -424,7 +424,7 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
                 type="button"
                 variant="outline"
                 onClick={() => setShowAddDialog(false)}
-                className="flex-1 border-stone-200 text-stone-600 hover:bg-stone-50"
+                className="flex-1 border-border text-muted-foreground hover:bg-muted"
                 disabled={loading}
               >
                 Cancelar
@@ -450,18 +450,18 @@ export function GiftManager({ isAdmin = true }: GiftManagerProps) {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent className="bg-white">
+        <AlertDialogContent className="bg-card">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-stone-800">
               Excluir presente
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-stone-600">
+            <AlertDialogDescription className="text-muted-foreground">
               Tem certeza que deseja excluir <strong>"{deletingGift?.name}"</strong>?
               Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-stone-200">
+            <AlertDialogCancel className="border-border">
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction

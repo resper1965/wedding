@@ -72,10 +72,10 @@ export function TemplateList({
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'email': return 'bg-blue-100 text-blue-700 border-blue-200'
-      case 'whatsapp': return 'bg-emerald-100 text-emerald-700 border-emerald-200'
-      case 'sms': return 'bg-purple-100 text-purple-700 border-purple-200'
-      default: return 'bg-stone-100 text-stone-700 border-stone-200'
+      case 'email': return 'bg-primary/10 text-primary border-primary/20'
+      case 'whatsapp': return 'bg-primary/10 text-primary border-primary/20'
+      case 'sms': return 'bg-purple-100 text-primary border-purple-200'
+      default: return 'bg-muted text-muted-foreground border-border'
     }
   }
 
@@ -138,7 +138,7 @@ export function TemplateList({
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold text-stone-800">Templates de Mensagem</h2>
-            <p className="text-sm text-stone-500">Gerencie os modelos para seus convites e comunicados</p>
+            <p className="text-sm text-muted-foreground">Gerencie os modelos para seus convites e comunicados</p>
           </div>
           <Button 
             onClick={onCreateNew}
@@ -151,11 +151,11 @@ export function TemplateList({
 
         {/* Templates Grid */}
         {templates.length === 0 ? (
-          <Card className="border-dashed border-amber-200 bg-amber-50/50">
+          <Card className="border-dashed border-accent/20 bg-accent/5/50">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Mail className="h-12 w-12 text-amber-300 mb-4" />
-              <h3 className="text-lg font-medium text-stone-700 mb-2">Nenhum template criado</h3>
-              <p className="text-sm text-stone-500 mb-4 text-center max-w-sm">
+              <h3 className="text-lg font-medium text-muted-foreground mb-2">Nenhum template criado</h3>
+              <p className="text-sm text-muted-foreground mb-4 text-center max-w-sm">
                 Crie seu primeiro template para começar a enviar convites e comunicados personalizados.
               </p>
               <Button onClick={onCreateNew} className="bg-amber-600 hover:bg-amber-700">
@@ -176,7 +176,7 @@ export function TemplateList({
                   transition={{ duration: 0.2, delay: index * 0.05 }}
                   layout
                 >
-                  <Card className="group overflow-hidden border-amber-100 hover:border-amber-300 hover:shadow-md transition-all h-full flex flex-col">
+                  <Card className="group overflow-hidden border-amber-100 hover:border-accent/30 hover:shadow-md transition-all h-full flex flex-col">
                     {/* Thumbnail Preview Area */}
                     <div 
                       className="h-24 bg-gradient-to-br from-amber-50 to-orange-50 relative overflow-hidden cursor-pointer"
@@ -203,7 +203,7 @@ export function TemplateList({
                         <Button
                           variant="secondary"
                           size="sm"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity bg-card/90 hover:bg-card"
                           onClick={(e) => {
                             e.stopPropagation()
                             setPreviewTemplate(template)
@@ -225,7 +225,7 @@ export function TemplateList({
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 text-stone-400 hover:text-stone-600"
+                              className="h-8 w-8 text-muted-foreground hover:text-muted-foreground"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </Button>
@@ -248,7 +248,7 @@ export function TemplateList({
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
-                              className="text-rose-600 focus:text-rose-700"
+                              className="text-destructive focus:text-destructive"
                               onClick={() => setDeleteId(template.id)}
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
@@ -262,13 +262,13 @@ export function TemplateList({
                     <CardContent className="flex-1 pb-3">
                       {/* Subject (for email) */}
                       {template.type === 'email' && template.subject && (
-                        <p className="text-sm font-medium text-stone-600 mb-2 line-clamp-1">
+                        <p className="text-sm font-medium text-muted-foreground mb-2 line-clamp-1">
                           {template.subject}
                         </p>
                       )}
                       
                       {/* Content Preview */}
-                      <p className="text-xs text-stone-500 line-clamp-3 font-mono bg-stone-50 p-2 rounded">
+                      <p className="text-xs text-muted-foreground line-clamp-3 font-mono bg-muted p-2 rounded">
                         {getPreviewText(template.content)}
                       </p>
 
@@ -279,7 +279,7 @@ export function TemplateList({
                             <Badge 
                               key={v} 
                               variant="secondary" 
-                              className="text-[10px] bg-amber-100 text-amber-700"
+                              className="text-[10px] bg-accent/10 text-accent"
                             >
                               {`{${v}}`}
                             </Badge>
@@ -287,7 +287,7 @@ export function TemplateList({
                           {parseVariables(template.variables).length > 4 && (
                             <Badge 
                               variant="secondary" 
-                              className="text-[10px] bg-stone-100 text-stone-600"
+                              className="text-[10px] bg-muted text-muted-foreground"
                             >
                               +{parseVariables(template.variables).length - 4}
                             </Badge>
@@ -298,14 +298,14 @@ export function TemplateList({
 
                     <CardFooter className="pt-2 border-t border-amber-50">
                       <div className="flex items-center justify-between w-full">
-                        <div className="flex items-center gap-1 text-xs text-stone-400">
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Clock className="h-3 w-3" />
                           {formatDate(template.updatedAt)}
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                          className="text-accent hover:text-accent hover:bg-accent/5"
                           onClick={() => onEdit(template)}
                         >
                           <Pencil className="h-3 w-3 mr-1" />

@@ -35,10 +35,10 @@ interface GiftCardProps {
 }
 
 const categoryColors: Record<string, string> = {
-  'Cozinha': 'bg-amber-100 text-amber-800 border-amber-200',
-  'Quarto': 'bg-rose-100 text-rose-800 border-rose-200',
+  'Cozinha': 'bg-accent/10 text-amber-800 border-accent/20',
+  'Quarto': 'bg-destructive/10 text-rose-800 border-destructive/20',
   'Sala': 'bg-sage-100 text-sage-800 border-sage-200',
-  'Eletrodomésticos': 'bg-blue-100 text-blue-800 border-blue-200',
+  'Eletrodomésticos': 'bg-primary/10 text-blue-800 border-primary/20',
   'Decoração': 'bg-cyan-100 text-cyan-800 border-cyan-200',
   'Cama, Mesa e Banho': 'bg-pink-100 text-pink-800 border-pink-200',
 }
@@ -74,21 +74,21 @@ export function GiftCard({
     switch (gift.status) {
       case 'available':
         return (
-          <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 hover:bg-emerald-100">
+          <Badge className="bg-primary/10 text-foreground/80 border border-primary/20 hover:bg-primary/10">
             <CheckCircle2 className="w-3 h-3 mr-1" />
             Disponível
           </Badge>
         )
       case 'reserved':
         return (
-          <Badge className="bg-amber-100 text-amber-800 border border-amber-200 hover:bg-amber-100">
+          <Badge className="bg-accent/10 text-amber-800 border border-accent/20 hover:bg-accent/10">
             <Clock className="w-3 h-3 mr-1" />
             Reservado
           </Badge>
         )
       case 'purchased':
         return (
-          <Badge className="bg-rose-100 text-rose-800 border border-rose-200 hover:bg-rose-100">
+          <Badge className="bg-destructive/10 text-rose-800 border border-destructive/20 hover:bg-destructive/10">
             <ShoppingBag className="w-3 h-3 mr-1" />
             Comprado
           </Badge>
@@ -106,8 +106,8 @@ export function GiftCard({
       <Card className={cn(
         "group overflow-hidden border-0 shadow-lg transition-all duration-300",
         gift.status === 'available'
-          ? "bg-white hover:shadow-xl hover:shadow-amber-100/50"
-          : "bg-stone-50/80"
+          ? "bg-card hover:shadow-xl hover:shadow-amber-100/50"
+          : "bg-muted/80"
       )}>
         {/* Image Section */}
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50">
@@ -137,7 +137,7 @@ export function GiftCard({
           {/* Store Badge */}
           {gift.store && (
             <div className="absolute top-3 right-3">
-              <Badge variant="outline" className="bg-white/90 backdrop-blur-sm border-stone-200 text-stone-700">
+              <Badge variant="outline" className="bg-card/90 backdrop-blur-sm border-border text-muted-foreground">
                 {storeLogos[gift.store] || '🏪'} {gift.store}
               </Badge>
             </div>
@@ -151,7 +151,7 @@ export function GiftCard({
               variant="outline"
               className={cn(
                 "text-xs",
-                categoryColors[gift.category] || "bg-stone-100 text-stone-600 border-stone-200"
+                categoryColors[gift.category] || "bg-muted text-muted-foreground border-border"
               )}
             >
               {gift.category}
@@ -161,29 +161,29 @@ export function GiftCard({
           {/* Name */}
           <h3 className={cn(
             "font-serif text-lg font-semibold line-clamp-2",
-            gift.status === 'available' ? "text-stone-800" : "text-stone-500"
+            gift.status === 'available' ? "text-stone-800" : "text-muted-foreground"
           )}>
             {gift.name}
           </h3>
 
           {/* Description */}
           {gift.description && (
-            <p className="text-sm text-stone-500 line-clamp-2">
+            <p className="text-sm text-muted-foreground line-clamp-2">
               {gift.description}
             </p>
           )}
 
           {/* Price */}
           {gift.price && (
-            <p className="text-lg font-bold text-amber-700">
+            <p className="text-lg font-bold text-accent">
               {formatPrice(gift.price, gift.currency)}
             </p>
           )}
 
           {/* Reserved by info */}
           {gift.status === 'reserved' && gift.reservedByName && (
-            <div className="flex items-center gap-2 p-2 bg-amber-50 rounded-lg border border-amber-100">
-              <User className="w-4 h-4 text-amber-600" />
+            <div className="flex items-center gap-2 p-2 bg-accent/5 rounded-lg border border-amber-100">
+              <User className="w-4 h-4 text-accent" />
               <span className="text-sm text-amber-800">
                 Reservado por <strong>{gift.reservedByName}</strong>
               </span>
@@ -205,7 +205,7 @@ export function GiftCard({
                   <Button
                     variant="outline"
                     asChild
-                    className="border-amber-200 text-amber-700 hover:bg-amber-50"
+                    className="border-accent/20 text-accent hover:bg-accent/5"
                   >
                     <a href={gift.externalUrl} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="w-4 h-4" />
@@ -220,7 +220,7 @@ export function GiftCard({
                 <Button
                   variant="outline"
                   onClick={() => onCancelReservation?.(gift)}
-                  className="flex-1 border-amber-200 text-amber-700 hover:bg-amber-50"
+                  className="flex-1 border-accent/20 text-accent hover:bg-accent/5"
                 >
                   Cancelar Reserva
                 </Button>
@@ -228,7 +228,7 @@ export function GiftCard({
                   <Button
                     variant="outline"
                     asChild
-                    className="border-amber-200 text-amber-700 hover:bg-amber-50"
+                    className="border-accent/20 text-accent hover:bg-accent/5"
                   >
                     <a href={gift.externalUrl} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="w-4 h-4" />
@@ -245,7 +245,7 @@ export function GiftCard({
                     variant="ghost"
                     size="sm"
                     onClick={() => onEdit(gift)}
-                    className="text-stone-500 hover:text-stone-700"
+                    className="text-muted-foreground hover:text-muted-foreground"
                   >
                     Editar
                   </Button>
@@ -255,7 +255,7 @@ export function GiftCard({
                     variant="ghost"
                     size="sm"
                     onClick={() => onDelete(gift)}
-                    className="text-rose-500 hover:text-rose-700"
+                    className="text-rose-500 hover:text-destructive"
                   >
                     Excluir
                   </Button>

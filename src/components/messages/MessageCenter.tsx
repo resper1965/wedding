@@ -66,16 +66,16 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
       name: 'WhatsApp',
       icon: MessageCircle,
       enabled: true,
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-50'
+      color: 'text-primary',
+      bgColor: 'bg-primary/5'
     },
     {
       id: 'email',
       name: 'Email',
       icon: Mail,
       enabled: true,
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-50'
+      color: 'text-primary',
+      bgColor: 'bg-primary/5'
     }
   ]
 
@@ -285,8 +285,8 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
       {/* Mass send button at top */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-emerald-950">Mensagens</h2>
-          <p className="text-sm font-medium text-teal-900/50">{stats.totalPending} pendentes · {stats.totalSent} enviados</p>
+          <h2 className="text-xl font-semibold text-foreground">Mensagens</h2>
+          <p className="text-sm font-medium text-muted-foreground">{stats.totalPending} pendentes · {stats.totalSent} enviados</p>
         </div>
         <Button
           onClick={() => { fetchGuests(); setMassSheetOpen(true) }}
@@ -297,14 +297,14 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
       </div>
 
       <Tabs defaultValue="templates" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-md bg-emerald-100/50">
-          <TabsTrigger value="templates" className="data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:soft-shadow">
+        <TabsList className="grid w-full grid-cols-2 max-w-md bg-primary/10/50">
+          <TabsTrigger value="templates" className="data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:soft-shadow">
             Templates
           </TabsTrigger>
-          <TabsTrigger value="library" className="data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:soft-shadow">
+          <TabsTrigger value="library" className="data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:soft-shadow">
             Premium Library
           </TabsTrigger>
-          <TabsTrigger value="channels" className="data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:soft-shadow">
+          <TabsTrigger value="channels" className="data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:soft-shadow">
             Canais
           </TabsTrigger>
         </TabsList>
@@ -312,7 +312,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
         <TabsContent value="templates" className="mt-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : (
             <TemplateList
@@ -335,9 +335,9 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-emerald-100 bg-white p-6 soft-shadow"
+            className="rounded-2xl border border-emerald-100 bg-card p-6 soft-shadow"
           >
-            <h3 className="mb-5 text-sm font-semibold uppercase tracking-wider text-emerald-800">
+            <h3 className="mb-5 text-sm font-semibold uppercase tracking-wider text-foreground/80">
               Canais Configurados
             </h3>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -346,14 +346,14 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
                 return (
                   <div
                     key={channel.id}
-                    className="flex items-center gap-4 rounded-xl border border-emerald-50 p-4 transition-colors hover:bg-emerald-50/50"
+                    className="flex items-center gap-4 rounded-xl border border-emerald-50 p-4 transition-colors hover:bg-primary/5/50"
                   >
                     <div className={`rounded-xl p-2.5 ${channel.bgColor}`}>
                       <Icon className={`h-5 w-5 ${channel.color}`} />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-emerald-950">{channel.name}</p>
-                      <p className="text-xs font-medium text-teal-900/50">
+                      <p className="font-semibold text-foreground">{channel.name}</p>
+                      <p className="text-xs font-medium text-muted-foreground">
                         {channel.enabled ? 'Ativo' : 'Não configurado'}
                       </p>
                     </div>
@@ -372,22 +372,22 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="rounded-2xl border border-orange-100 bg-orange-50 p-6 soft-shadow"
+              className="rounded-2xl border border-orange-100 bg-accent/5 p-6 soft-shadow"
             >
-              <p className="text-sm font-semibold text-orange-600">Pendentes de Resposta</p>
-              <p className="mt-2 text-4xl font-bold tracking-tight text-orange-700">{stats.totalPending}</p>
-              <p className="mt-1 text-xs font-medium text-orange-600/70">convidados aguardando</p>
+              <p className="text-sm font-semibold text-accent">Pendentes de Resposta</p>
+              <p className="mt-2 text-4xl font-bold tracking-tight text-accent">{stats.totalPending}</p>
+              <p className="mt-1 text-xs font-medium text-accent/70">convidados aguardando</p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6 soft-shadow"
+              className="rounded-2xl border border-emerald-100 bg-primary/5 p-6 soft-shadow"
             >
-              <p className="text-sm font-semibold text-emerald-600">Convites Enviados</p>
-              <p className="mt-2 text-4xl font-bold tracking-tight text-emerald-700">{stats.totalSent}</p>
-              <p className="mt-1 text-xs font-medium text-emerald-600/70">comunicação realizada</p>
+              <p className="text-sm font-semibold text-primary">Convites Enviados</p>
+              <p className="mt-2 text-4xl font-bold tracking-tight text-primary">{stats.totalSent}</p>
+              <p className="mt-1 text-xs font-medium text-primary/70">comunicação realizada</p>
             </motion.div>
           </div>
 
@@ -414,7 +414,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
         <SheetContent side="right" className="w-full max-w-md overflow-y-auto">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
-              <MessageCircle className="h-5 w-5 text-emerald-600" />
+              <MessageCircle className="h-5 w-5 text-primary" />
               Envio em Massa via WhatsApp
             </SheetTitle>
           </SheetHeader>
@@ -422,7 +422,7 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
           <div className="mt-6 space-y-5">
             {/* Recipient filter */}
             <div>
-              <label className="text-sm font-medium text-teal-900/70">Destinatários</label>
+              <label className="text-sm font-medium text-foreground/70">Destinatários</label>
               <Select value={massFilter} onValueChange={setMassFilter}>
                 <SelectTrigger className="mt-1 border-emerald-100">
                   <SelectValue />
@@ -433,14 +433,14 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
                   <SelectItem value="confirmed">Confirmados</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="mt-1.5 text-xs font-medium text-teal-900/50">
-                <span className="font-bold text-emerald-600">{massTargets.length}</span> convidados com telefone
+              <p className="mt-1.5 text-xs font-medium text-muted-foreground">
+                <span className="font-bold text-primary">{massTargets.length}</span> convidados com telefone
               </p>
             </div>
 
             {/* Template selector */}
             <div>
-              <label className="text-sm font-medium text-teal-900/70">Template</label>
+              <label className="text-sm font-medium text-foreground/70">Template</label>
               <Select
                 value={massTemplate?.id ?? ''}
                 onValueChange={id => setMassTemplate(templates.find(t => t.id === id) ?? null)}
@@ -458,14 +458,14 @@ export function MessageCenter({ stats, onSendReminders }: MessageCenterProps) {
 
             {/* Preview */}
             {previewMessage && (
-              <div className="rounded-xl bg-emerald-50 border border-emerald-100 p-4">
-                <p className="mb-2 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Preview da Mensagem</p>
-                <p className="whitespace-pre-wrap text-sm font-medium text-emerald-950 leading-relaxed">{previewMessage}</p>
+              <div className="rounded-xl bg-primary/5 border border-emerald-100 p-4">
+                <p className="mb-2 text-[10px] font-bold text-foreground/80 uppercase tracking-wider">Preview da Mensagem</p>
+                <p className="whitespace-pre-wrap text-sm font-medium text-foreground leading-relaxed">{previewMessage}</p>
               </div>
             )}
 
             {/* Warning */}
-            <div className="rounded-xl bg-orange-50 border border-orange-100 p-4 text-xs font-medium text-orange-800 flex gap-2">
+            <div className="rounded-xl bg-accent/5 border border-orange-100 p-4 text-xs font-medium text-orange-800 flex gap-2">
               <ExternalLink className="h-4 w-4 shrink-0 mt-0.5" />
               <span>Cada convidado abrirá uma janela WhatsApp Web. Certifique-se de liberar popups no navegador.</span>
             </div>
