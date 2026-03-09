@@ -12,6 +12,7 @@ type WeddingProject = {
     partner1Name: string
     partner2Name: string
     weddingDate: string
+    owner_id?: string
 }
 
 export default function ProjectsDashboard() {
@@ -28,8 +29,6 @@ export default function ProjectsDashboard() {
     useEffect(() => {
         if (!loading && !user) {
             router.push('/login')
-        } else if (!loading && user?.isSuperAdmin) {
-            router.push('/admin/master')
         }
     }, [user, loading, router])
 
@@ -193,9 +192,16 @@ export default function ProjectsDashboard() {
                                 <h3 className="text-xl font-serif font-medium text-foreground flex items-center gap-2 mb-2 line-clamp-2">
                                     {project.partner1Name} <span className="text-accent font-sans text-sm">&amp;</span> {project.partner2Name}
                                 </h3>
-                                <p className="text-sm text-foreground/50 mb-6 font-mono text-xs truncate bg-muted/50 inline-block px-2 py-1 rounded-md">
-                                    ID: {project.id.slice(0, 8)}...
-                                </p>
+                                <div className="flex flex-col gap-1">
+                                    <p className="text-[10px] text-muted-foreground/40 font-mono truncate bg-muted/50 inline-block px-2 py-1 rounded-md self-start">
+                                        ID: {project.id.slice(0, 8)}...
+                                    </p>
+                                    {user?.isSuperAdmin && project.owner_id && (
+                                        <p className="text-[9px] text-primary/40 font-accent font-bold uppercase tracking-wider">
+                                            Dono: {project.owner_id.slice(0, 8)}...
+                                        </p>
+                                    )}
+                                </div>
                             </div>
 
                             <button
