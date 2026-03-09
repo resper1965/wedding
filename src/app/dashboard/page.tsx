@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, Heart, Bot, Grid3X3 } from 'lucide-react'
 import { authFetch } from '@/lib/auth-fetch'
 import { useAuth } from '@/components/auth/SessionProvider'
+import { getTenantId, tenantHref } from '@/hooks/useTenant'
 
 import dynamic from 'next/dynamic'
 
@@ -94,11 +95,14 @@ export function MarryflowPlatform() {
   const setActiveTab = (tab: string) => {
     const tabItem = tabs.find(t => t.id === tab)
     if (tabItem?.href) {
-      router.push(tabItem.href)
+      router.push(tenantHref(tabItem.href))
       return
     }
     const params = new URLSearchParams(searchParams.toString())
     params.set('tab', tab)
+    // Always preserve tenantId
+    const tid = getTenantId()
+    if (tid) params.set('tenantId', tid)
     router.push(`?${params.toString()}`, { scroll: false })
   }
 
