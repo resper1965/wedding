@@ -1,14 +1,9 @@
 import { getAccessToken } from '@/lib/supabase'
+import { getTenantId } from '@/hooks/useTenant'
 
 /**
- * Fetch wrapper que adiciona o Supabase access token automaticamente.
+ * Fetch wrapper que adiciona o Supabase access token + tenantId automaticamente.
  * Usar em componentes client-side para chamar APIs autenticadas.
- * 
- * Uso:
- * ```ts
- * const res = await authFetch('/api/guests')
- * const data = await res.json()
- * ```
  */
 export async function authFetch(
   url: string,
@@ -21,24 +16,11 @@ export async function authFetch(
     headers.set('Authorization', `Bearer ${token}`)
   }
 
-  // Multi-tenant: extract tenantId from the current browser URL
-  if (typeof window !== 'undefined') {
-    const pathname = window.location.pathname
-    const searchParams = new URLSearchParams(window.location.search)
-    let tenantId = searchParams.get('tenantId')
+  // Multi-tenant: resolve tenantId from the single source of truth
+  const tenantId = getTenantId()
 
-    if (!tenantId && pathname !== '/' && !pathname.startsWith('/api/') && !pathname.startsWith('/_next/') && pathname !== '/dashboard' && pathname !== '/projects' && pathname !== '/planos' && pathname !== '/login') {
-      tenantId = pathname.split('/')[1]
-    }
-
-    if (!tenantId) {
-      tenantId = localStorage.getItem('tenantId') || null
-    }
-
-    if (tenantId && tenantId !== 'dashboard' && tenantId !== 'projects' && tenantId !== 'login') {
-      headers.set('x-tenant-id', tenantId)
-      localStorage.setItem('tenantId', tenantId)
-    }
+  if (tenantId) {
+    headers.set('x-tenant-id', tenantId)
   }
 
   return fetch(url, {
