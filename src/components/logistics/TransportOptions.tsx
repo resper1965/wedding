@@ -201,14 +201,14 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
       {/* Loading State */}
       {loading && (
         <div className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-amber-600" />
+          <Loader2 className="w-6 h-6 animate-spin text-accent" />
         </div>
       )}
 
       {/* Empty State */}
       {!loading && transports.length === 0 && (
-        <div className="text-center py-8 bg-stone-50 rounded-xl border border-stone-200">
-          <p className="text-stone-500">Nenhuma opção de transporte cadastrada</p>
+        <div className="text-center py-8 bg-muted rounded-xl border border-border">
+          <p className="text-muted-foreground">Nenhuma opção de transporte cadastrada</p>
         </div>
       )}
 
@@ -227,7 +227,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="overflow-hidden border-stone-200 hover:shadow-md transition-shadow">
+                <Card className="overflow-hidden border-border hover:shadow-md transition-shadow">
                   <CardContent className="p-0">
                     <div className="flex items-stretch">
                       {/* Icon Column */}
@@ -241,11 +241,11 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
                           <div>
                             <div className="flex items-center gap-2">
                               <h4 className="font-semibold text-stone-800">{transport.title}</h4>
-                              <Badge variant="outline" className="text-xs border-stone-200">
+                              <Badge variant="outline" className="text-xs border-border">
                                 {typeLabel}
                               </Badge>
                             </div>
-                            <p className="text-sm text-stone-600 mt-1">{transport.description}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{transport.description}</p>
                           </div>
                           
                           {showAdmin && (
@@ -253,7 +253,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 text-stone-400 hover:text-stone-600"
+                                className="h-8 w-8 text-muted-foreground hover:text-muted-foreground"
                                 onClick={() => handleOpenDialog(transport)}
                               >
                                 <Edit className="w-4 h-4" />
@@ -261,7 +261,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 text-rose-400 hover:text-rose-600"
+                                className="h-8 w-8 text-rose-400 hover:text-destructive"
                                 onClick={() => handleDelete(transport.id)}
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -273,14 +273,14 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
                         {/* Details */}
                         <div className="flex flex-wrap items-center gap-3 mt-3">
                           {transport.price && (
-                            <span className="text-sm font-medium text-amber-700">
+                            <span className="text-sm font-medium text-accent">
                               💰 {transport.price}
                             </span>
                           )}
                           {transport.contact && (
                             <a
                               href={`tel:${transport.contact}`}
-                              className="flex items-center gap-1 text-sm text-stone-600 hover:text-amber-600 transition-colors"
+                              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-accent transition-colors"
                             >
                               <Phone className="w-3.5 h-3.5" />
                               {transport.contact}
@@ -291,7 +291,7 @@ export function TransportOptions({ showAdmin = false }: TransportOptionsProps) {
                               href={transport.link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-sm text-amber-600 hover:text-amber-700 transition-colors"
+                              className="flex items-center gap-1 text-sm text-accent hover:text-accent transition-colors"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                               Acessar

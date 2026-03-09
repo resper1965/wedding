@@ -63,7 +63,7 @@ export function MasterHeader({
           <div className={cn(
             "flex h-16 items-center justify-between rounded-full px-6 transition-all duration-300 border border-transparent",
             isScrolled
-              ? "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md shadow-lg border-border/40"
+              ? "bg-card/80 dark:bg-zinc-950/80 backdrop-blur-md shadow-lg border-border/40"
               : "bg-transparent"
           )}>
             <div className="flex items-center gap-4">
@@ -145,7 +145,7 @@ export function MasterHeader({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed right-0 top-0 z-50 h-full w-72 border-l border-border bg-white/95 dark:bg-zinc-950/95 shadow-2xl glass lg:hidden"
+              className="fixed right-0 top-0 z-50 h-full w-72 border-l border-border bg-card/95 dark:bg-zinc-950/95 shadow-2xl glass lg:hidden"
             >
               <div className="flex h-16 items-center justify-between border-b border-border px-4">
                 <BrandLogo size="md" />

@@ -38,8 +38,8 @@ const typeLabels: Record<string, string> = {
 }
 
 const typeColors: Record<string, string> = {
-  hotel: 'bg-amber-100 text-amber-800 border-amber-200',
-  pousada: 'bg-rose-100 text-rose-800 border-rose-200',
+  hotel: 'bg-accent/10 text-amber-800 border-accent/20',
+  pousada: 'bg-destructive/10 text-rose-800 border-destructive/20',
   airbnb: 'bg-terracotta-100 text-terracotta-800 border-terracotta-200',
   hostel: 'bg-sage-100 text-sage-800 border-sage-200'
 }
@@ -59,7 +59,7 @@ export function AccommodationCard({
   const [imageError, setImageError] = useState(false)
 
   const typeLabel = typeLabels[accommodation.type] || accommodation.type
-  const typeColor = typeColors[accommodation.type] || 'bg-stone-100 text-stone-800 border-stone-200'
+  const typeColor = typeColors[accommodation.type] || 'bg-muted text-stone-800 border-border'
   const priceLabel = accommodation.priceRange ? priceLabels[accommodation.priceRange] : null
 
   return (
@@ -70,7 +70,7 @@ export function AccommodationCard({
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
     >
-      <Card className="overflow-hidden h-full flex flex-col hover:shadow-lg transition-shadow border-stone-200 bg-white">
+      <Card className="overflow-hidden h-full flex flex-col hover:shadow-lg transition-shadow border-border bg-card">
         {/* Image */}
         {accommodation.imageUrl && !imageError ? (
           <div className="relative h-48 w-full overflow-hidden">
@@ -113,7 +113,7 @@ export function AccommodationCard({
               </Badge>
             </div>
             {priceLabel && (
-              <Badge variant="outline" className="bg-stone-50 text-stone-600 border-stone-200">
+              <Badge variant="outline" className="bg-muted text-muted-foreground border-border">
                 {accommodation.priceRange} • {priceLabel}
               </Badge>
             )}
@@ -121,7 +121,7 @@ export function AccommodationCard({
 
           {/* Description */}
           {accommodation.description && (
-            <p className="text-sm text-stone-600 mt-2 line-clamp-2">
+            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
               {accommodation.description}
             </p>
           )}
@@ -129,13 +129,13 @@ export function AccommodationCard({
           {/* Details */}
           <div className="mt-3 space-y-1.5">
             {accommodation.distance && (
-              <div className="flex items-center gap-2 text-sm text-stone-600">
-                <MapPin className="w-4 h-4 text-amber-600" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="w-4 h-4 text-accent" />
                 <span>{accommodation.distance} do local</span>
               </div>
             )}
             {accommodation.address && (
-              <div className="flex items-start gap-2 text-sm text-stone-500">
+              <div className="flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span className="line-clamp-1">{accommodation.address}</span>
               </div>
@@ -144,13 +144,13 @@ export function AccommodationCard({
 
           {/* Special Rate */}
           {accommodation.specialRate && (
-            <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="mt-3 p-3 bg-accent/5 border border-accent/20 rounded-lg">
               <div className="flex items-center gap-2 text-amber-800">
                 <Tag className="w-4 h-4" />
                 <span className="font-medium text-sm">{accommodation.specialRate}</span>
               </div>
               {accommodation.discountCode && (
-                <div className="mt-1 text-xs text-amber-600">
+                <div className="mt-1 text-xs text-accent">
                   Código: <span className="font-mono font-semibold">{accommodation.discountCode}</span>
                 </div>
               )}
@@ -163,7 +163,7 @@ export function AccommodationCard({
             <Button
               variant="outline"
               size="sm"
-              className="gap-1.5 border-stone-200 text-stone-600 hover:bg-stone-50"
+              className="gap-1.5 border-border text-muted-foreground hover:bg-muted"
               asChild
             >
               <a href={`tel:${accommodation.phone}`}>
@@ -190,7 +190,7 @@ export function AccommodationCard({
               <Button
                 variant="outline"
                 size="sm"
-                className="border-stone-200"
+                className="border-border"
                 onClick={onEdit}
               >
                 Editar
@@ -198,7 +198,7 @@ export function AccommodationCard({
               <Button
                 variant="outline"
                 size="sm"
-                className="border-rose-200 text-rose-600 hover:bg-rose-50"
+                className="border-destructive/20 text-destructive hover:bg-destructive/5"
                 onClick={onDelete}
               >
                 Excluir

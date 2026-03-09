@@ -176,7 +176,7 @@ export default function ReceptionPage() {
         ) : filteredGuests.length === 0 ? (
           <div className="py-12 text-center">
             <User className="mx-auto h-8 w-8 text-stone-300" />
-            <p className="mt-2 text-sm text-stone-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               {searchQuery ? 'Nenhum convidado encontrado' : 'Nenhum convidado confirmado'}
             </p>
           </div>
@@ -237,7 +237,7 @@ export default function ReceptionPage() {
                           size="sm"
                           variant="ghost"
                           onClick={() => handleUndo(guest.id)}
-                          className="text-stone-500 hover:text-stone-700"
+                          className="text-muted-foreground hover:text-muted-foreground"
                         >
                           <X className="h-4 w-4" />
                         </Button>

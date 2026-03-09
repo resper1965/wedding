@@ -374,7 +374,7 @@ export default function RSVPPage() {
                         value={specialNeeds}
                         onChange={(e) => setSpecialNeeds(e.target.value)}
                         placeholder="Ex: Acessibilidade, alergias, etc."
-                        className="border-border bg-white/50"
+                        className="border-border bg-card/50"
                       />
                     </div>
 
@@ -461,7 +461,7 @@ export default function RSVPPage() {
                             <button
                               key={guest.id}
                               onClick={() => handleSelectGuest(guest)}
-                              className="w-full rounded-xl border border-border bg-white/50 p-4 text-left transition-all hover:border-primary/30 hover:bg-primary/5"
+                              className="w-full rounded-xl border border-border bg-card/50 p-4 text-left transition-all hover:border-primary/30 hover:bg-primary/5"
                             >
                               <p className="font-medium text-foreground">
                                 {guest.firstName} {guest.lastName}

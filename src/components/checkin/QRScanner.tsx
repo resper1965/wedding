@@ -187,7 +187,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="text-white hover:bg-white/20"
+          className="text-white hover:bg-card/20"
         >
           <X className="h-5 w-5" />
         </Button>
@@ -242,11 +242,11 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
             exit={{ opacity: 0, y: 20 }}
             className="absolute bottom-24 left-4 right-4"
           >
-            <div className="flex items-center gap-3 rounded-2xl border border-orange-200 bg-orange-50 p-4 soft-shadow">
+            <div className="flex items-center gap-3 rounded-2xl border border-accent/20 bg-accent/5 p-4 soft-shadow">
               <AlertCircle className="h-5 w-5 shrink-0 text-orange-500" />
               <div>
                 <p className="text-sm font-bold text-orange-800">Erro de Câmera</p>
-                <p className="text-xs font-medium text-orange-700/80">{cameraError}</p>
+                <p className="text-xs font-medium text-accent/80">{cameraError}</p>
               </div>
             </div>
           </motion.div>
@@ -258,17 +258,17 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
         <div className="mx-auto flex max-w-sm items-center justify-between">
           <div className="flex items-center gap-2">
             {isScanning ? (
-              <Badge className="gap-1 border-emerald-200 bg-emerald-100/90 text-emerald-700 tracking-wide uppercase font-bold text-[10px]">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+              <Badge className="gap-1 border-primary/20 bg-primary/10/90 text-primary tracking-wide uppercase font-bold text-[10px]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
                 Escaneando
               </Badge>
             ) : hasPermission === false ? (
-              <Badge className="gap-1 border-orange-200 bg-orange-100 text-orange-700 tracking-wide uppercase font-bold text-[10px]">
+              <Badge className="gap-1 border-accent/20 bg-accent/10 text-accent tracking-wide uppercase font-bold text-[10px]">
                 <AlertCircle className="h-3 w-3" />
                 Sem acesso
               </Badge>
             ) : (
-              <Badge className="gap-1 border-emerald-200 bg-emerald-100 text-emerald-700 tracking-wide uppercase font-bold text-[10px]">
+              <Badge className="gap-1 border-primary/20 bg-primary/10 text-primary tracking-wide uppercase font-bold text-[10px]">
                 <Camera className="h-3 w-3" />
                 Iniciando
               </Badge>
@@ -280,7 +280,7 @@ export function QRScanner({ onScanSuccess, onScanError, isActive, onClose }: QRS
               variant="ghost"
               size="sm"
               onClick={switchCamera}
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-card/20"
             >
               <SwitchCamera className="mr-2 h-4 w-4" />
               Trocar Câmera

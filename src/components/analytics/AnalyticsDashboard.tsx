@@ -195,7 +195,7 @@ export function AnalyticsDashboard() {
                     transition={{ duration: 1, delay: index * 0.1 }}
                     className="bg-primary relative"
                   >
-                    <div className="absolute inset-0 bg-white/20 shimmer" />
+                    <div className="absolute inset-0 bg-card/20 shimmer" />
                   </motion.div>
                   <motion.div
                     initial={{ width: 0 }}

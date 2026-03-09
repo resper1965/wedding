@@ -195,7 +195,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
     return (
       <Card className="border-amber-100/50">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+          <Loader2 className="h-6 w-6 animate-spin text-accent" />
         </CardContent>
       </Card>
     )
@@ -208,13 +208,13 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Bell className="h-5 w-5 text-amber-600" />
+              <Bell className="h-5 w-5 text-accent" />
               <CardTitle className="text-lg font-medium text-stone-800">
                 Lembretes Automáticos
               </CardTitle>
             </div>
             <div className="flex items-center gap-2">
-              <Label htmlFor="enabled" className="text-sm text-stone-500">
+              <Label htmlFor="enabled" className="text-sm text-muted-foreground">
                 {formData.enabled ? 'Ativado' : 'Desativado'}
               </Label>
               <Switch
@@ -234,29 +234,29 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
           {stats && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
               <div className="text-center">
-                <p className="text-2xl font-bold text-amber-700">{stats.daysUntilWedding}</p>
-                <p className="text-xs text-stone-500">dias para o casamento</p>
+                <p className="text-2xl font-bold text-accent">{stats.daysUntilWedding}</p>
+                <p className="text-xs text-muted-foreground">dias para o casamento</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-orange-600">{stats.pendingGuests}</p>
-                <p className="text-xs text-stone-500">pendentes</p>
+                <p className="text-2xl font-bold text-accent">{stats.pendingGuests}</p>
+                <p className="text-xs text-muted-foreground">pendentes</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">{stats.remindersSent.first + stats.remindersSent.second + stats.remindersSent.final}</p>
-                <p className="text-xs text-stone-500">lembretes enviados</p>
+                <p className="text-2xl font-bold text-primary">{stats.remindersSent.first + stats.remindersSent.second + stats.remindersSent.final}</p>
+                <p className="text-xs text-muted-foreground">lembretes enviados</p>
               </div>
               <div className="text-center">
                 {stats.nextReminderDate ? (
                   <>
-                    <p className="text-lg font-bold text-stone-700">
+                    <p className="text-lg font-bold text-muted-foreground">
                       {format(new Date(stats.nextReminderDate), 'd MMM', { locale: ptBR })}
                     </p>
-                    <p className="text-xs text-stone-500">próximo lembrete</p>
+                    <p className="text-xs text-muted-foreground">próximo lembrete</p>
                   </>
                 ) : (
                   <>
                     <p className="text-2xl text-stone-300">—</p>
-                    <p className="text-xs text-stone-400">sem lembretes</p>
+                    <p className="text-xs text-muted-foreground">sem lembretes</p>
                   </>
                 )}
               </div>
@@ -265,14 +265,14 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
 
           {/* Reminder Days Configuration */}
           <div className={`space-y-4 ${!formData.enabled ? 'opacity-50 pointer-events-none' : ''}`}>
-            <h4 className="text-sm font-medium text-stone-700 flex items-center gap-2">
+            <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Configuração de Dias
             </h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstReminderDays" className="text-stone-600">
+                <Label htmlFor="firstReminderDays" className="text-muted-foreground">
                   Primeiro Lembrete
                 </Label>
                 <div className="flex items-center gap-2">
@@ -284,12 +284,12 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                     onChange={(e) => setFormData(prev => ({ ...prev, firstReminderDays: parseInt(e.target.value) || 30 }))}
                     className="w-20"
                   />
-                  <span className="text-sm text-stone-500">dias antes</span>
+                  <span className="text-sm text-muted-foreground">dias antes</span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="secondReminderDays" className="text-stone-600">
+                <Label htmlFor="secondReminderDays" className="text-muted-foreground">
                   Segundo Lembrete
                 </Label>
                 <div className="flex items-center gap-2">
@@ -301,12 +301,12 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                     onChange={(e) => setFormData(prev => ({ ...prev, secondReminderDays: parseInt(e.target.value) || 7 }))}
                     className="w-20"
                   />
-                  <span className="text-sm text-stone-500">dias antes</span>
+                  <span className="text-sm text-muted-foreground">dias antes</span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="finalReminderDays" className="text-stone-600">
+                <Label htmlFor="finalReminderDays" className="text-muted-foreground">
                   Lembrete Final
                 </Label>
                 <div className="flex items-center gap-2">
@@ -318,14 +318,14 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                     onChange={(e) => setFormData(prev => ({ ...prev, finalReminderDays: parseInt(e.target.value) || 2 }))}
                     className="w-20"
                   />
-                  <span className="text-sm text-stone-500">dias antes</span>
+                  <span className="text-sm text-muted-foreground">dias antes</span>
                 </div>
               </div>
             </div>
 
             {/* Custom Message */}
             <div className="space-y-2">
-              <Label htmlFor="customMessage" className="text-stone-600">
+              <Label htmlFor="customMessage" className="text-muted-foreground">
                 Mensagem Personalizada (opcional)
               </Label>
               <Textarea
@@ -373,7 +373,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
       <Card className="border-amber-100/50">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-amber-600" />
+            <Clock className="h-5 w-5 text-accent" />
             <CardTitle className="text-lg font-medium text-stone-800">
               Próximos Lembretes
             </CardTitle>
@@ -388,9 +388,9 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-3 rounded-lg bg-green-50 border border-green-200"
+              className="mb-4 p-3 rounded-lg bg-primary/5 border border-primary/20"
             >
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-primary">
                 <CheckCircle className="h-4 w-4 inline mr-1" />
                 {lastResult.sent} lembrete(s) enviado(s) com sucesso
                 {lastResult.failed > 0 && `, ${lastResult.failed} falharam`}
@@ -399,11 +399,11 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
           )}
 
           {upcoming.length === 0 ? (
-            <div className="text-center py-6 text-stone-500">
+            <div className="text-center py-6 text-muted-foreground">
               <BellOff className="h-10 w-10 mx-auto mb-2 text-stone-300" />
               <p>Nenhum lembrete programado</p>
               {stats && stats.pendingGuests === 0 && (
-                <p className="text-sm text-green-600 mt-1">
+                <p className="text-sm text-primary mt-1">
                   Todos os convidados já responderam!
                 </p>
               )}
@@ -417,17 +417,17 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                       key={`${reminder.type}-${reminder.daysBefore}`}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="flex items-center justify-between p-3 rounded-lg border border-stone-200 hover:border-amber-200 bg-white transition-colors"
+                      className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-accent/20 bg-card transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-                          <Bell className="h-5 w-5 text-amber-600" />
+                        <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                          <Bell className="h-5 w-5 text-accent" />
                         </div>
                         <div>
-                          <p className="font-medium text-stone-700">
+                          <p className="font-medium text-muted-foreground">
                             {getTypeLabel(reminder.type)}
                           </p>
-                          <div className="flex items-center gap-3 text-sm text-stone-500">
+                          <div className="flex items-center gap-3 text-sm text-muted-foreground">
                             <span>
                               {format(new Date(reminder.date), "d 'de' MMMM", { locale: ptBR })}
                             </span>
@@ -444,7 +444,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                         variant="outline"
                         onClick={() => handleSendReminder(reminder.type)}
                         disabled={isSending !== null || (stats?.pendingGuests || 0) === 0}
-                        className="border-amber-200 text-amber-700 hover:bg-amber-50"
+                        className="border-accent/20 text-accent hover:bg-accent/5"
                       >
                         {isSending === reminder.type ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -464,7 +464,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
 
           {/* Manual Send Section */}
           <div className="mt-4 pt-4 border-t border-stone-100">
-            <p className="text-sm text-stone-500 mb-3">
+            <p className="text-sm text-muted-foreground mb-3">
               Envio manual de lembretes:
             </p>
             <div className="flex flex-wrap gap-2">
@@ -473,7 +473,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                 variant="outline"
                 onClick={() => handleSendReminder('first')}
                 disabled={isSending !== null || (stats?.pendingGuests || 0) === 0}
-                className="border-stone-200"
+                className="border-border"
               >
                 {isSending === 'first' ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-1" />
@@ -487,7 +487,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                 variant="outline"
                 onClick={() => handleSendReminder('second')}
                 disabled={isSending !== null || (stats?.pendingGuests || 0) === 0}
-                className="border-stone-200"
+                className="border-border"
               >
                 {isSending === 'second' ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-1" />
@@ -501,7 +501,7 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
                 variant="outline"
                 onClick={() => handleSendReminder('final')}
                 disabled={isSending !== null || (stats?.pendingGuests || 0) === 0}
-                className="border-stone-200"
+                className="border-border"
               >
                 {isSending === 'final' ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-1" />
@@ -516,13 +516,13 @@ export function ReminderSettings({ weddingId }: ReminderSettingsProps) {
       </Card>
 
       {/* Info Card */}
-      <Card className="border-blue-100 bg-blue-50/50">
+      <Card className="border-blue-100 bg-primary/5/50">
         <CardContent className="py-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
-            <div className="text-sm text-blue-700">
+            <AlertCircle className="h-5 w-5 text-primary mt-0.5" />
+            <div className="text-sm text-primary">
               <p className="font-medium mb-1">Como funcionam os lembretes?</p>
-              <ul className="text-blue-600 space-y-1 list-disc list-inside">
+              <ul className="text-primary space-y-1 list-disc list-inside">
                 <li>Os lembretes são enviados automaticamente nas datas configuradas</li>
                 <li>Apenas convidados com email cadastrado recebem lembretes</li>
                 <li>Convidados que já confirmaram não recebem lembretes</li>

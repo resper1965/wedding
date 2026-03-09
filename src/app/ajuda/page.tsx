@@ -45,7 +45,7 @@ function HelpSection({ icon: Icon, title, children, defaultOpen = false }: HelpS
         <span className="text-base font-bold text-foreground flex-1 font-serif">{title}</span>
         <ChevronDown
           className={cn(
-            'h-4 w-4 text-stone-400 transition-transform duration-200',
+            'h-4 w-4 text-muted-foreground transition-transform duration-200',
             isOpen && 'rotate-180'
           )}
         />
@@ -91,7 +91,7 @@ export default function AjudaPage() {
 
         {/* Primeiros Passos */}
         <HelpSection icon={Heart} title="Primeiros Passos" defaultOpen={true}>
-          <p className="font-medium text-stone-700 mb-2">Bem-vindo à plataforma de gestão do casamento!</p>
+          <p className="font-medium text-muted-foreground mb-2">Bem-vindo à plataforma de gestão do casamento!</p>
           <ol className="list-decimal list-inside space-y-2">
             <li>Acesse o <strong>Painel</strong> para ver o resumo geral: convidados confirmados, pendentes e declinados.</li>
             <li>Cadastre os <strong>Convidados</strong> individualmente ou em grupo (via convite/família).</li>
@@ -105,19 +105,19 @@ export default function AjudaPage() {
         <HelpSection icon={Users} title="Convidados">
           <div className="space-y-3">
             <div>
-              <p className="font-medium text-stone-700">Cadastrar convidado</p>
+              <p className="font-medium text-muted-foreground">Cadastrar convidado</p>
               <p>Vá em <strong>Convidados → Adicionar</strong>. Preencha nome, telefone, email e categoria (família, amigos, trabalho, etc.).</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Grupos e famílias</p>
+              <p className="font-medium text-muted-foreground">Grupos e famílias</p>
               <p>Agrupe convidados por família ou convite. Isso facilita o envio de convites e controle de RSVPs.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Status do convite</p>
+              <p className="font-medium text-muted-foreground">Status do convite</p>
               <p>Cada convidado tem um status: <em>Pendente</em>, <em>Enviado</em>, <em>Confirmado</em>, <em>Declinado</em>. O status atualiza automaticamente quando o convidado responde via WhatsApp ou formulário.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Restrições alimentares</p>
+              <p className="font-medium text-muted-foreground">Restrições alimentares</p>
               <p>O campo "Restrições Alimentares" aceita texto livre. Ex: vegetariano, alergia a frutos do mar, sem glúten.</p>
             </div>
           </div>
@@ -127,15 +127,15 @@ export default function AjudaPage() {
         <HelpSection icon={MessageSquare} title="Mensagens e WhatsApp">
           <div className="space-y-3">
             <div>
-              <p className="font-medium text-stone-700">Envio de convites</p>
+              <p className="font-medium text-muted-foreground">Envio de convites</p>
               <p>Envie convites individuais ou em massa via WhatsApp. Configure templates em <strong>Configurações → Templates</strong>.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Concierge IA</p>
+              <p className="font-medium text-muted-foreground">Concierge IA</p>
               <p>O bot de WhatsApp usa inteligência artificial para responder automaticamente aos convidados. Ele entende confirmações, pedidos de informação e restrições alimentares.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Agendar mensagens</p>
+              <p className="font-medium text-muted-foreground">Agendar mensagens</p>
               <p>Use o <strong>Agendador</strong> para programar lembretes automáticos (ex: 30 dias antes, 7 dias antes, 2 dias antes).</p>
             </div>
           </div>
@@ -146,11 +146,11 @@ export default function AjudaPage() {
           <div className="space-y-3">
             <p>O <strong>Planejador de Mesas</strong> permite organizar onde cada convidado vai sentar.</p>
             <div>
-              <p className="font-medium text-stone-700">Criar mesa</p>
+              <p className="font-medium text-muted-foreground">Criar mesa</p>
               <p>Clique em "Nova Mesa", defina nome, capacidade e formato (redonda, retangular, quadrada).</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Alocar convidados</p>
+              <p className="font-medium text-muted-foreground">Alocar convidados</p>
               <p>Arraste convidados confirmados para as mesas. O sistema mostra a capacidade restante de cada mesa.</p>
             </div>
           </div>
@@ -161,15 +161,15 @@ export default function AjudaPage() {
           <div className="space-y-3">
             <p>O sistema de check-in funciona <strong>offline</strong> — ideal para locais sem internet estável.</p>
             <div>
-              <p className="font-medium text-stone-700">Como usar</p>
+              <p className="font-medium text-muted-foreground">Como usar</p>
               <p>Acesse <strong>/reception</strong> no celular ou tablet. Busque o convidado pelo nome e toque para confirmar entrada.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">QR Code</p>
+              <p className="font-medium text-muted-foreground">QR Code</p>
               <p>Cada convite pode gerar um QR Code único. O recepcionista escaneia e o check-in é feito automaticamente.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Sincronização</p>
+              <p className="font-medium text-muted-foreground">Sincronização</p>
               <p>Check-ins offline são salvos no dispositivo e sincronizados automaticamente quando a internet voltar.</p>
             </div>
           </div>
@@ -180,11 +180,11 @@ export default function AjudaPage() {
           <div className="space-y-3">
             <p>Gerencie a lista de presentes em <strong>/presentes</strong>.</p>
             <div>
-              <p className="font-medium text-stone-700">Adicionar presente</p>
+              <p className="font-medium text-muted-foreground">Adicionar presente</p>
               <p>Informe nome, descrição, preço, loja e link externo. Convidados podem reservar presentes pela página pública.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Status</p>
+              <p className="font-medium text-muted-foreground">Status</p>
               <p>Presentes podem ter status <em>Disponível</em>, <em>Reservado</em> ou <em>Comprado</em>.</p>
             </div>
           </div>
@@ -218,19 +218,19 @@ export default function AjudaPage() {
         <HelpSection icon={Settings} title="Configurações">
           <div className="space-y-3">
             <div>
-              <p className="font-medium text-stone-700">Dados do Casamento</p>
+              <p className="font-medium text-muted-foreground">Dados do Casamento</p>
               <p>Edite nomes, data, local e endereço.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Eventos</p>
+              <p className="font-medium text-muted-foreground">Eventos</p>
               <p>Cadastre múltiplos eventos (cerimônia, recepção, festa). Cada evento pode ter local, horário e dress code diferentes.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">WhatsApp</p>
+              <p className="font-medium text-muted-foreground">WhatsApp</p>
               <p>Configure o token, phone ID e webhook do WhatsApp Business API.</p>
             </div>
             <div>
-              <p className="font-medium text-stone-700">Lembretes automáticos</p>
+              <p className="font-medium text-muted-foreground">Lembretes automáticos</p>
               <p>Defina quantos dias antes do evento enviar lembretes (padrão: 30, 7 e 2 dias).</p>
             </div>
           </div>

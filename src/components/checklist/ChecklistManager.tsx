@@ -133,7 +133,7 @@ export function ChecklistManager() {
           ))}
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="h-7 w-36 text-xs border-stone-200"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="h-7 w-36 text-xs border-border"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas categorias</SelectItem>
             {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}

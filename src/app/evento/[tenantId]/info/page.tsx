@@ -153,7 +153,7 @@ export default function InfoPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-border bg-white/60 p-6 sm:p-8"
+            className="rounded-2xl border border-border bg-card/60 p-6 sm:p-8"
           >
             <div className="flex items-start gap-4">
               <div className="rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 p-3 text-primary">
@@ -165,9 +165,9 @@ export default function InfoPage() {
                   <span className="font-medium text-primary">Esporte Fino</span> — Sugerimos cores claras e tons pastéis para criar uma atmosfera harmoniosa.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-xl border border-green-200/50 bg-green-50/50 p-3">
-                    <p className="text-sm font-medium text-green-700">✓ Sugerimos</p>
-                    <p className="mt-1 text-xs text-green-600">Tons pastéis, cores claras, estampas delicadas</p>
+                  <div className="rounded-xl border border-primary/20/50 bg-primary/5/50 p-3">
+                    <p className="text-sm font-medium text-primary">✓ Sugerimos</p>
+                    <p className="mt-1 text-xs text-primary">Tons pastéis, cores claras, estampas delicadas</p>
                   </div>
                   <div className="rounded-xl border border-accent/20 bg-accent/5 p-3">
                     <p className="text-sm font-medium text-accent">✗ Evitem</p>
@@ -203,7 +203,7 @@ export default function InfoPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="rounded-2xl border border-border bg-white/60 p-6 transition-all hover:border-primary/30 hover:shadow-md"
+                    className="rounded-2xl border border-border bg-card/60 p-6 transition-all hover:border-primary/30 hover:shadow-md"
                   >
                     <div className="mb-4 flex items-center gap-3">
                       <div className="rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 p-2 text-primary">
@@ -211,7 +211,7 @@ export default function InfoPage() {
                       </div>
                       <h3 className="font-medium text-foreground">{list.name}</h3>
                     </div>
-                    <p className="mb-4 text-sm text-stone-500">{list.description}</p>
+                    <p className="mb-4 text-sm text-muted-foreground">{list.description}</p>
 
                     {list.pixKey ? (
                       <div className="space-y-2">
@@ -244,7 +244,7 @@ export default function InfoPage() {
               })}
             </div>
 
-            <p className="mt-6 text-center text-sm text-stone-500 italic">
+            <p className="mt-6 text-center text-sm text-muted-foreground italic">
               "Sua presença é o nosso maior presente, mas se desejar nos presentear, estas são algumas sugestões."
             </p>
           </motion.div>
@@ -264,7 +264,7 @@ export default function InfoPage() {
               <h2 className="text-xl font-medium text-primary font-serif">Perguntas Frequentes</h2>
             </div>
 
-            <div className="rounded-2xl border border-border bg-white/60 p-4 sm:p-6">
+            <div className="rounded-2xl border border-border bg-card/60 p-4 sm:p-6">
               <Accordion type="single" collapsible className="space-y-2">
                 {faqs.map((faq, index) => (
                   <AccordionItem

@@ -272,7 +272,7 @@ export function ConciergeDashboard() {
                     className="h-auto py-4 flex-col gap-2"
                     onClick={() => setActiveTab('qrcode')}
                   >
-                    <QrCode className="h-5 w-5 text-amber-600" />
+                    <QrCode className="h-5 w-5 text-accent" />
                     <span>Gerar QR Code</span>
                   </Button>
                   <Button
@@ -280,7 +280,7 @@ export function ConciergeDashboard() {
                     className="h-auto py-4 flex-col gap-2"
                     onClick={() => setActiveTab('media')}
                   >
-                    <ImageIcon className="h-5 w-5 text-rose-600" />
+                    <ImageIcon className="h-5 w-5 text-destructive" />
                     <span>Criar Convite</span>
                   </Button>
                   <Button
@@ -288,7 +288,7 @@ export function ConciergeDashboard() {
                     className="h-auto py-4 flex-col gap-2"
                     onClick={fetchConciergeData}
                   >
-                    <RefreshCw className="h-5 w-5 text-blue-600" />
+                    <RefreshCw className="h-5 w-5 text-primary" />
                     <span>Atualizar Dados</span>
                   </Button>
                   <Button
@@ -296,7 +296,7 @@ export function ConciergeDashboard() {
                     className="h-auto py-4 flex-col gap-2"
                     onClick={() => setActiveTab('settings')}
                   >
-                    <Settings className="h-5 w-5 text-stone-600" />
+                    <Settings className="h-5 w-5 text-muted-foreground" />
                     <span>Configurar</span>
                   </Button>
                 </div>
@@ -304,19 +304,19 @@ export function ConciergeDashboard() {
             </Card>
 
             {/* AI Status */}
-            <Card className="border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
+            <Card className="border-accent/20 bg-gradient-to-r from-amber-50 to-orange-50">
               <CardContent className="py-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
-                    <Sparkles className="h-5 w-5 text-amber-600" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10">
+                    <Sparkles className="h-5 w-5 text-accent" />
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-amber-900">AI Concierge Ativo</p>
-                    <p className="text-sm text-amber-700">
+                    <p className="text-sm text-accent">
                       Processando mensagens com GPT-4o • RAG Context habilitado
                     </p>
                   </div>
-                  <Badge variant="outline" className="border-amber-300 text-amber-700">
+                  <Badge variant="outline" className="border-accent/30 text-accent">
                     Online
                   </Badge>
                 </div>
@@ -343,7 +343,7 @@ export function ConciergeDashboard() {
               </CardHeader>
               <CardContent>
                 {conversations.length === 0 ? (
-                  <div className="text-center py-8 text-stone-500">
+                  <div className="text-center py-8 text-muted-foreground">
                     <MessageSquare className="mx-auto h-12 w-12 text-stone-300 mb-3" />
                     <p>Nenhuma conversa ainda</p>
                     <p className="text-sm">As conversas aparecerão aqui quando os convidados enviarem mensagens</p>
@@ -353,9 +353,9 @@ export function ConciergeDashboard() {
                     {conversations.map(conv => (
                       <div
                         key={conv.id}
-                        className="flex items-start gap-3 p-3 rounded-lg border border-stone-100 hover:bg-stone-50 transition-colors"
+                        className="flex items-start gap-3 p-3 rounded-lg border border-stone-100 hover:bg-muted transition-colors"
                       >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-600 font-medium">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent font-medium">
                           {conv.familyName?.charAt(0) || '?'}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -367,10 +367,10 @@ export function ConciergeDashboard() {
                               {conv.flowStatus}
                             </Badge>
                           </div>
-                          <p className="text-sm text-stone-500 truncate">
+                          <p className="text-sm text-muted-foreground truncate">
                             {conv.lastMessage}
                           </p>
-                          <p className="text-xs text-stone-400 mt-1">
+                          <p className="text-xs text-muted-foreground mt-1">
                             {conv.lastMessageAt
                               ? new Date(conv.lastMessageAt).toLocaleString('pt-BR')
                               : 'Sem mensagens'}
@@ -460,7 +460,7 @@ export function ConciergeDashboard() {
               <CardContent>
                 {generatedQR ? (
                   <div className="space-y-4">
-                    <div className="flex justify-center p-4 bg-white rounded-lg border">
+                    <div className="flex justify-center p-4 bg-card rounded-lg border">
                       <img
                         src={generatedQR.qrDataUrl}
                         alt="QR Code"
@@ -469,7 +469,7 @@ export function ConciergeDashboard() {
                     </div>
                     <div className="text-center">
                       <p className="font-medium">{generatedQR.familyName}</p>
-                      <p className="text-sm text-stone-500">
+                      <p className="text-sm text-muted-foreground">
                         Válido por 30 dias
                       </p>
                     </div>
@@ -486,7 +486,7 @@ export function ConciergeDashboard() {
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-center py-12 text-stone-500">
+                  <div className="text-center py-12 text-muted-foreground">
                     <QrCode className="mx-auto h-16 w-16 text-stone-300 mb-3" />
                     <p>Configure os dados e clique em gerar</p>
                   </div>
@@ -536,7 +536,7 @@ export function ConciergeDashboard() {
               <CardContent>
                 {generatedMediaUrl ? (
                   <div className="space-y-4">
-                    <div className="flex justify-center p-2 bg-stone-100 rounded-lg">
+                    <div className="flex justify-center p-2 bg-muted rounded-lg">
                       <img
                         src={generatedMediaUrl}
                         alt="Convite"
@@ -557,7 +557,7 @@ export function ConciergeDashboard() {
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-center py-12 text-stone-500">
+                  <div className="text-center py-12 text-muted-foreground">
                     <ImageIcon className="mx-auto h-16 w-16 text-stone-300 mb-3" />
                     <p>Configure os dados e clique em gerar</p>
                   </div>
@@ -591,7 +591,7 @@ export function ConciergeDashboard() {
                       <Input
                         readOnly
                         value={`${typeof window !== 'undefined' ? window.location.origin : ''}/api/webhook/whatsapp`}
-                        className="bg-stone-50"
+                        className="bg-muted"
                       />
                       <Button
                         variant="outline"
@@ -604,7 +604,7 @@ export function ConciergeDashboard() {
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-xs text-stone-500">
+                    <p className="text-xs text-muted-foreground">
                       Configure esta URL no Meta Business Suite
                     </p>
                   </div>
@@ -617,7 +617,7 @@ export function ConciergeDashboard() {
                       <Input
                         readOnly
                         value="wedding_concierge_2025"
-                        className="bg-stone-50"
+                        className="bg-muted"
                       />
                       <Button
                         variant="outline"
@@ -630,7 +630,7 @@ export function ConciergeDashboard() {
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-xs text-stone-500">
+                    <p className="text-xs text-muted-foreground">
                       Use este token ao configurar o webhook
                     </p>
                   </div>
@@ -644,16 +644,16 @@ export function ConciergeDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 font-mono text-sm">
-                  <div className="p-2 bg-stone-100 rounded">
+                  <div className="p-2 bg-muted rounded">
                     <code>WHATSAPP_ACCESS_TOKEN</code>
                   </div>
-                  <div className="p-2 bg-stone-100 rounded">
+                  <div className="p-2 bg-muted rounded">
                     <code>WHATSAPP_PHONE_NUMBER_ID</code>
                   </div>
-                  <div className="p-2 bg-stone-100 rounded">
+                  <div className="p-2 bg-muted rounded">
                     <code>WHATSAPP_VERIFY_TOKEN</code>
                   </div>
-                  <div className="p-2 bg-stone-100 rounded">
+                  <div className="p-2 bg-muted rounded">
                     <code>JWT_SECRET</code>
                   </div>
                 </div>
@@ -682,12 +682,12 @@ function StatCard({
   color: 'amber' | 'blue' | 'green' | 'orange' | 'cyan' | 'rose'
 }) {
   const colorClasses = {
-    amber: 'bg-amber-50 text-amber-600 border-amber-200',
-    blue: 'bg-blue-50 text-blue-600 border-blue-200',
-    green: 'bg-green-50 text-green-600 border-green-200',
-    orange: 'bg-orange-50 text-orange-600 border-orange-200',
-    cyan: 'bg-cyan-50 text-cyan-600 border-cyan-200',
-    rose: 'bg-rose-50 text-rose-600 border-rose-200'
+    amber: 'bg-accent/5 text-accent border-accent/20',
+    blue: 'bg-primary/5 text-primary border-primary/20',
+    green: 'bg-primary/5 text-primary border-primary/20',
+    orange: 'bg-accent/5 text-accent border-accent/20',
+    cyan: 'bg-primary/5 text-cyan-600 border-cyan-200',
+    rose: 'bg-destructive/5 text-destructive border-destructive/20'
   }
 
   return (

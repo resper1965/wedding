@@ -155,7 +155,7 @@ export default function PricingPage() {
                         className="mt-20 max-w-4xl mx-auto bg-gradient-to-br from-primary to-primary/80 rounded-[2.5rem] p-8 sm:p-12 border border-primary/20 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left"
                     >
                         <div>
-                            <div className="inline-flex items-center justify-center p-4 bg-white/10 rounded-2xl mb-6">
+                            <div className="inline-flex items-center justify-center p-4 bg-card/10 rounded-2xl mb-6">
                                 <Building className="w-8 h-8 text-white" />
                             </div>
                             <h3 className="text-2xl font-bold text-white mb-3">Escritório ou Grande Assessoria?</h3>
@@ -163,7 +163,7 @@ export default function PricingPage() {
                                 Para estúdios consolidadores. Oferecemos White-label completo, descontos agressivos em escala e infraestrutura dedicada para múltiplos casais.
                             </p>
                         </div>
-                        <Button asChild variant="outline" className="shrink-0 h-14 px-10 rounded-full border-white/20 bg-white/10 text-white hover:bg-white hover:text-primary font-bold transition-all shadow-xl">
+                        <Button asChild variant="outline" className="shrink-0 h-14 px-10 rounded-full border-white/20 bg-card/10 text-white hover:bg-card hover:text-primary font-bold transition-all shadow-xl">
                             <Link href="mailto:resper@ness.com.br" className="flex items-center gap-2">
                                 Falar com Consultor
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

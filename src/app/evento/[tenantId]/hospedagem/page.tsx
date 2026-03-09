@@ -112,7 +112,7 @@ export default function HospedagemPage() {
             className="max-w-md mx-auto"
           >
             <div className="flex items-center gap-2 mb-4">
-              <Cloud className="w-5 h-5 text-amber-600" />
+              <Cloud className="w-5 h-5 text-accent" />
               <h2 className="text-lg font-semibold text-stone-800">Previsão do Tempo</h2>
             </div>
             <WeatherWidget />
@@ -121,7 +121,7 @@ export default function HospedagemPage() {
       </section>
 
       {/* Accommodations Section */}
-      <section className="px-4 py-12 bg-white/50">
+      <section className="px-4 py-12 bg-card/50">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

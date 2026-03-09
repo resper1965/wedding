@@ -163,7 +163,7 @@ export default function EventsPage() {
               className="rounded-2xl border border-border bg-card/40 backdrop-blur-md p-8 text-center"
             >
               <Heart className="mx-auto mb-4 h-8 w-8 text-rose-300" />
-              <p className="text-stone-500">
+              <p className="text-muted-foreground">
                 A programação será divulgada em breve.
               </p>
             </motion.div>
@@ -235,12 +235,12 @@ export default function EventsPage() {
 
                             {/* Venue */}
                             {event.venue && (
-                              <div className="flex items-start gap-3 text-stone-600">
+                              <div className="flex items-start gap-3 text-muted-foreground">
                                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                                 <div>
                                   <p className="text-sm font-medium">{event.venue}</p>
                                   {event.address && (
-                                    <p className="text-xs text-stone-500">{event.address}</p>
+                                    <p className="text-xs text-muted-foreground">{event.address}</p>
                                   )}
                                 </div>
                               </div>
@@ -248,7 +248,7 @@ export default function EventsPage() {
 
                             {/* Dress Code */}
                             {event.dressCode && (
-                              <div className="flex items-center gap-3 text-stone-600">
+                              <div className="flex items-center gap-3 text-muted-foreground">
                                 <Shirt className="h-4 w-4 text-amber-400" />
                                 <span className="text-sm">
                                   <span className="font-medium">Dress code:</span> {event.dressCode}

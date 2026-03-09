@@ -72,10 +72,10 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'email': return 'bg-blue-100 text-blue-700'
-      case 'whatsapp': return 'bg-emerald-100 text-emerald-700'
-      case 'sms': return 'bg-purple-100 text-purple-700'
-      default: return 'bg-stone-100 text-stone-700'
+      case 'email': return 'bg-primary/10 text-primary'
+      case 'whatsapp': return 'bg-primary/10 text-primary'
+      case 'sms': return 'bg-purple-100 text-primary'
+      default: return 'bg-muted text-muted-foreground'
     }
   }
 
@@ -121,7 +121,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+            className="bg-card rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -133,7 +133,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                 </Badge>
                 <div>
                   <h2 className="font-semibold text-stone-800">{template.name}</h2>
-                  <p className="text-xs text-stone-500">Pré-visualização do template</p>
+                  <p className="text-xs text-muted-foreground">Pré-visualização do template</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -141,11 +141,11 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                   variant="ghost"
                   size="sm"
                   onClick={copyContent}
-                  className="text-stone-600"
+                  className="text-muted-foreground"
                 >
                   {copied ? (
                     <>
-                      <Check className="h-4 w-4 mr-1.5 text-emerald-600" />
+                      <Check className="h-4 w-4 mr-1.5 text-primary" />
                       Copiado!
                     </>
                   ) : (
@@ -159,7 +159,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                   variant="ghost"
                   size="icon"
                   onClick={onClose}
-                  className="text-stone-500 hover:text-stone-700"
+                  className="text-muted-foreground hover:text-muted-foreground"
                 >
                   <X className="h-5 w-5" />
                 </Button>
@@ -172,13 +172,13 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
               <div className="flex-1 p-6">
                 {/* View Mode Toggle */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-1 bg-stone-100 rounded-lg p-1">
+                  <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
                     <button
                       onClick={() => setViewMode('desktop')}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
                         viewMode === 'desktop' 
-                          ? 'bg-white shadow-sm text-amber-700' 
-                          : 'text-stone-500 hover:text-stone-700'
+                          ? 'bg-card shadow-sm text-accent' 
+                          : 'text-muted-foreground hover:text-muted-foreground'
                       }`}
                     >
                       <Monitor className="h-4 w-4" />
@@ -188,8 +188,8 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                       onClick={() => setViewMode('mobile')}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
                         viewMode === 'mobile' 
-                          ? 'bg-white shadow-sm text-amber-700' 
-                          : 'text-stone-500 hover:text-stone-700'
+                          ? 'bg-card shadow-sm text-accent' 
+                          : 'text-muted-foreground hover:text-muted-foreground'
                       }`}
                     >
                       <Smartphone className="h-4 w-4" />
@@ -202,20 +202,20 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                 <div className={`mx-auto transition-all duration-300 ${
                   viewMode === 'mobile' 
                     ? 'max-w-[320px] rounded-3xl border-8 border-stone-800 bg-stone-800 p-1' 
-                    : 'max-w-full rounded-xl border border-stone-200'
+                    : 'max-w-full rounded-xl border border-border'
                 }`}>
                   {/* Email Header (for email type) */}
                   {template.type === 'email' && (
-                    <div className={`bg-stone-50 border-b border-stone-200 ${
+                    <div className={`bg-muted border-b border-border ${
                       viewMode === 'mobile' ? 'rounded-t-2xl px-4 py-3' : 'rounded-t-lg px-6 py-3'
                     }`}>
-                      <div className="flex items-center gap-2 text-xs text-stone-500">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <span className="font-medium">De:</span>
                         <span>Louise & Nicolas &lt;casamento@louise-nicolas.com&gt;</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-stone-500 mt-1">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                         <span className="font-medium">Assunto:</span>
-                        <span className="text-stone-700">
+                        <span className="text-muted-foreground">
                           {template.subject ? generatePreview(template.subject) : 'Sem assunto'}
                         </span>
                       </div>
@@ -223,7 +223,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                   )}
 
                   {/* Message Content */}
-                  <div className={`bg-white ${
+                  <div className={`bg-card ${
                     viewMode === 'mobile' 
                       ? 'rounded-b-2xl p-4 max-h-[400px] overflow-y-auto' 
                       : 'rounded-b-lg p-6'
@@ -237,8 +237,8 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                               {generatePreview(template.content)}
                             </p>
                             <div className="flex items-center justify-end gap-1 mt-1">
-                              <span className="text-[10px] text-stone-500">16:45</span>
-                              <span className="text-[10px] text-blue-500">✓✓</span>
+                              <span className="text-[10px] text-muted-foreground">16:45</span>
+                              <span className="text-[10px] text-primary">✓✓</span>
                             </div>
                           </div>
                         </div>
@@ -246,10 +246,10 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                     ) : template.type === 'sms' ? (
                       // SMS Style
                       <div className="space-y-4">
-                        <div className="bg-stone-50 rounded-lg p-4 border border-stone-200">
-                          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-stone-200">
-                            <MessageCircle className="h-4 w-4 text-stone-400" />
-                            <span className="text-sm font-medium text-stone-600">Mensagem</span>
+                        <div className="bg-muted rounded-lg p-4 border border-border">
+                          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-border">
+                            <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm font-medium text-muted-foreground">Mensagem</span>
                           </div>
                           <p className="text-sm text-stone-800 whitespace-pre-wrap">
                             {generatePreview(template.content)}
@@ -259,7 +259,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                     ) : (
                       // Email Style
                       <div className="prose prose-stone prose-sm max-w-none">
-                        <div className="whitespace-pre-wrap text-stone-700 leading-relaxed">
+                        <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
                           {generatePreview(template.content)}
                         </div>
                         
@@ -274,7 +274,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                             </span>
                             <Heart className="h-4 w-4 text-rose-400" fill="currentColor" />
                           </div>
-                          <div className="flex items-center justify-center gap-4 text-xs text-stone-500">
+                          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
                               {SAMPLE_DATA['{data}']}
@@ -292,7 +292,7 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
               </div>
 
               {/* Sidebar - Variables */}
-              <div className="lg:w-72 border-t lg:border-t-0 lg:border-l border-stone-100 bg-stone-50 p-6">
+              <div className="lg:w-72 border-t lg:border-t-0 lg:border-l border-stone-100 bg-muted p-6">
                 <h3 className="font-medium text-stone-800 mb-4">Variáveis Utilizadas</h3>
                 
                 {parseVariables(template.variables).length > 0 ? (
@@ -300,17 +300,17 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                     {parseVariables(template.variables).map((v) => (
                       <div 
                         key={v}
-                        className="flex items-center justify-between p-2 bg-white rounded-lg border border-stone-200"
+                        className="flex items-center justify-between p-2 bg-card rounded-lg border border-border"
                       >
-                        <code className="text-xs text-amber-700">{`{${v}}`}</code>
-                        <span className="text-xs text-stone-500">
+                        <code className="text-xs text-accent">{`{${v}}`}</code>
+                        <span className="text-xs text-muted-foreground">
                           {SAMPLE_DATA[`{${v}}`] || '-'}
                         </span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-stone-500 italic">
+                  <p className="text-sm text-muted-foreground italic">
                     Nenhuma variável utilizada neste template.
                   </p>
                 )}
@@ -318,8 +318,8 @@ export function TemplatePreview({ template, isOpen, onClose }: TemplatePreviewPr
                 <Separator className="my-4" />
 
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-stone-700">Informações</h4>
-                  <div className="text-xs text-stone-500 space-y-1">
+                  <h4 className="text-sm font-medium text-muted-foreground">Informações</h4>
+                  <div className="text-xs text-muted-foreground space-y-1">
                     <p><span className="font-medium">Tipo:</span> {template.type.toUpperCase()}</p>
                     {template.subject && (
                       <p><span className="font-medium">Assunto:</span> {template.subject}</p>

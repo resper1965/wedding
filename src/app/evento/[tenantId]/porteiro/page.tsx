@@ -324,7 +324,7 @@ export default function PorteiroPage() {
                     transition={{ duration: 1.5, ease: 'circOut' }}
                     className="h-full rounded-full bg-primary relative shadow-[0_0_15px_rgba(var(--primary),0.3)]"
                   >
-                    <div className="absolute inset-0 bg-white/10 shimmer" />
+                    <div className="absolute inset-0 bg-card/10 shimmer" />
                   </motion.div>
                 </div>
               </div>

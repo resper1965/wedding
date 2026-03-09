@@ -160,7 +160,7 @@ export function VendorManager() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-3">{[1, 2].map(i => <div key={i} className="h-24 rounded-xl bg-stone-100 animate-pulse" />)}</div>
+        <div className="space-y-3">{[1, 2].map(i => <div key={i} className="h-24 rounded-xl bg-muted animate-pulse" />)}</div>
       ) : filtered.length === 0 ? (
         <div className="rounded-[2rem] border-2 border-dashed border-border p-16 text-center bg-card/10 backdrop-blur-sm">
           <div className="bg-primary/5 h-16 w-16 rounded-3xl flex items-center justify-center mx-auto mb-6">

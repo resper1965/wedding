@@ -125,14 +125,14 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
     <div className="space-y-4">
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Buscar por nome..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoFocus={autoFocus}
-          className="border-primary/10 bg-white pl-9 pr-9 focus:border-primary/40"
+          className="border-primary/10 bg-card pl-9 pr-9 focus:border-primary/40"
         />
         {query && (
           <Button
@@ -160,7 +160,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
           </Badge>
         )}
         {!isLoading && error && (
-          <Badge variant="outline" className="gap-1 border-orange-200 text-orange-600">
+          <Badge variant="outline" className="gap-1 border-accent/20 text-accent">
             {error}
           </Badge>
         )}
@@ -177,8 +177,8 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
               className="py-8 text-center"
             >
               <User className="mx-auto h-10 w-10 text-stone-300" />
-              <p className="mt-2 text-sm text-stone-500">Nenhum convidado encontrado</p>
-              <p className="text-xs text-stone-400">Tente outro nome</p>
+              <p className="mt-2 text-sm text-muted-foreground">Nenhum convidado encontrado</p>
+              <p className="text-xs text-muted-foreground">Tente outro nome</p>
             </motion.div>
           )}
 
@@ -191,7 +191,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
               exit={{ opacity: 0, x: -20 }}
               transition={{ delay: index * 0.03 }}
               onClick={() => onGuestSelect(invitation)}
-              className="mb-2 w-full rounded-2xl border border-primary/10 bg-white p-5 text-left transition-all hover:bg-primary/5 soft-shadow"
+              className="mb-2 w-full rounded-2xl border border-primary/10 bg-card p-5 text-left transition-all hover:bg-primary/5 soft-shadow"
             >
               <div className="flex items-center gap-3">
                 {/* Avatar */}
@@ -218,7 +218,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
                       </Badge>
                     )}
                   </div>
-                  <p className="mt-1 text-xs font-medium text-stone-400">
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
                     {invitation.guests?.length || 0} convidado{(invitation.guests?.length || 0) !== 1 ? 's' : ''}
                     {invitation.checkedIn && invitation.checkedInAt && (
                       <span className="ml-2 text-primary">
@@ -263,7 +263,7 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
               exit={{ opacity: 0, x: -20 }}
               transition={{ delay: (results.invitations?.length || 0 + index) * 0.03 }}
               onClick={() => onGuestSelect(guest)}
-              className="mb-2 w-full rounded-2xl border border-emerald-100 bg-white p-5 text-left transition-all hover:bg-emerald-50/50 soft-shadow"
+              className="mb-2 w-full rounded-2xl border border-emerald-100 bg-card p-5 text-left transition-all hover:bg-primary/5/50 soft-shadow"
             >
               <div className="flex items-center gap-3">
                 {/* Avatar */}
@@ -280,11 +280,11 @@ export function GuestSearch({ onGuestSelect, autoFocus = false }: GuestSearchPro
 
                 {/* Info */}
                 <div className="min-w-0 flex-1">
-                  <p className={`truncate font-bold ${guest.invitation?.checkedIn ? 'text-teal-900/50' : 'text-emerald-950'
+                  <p className={`truncate font-bold ${guest.invitation?.checkedIn ? 'text-muted-foreground' : 'text-foreground'
                     }`}>
                     {guest.fullName || `${guest.firstName} ${guest.lastName}`}
                   </p>
-                  <p className="mt-1 text-xs font-medium text-stone-400">
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
                     {guest.invitation?.familyName || 'Sem grupo'}
                     {guest.invitation?.checkedIn && guest.invitation.checkedInAt && (
                       <span className="ml-3 flex items-center text-primary">
